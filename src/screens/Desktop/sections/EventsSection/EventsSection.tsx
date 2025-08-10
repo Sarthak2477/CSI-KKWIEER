@@ -90,6 +90,7 @@ export const EventsSection = (): JSX.Element => {
 
   return (
     <section
+      
       ref={sectionRef}
       className={`w-full max-w-[1292px] mx-auto py-20 md:py-24 px-4 md:px-8 transform transition-all duration-1000 ease-out ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"

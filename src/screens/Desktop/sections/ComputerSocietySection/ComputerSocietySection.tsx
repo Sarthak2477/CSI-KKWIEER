@@ -78,7 +78,7 @@ export const ComputerSocietySection = (): JSX.Element => {
         </h2>
       </div>
 
-      <Card className="w-full max-w-[1053px] mx-auto my-12 md:my-16 font-['Urbanist',Helvetica] mx-4 md:mx-auto">
+      <Card className="border-0 -w-full max-w-[1053px] mx-auto my-12 md:my-16 font-['Urbanist',Helvetica] mx-4 md:mx-auto">
         <CardContent className="p-8 md:p-12 text-center">
           <p className="text-lg md:text-2xl tracking-[0.92px] leading-[29px] px-4">
             Having{" "}

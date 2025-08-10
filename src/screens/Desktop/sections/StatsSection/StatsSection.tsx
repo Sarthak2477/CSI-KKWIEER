@@ -56,7 +56,7 @@ export const StatsSection = (): JSX.Element => {
           The Journey So Far
         </h2>
 
-        <Card className="border-0 shadow-none">
+        <Card className="border shadow-none">
           <CardContent className="p-0">
             <div className="bg-[#0033991a] relative">
               <Separator className="w-full h-[3px]" />
@@ -96,7 +96,6 @@ export const StatsSection = (): JSX.Element => {
                 })}
               </div>
 
-              <Separator className="w-full h-[3px]" />
             </div>
           </CardContent>
         </Card>

@@ -40,8 +40,14 @@ export const Desktop = (): JSX.Element => {
   ];
 
   return (
-    <div   style={{ backgroundImage: "url('/images/image1.png')" }}
-    className="bg-cover bg-center flex flex-col items-center w-full min-h-screen">
+    <div
+    style={{
+      backgroundImage: "url('/images/image1.png')",
+      backgroundRepeat: "repeat-y",
+      backgroundSize: "100% 200%", // stretches vertically so seams are rarer
+    }}
+  className="flex flex-col items-center w-full min-h-screen"
+>
       <div className="overflow-hidden w-full relative">
         {/* Background images */}
         <div className="relative w-full">

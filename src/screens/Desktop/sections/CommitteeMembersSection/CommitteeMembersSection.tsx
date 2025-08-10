@@ -71,18 +71,22 @@ export const CommitteeMembersSection = (): JSX.Element => {
       position: "President",
       description:
         "Leads the club with vision and direction.\nOversees all activities, decisions, and growth initiatives.",
+      image: "/images/ankit_Khandelwal.jpg",
     },
     {
       name: "Manasi Jadhav",
       position: "Vice President",
       description:
         "Supports the President and manages internal coordination. Ensures smooth execution of events and team synergy.",
+      image: "/images/manasi_Jadhav.jpeg"
     },
     {
       name: "Shweta Yeola",
       position: "Secretary",
       description:
         "Handles communication, documentation, and scheduling. Keeps the club organized and informed at all times.",
+      image: "/images/Shweta_Yeola.jpg"
+      
     },
   ];
 
@@ -129,8 +133,13 @@ export const CommitteeMembersSection = (): JSX.Element => {
               opacity: isVisible ? 1 : 0,
             }}
           >
-            <div className="h-[404px] rounded-t-[15.54px] border-t-[1.04px] border-r-[1.04px] border-l-[1.04px] border-[#898989] bg-[linear-gradient(226deg,rgba(255,255,255,0.5)_9%,rgba(193,224,254,0.5)_100%)]" />
-
+        <div className="h-[404px] rounded-t-[15.54px] border-t-[1.04px] border-r-[1.04px] border-l-[1.04px] border-[#898989] overflow-hidden">
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
             <CardContent className="p-6 space-y-4">
               <h3 className="font-semibold text-black text-2xl md:text-[31.1px] tracking-[-0.93px] leading-[35.6px] [font-family:'Maven_Pro',Helvetica]">
                 {member.name}
