@@ -1,0 +1,1 @@
+export { CommitteeMembersCarousel } from "./CommitteeMembersCarousel";

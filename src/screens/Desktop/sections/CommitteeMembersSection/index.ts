@@ -1,1 +1,0 @@
-export { CommitteeMembersSection } from "./CommitteeMembersSection";

@@ -1,1 +1,0 @@
-export { FeaturedEventsSection } from "./FeaturedEventsSection";

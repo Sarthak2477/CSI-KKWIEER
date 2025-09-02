@@ -1,0 +1,214 @@
+// components/ClubHistory.jsx
+
+import { useState } from "react";
+import { Award, Calendar, ChevronDown, ChevronUp, Network, Users } from "lucide-react";
+
+export const AboutUs = () => {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <section className="px-4 py-10 md:py-16 max-w-6xl mx-auto">
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-blue-700 mb-8">
+        About Us
+      </h2>
+
+      {/* Intro (always visible) */}
+      <p className="text-gray-700 text-md md:text-lg leading-relaxed mb-6">
+        The CSI student branch at KKWIEER, established in 1995-96, is one of the most vibrant in Maharashtra & Goa.
+        Recognized 7 times as the "Best Student Branch", it has over 500 student members and organizes regular technical
+        events such as quizzes, seminars, and workshops. Faculty and students benefit from publications, communication
+        networks, and financial support for research.
+      </p>
+
+      {/* Modern Read More/Less Button */}
+      <div className="flex justify-center mb-6">
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 ease-out hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          <span className="text-sm md:text-base">
+            {expanded ? "Read Less" : "Read More"}
+          </span>
+          <div className="transform transition-transform duration-300 ease-out group-hover:scale-110">
+            {expanded ? (
+              <ChevronUp className="w-4 h-4 md:w-5 md:h-5" />
+            ) : (
+              <ChevronDown className="w-4 h-4 md:w-5 md:h-5" />
+            )}
+          </div>
+
+          {/* Subtle glow effect */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-sm"></div>
+        </button>
+      </div>
+
+      {/* Expanded Content with Smooth Animation */}
+      <div
+        className={`overflow-hidden transition-all duration-700 ease-in-out ${expanded
+          ? "max-h-[3000px] opacity-100"
+          : "max-h-0 opacity-0"
+          }`}
+      >
+        <div className="space-y-10 pt-4">
+          {/* Detailed Info */}
+          <div className="text-gray-700 space-y-4 text-sm md:text-base leading-relaxed transform transition-transform duration-500 ease-out">
+            <p className="animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+              CSI was founded in 1965 by a small group of IT professionals who wanted to exchange ideas and organize activities
+              in the emerging computer science field. Today, CSI is the largest and most professionally managed association for
+              IT professionals in India with over 100,000 members.
+            </p>
+            <p className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+              Members include software developers, scientists, academicians, CIOs, CTOs, and vendors across various sectors.
+              CSI currently has over 500 student branches across 73+ locations and aims to expand further into smaller towns and cities.
+            </p>
+            <p className="animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+              At KKWIEER, Prof. A. V. Kolapkar leads the student branch as Coordinator and has received the "Best Student Branch Coordinator" award.
+              Faculty receive access to CSI Journals and Communications, and both students and faculty benefit from research grants and tech exposure.
+              Prof. Dr. S. S. Sane, a key contributor, now serves as Regional Vice President for Maharashtra & Goa.
+            </p>
+          </div>
+
+          {/* Image 1 */}
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+            <img
+              src="/images/csi_img1.png"
+              alt="Prof. Dr. S.S. Sane receiving Best Student Branch Award"
+              className="max-h-[400px] max-w-[600px] object-contain rounded-xl transition-transform duration-500 mx-auto"
+            />
+
+            <p className="text-sm text-gray-600 text-center font-medium mt-2">
+              Prof. Dr. S.S. Sane receiving “Best Student Branch” Award on 51th Annual Convention at Coimbatore. The seed for the Computer Society of India (CSI) was first sown in the year 1965 with a handful of IT enthusiasts who were a computer user group and felt the need to organize their activities.            </p>
+          </div>
+
+
+          {/* Image 2 */}
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
+            <img
+              src="/images/csi_img2.png"
+              alt="Mr. A. V. Kolapkar receiving Longest Continuous Student Branch Counselor Award"
+              className="max-h-[400px] max-w-[600px] object-contain rounded-xl  transition-transform duration-500 mx-auto"
+            />
+            <p className="mt-2 text-sm text-gray-600 text-center font-medium">
+              Mr. A. V. Kolapkar receiving “Longest Continuous Student Branch Counselor” Award from CSI President Prof. Bipin Mehta on 5dec 2015 at CSI Golden Jubilee Annual convention at New Delhi
+            </p>
+          </div>
+
+          {/* Image 3 */}
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
+            <img
+              src="/images/csi_img3.png"
+              alt="Mr. Khitij Khakurdikar receiving Highest Committed Student Branch Activist Award"
+              className="max-h-[400px] max-w-[600px] object-contain rounded-xl transition-transform duration-500 mx-auto"
+            />
+
+            <p className="mt-2 text-sm text-gray-600 text-center font-medium">
+              Mr. Khitij Khakurdikar receiving “Highest Committed Student Branch Activist” Award by CSI President on 2013 at CSI Annual convention at Vishakapattanam</p>
+          </div>
+        </div>
+      </div>
+
+
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-5 lg:grid-rows-5 gap-4 lg:gap-6 min-h-[600px]">
+
+        {/* Main CSI Logo Section */}
+        <div className="lg:col-span-3 lg:row-span-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 lg:p-12 flex flex-col items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100">
+          <div className="relative">
+            <img
+              src="/images/csi.png"
+              alt="CSI Logo"
+              className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56 object-contain drop-shadow-lg hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-400/20 to-blue-600/20 rounded-full blur-xl -z-10"></div>
+          </div>
+          <h3 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-800 mt-6 text-center">
+            Computer Society of India
+          </h3>
+          <p className="text-blue-600 text-center mt-2 text-sm lg:text-base">
+            KKWIEER Chapter
+          </p>
+        </div>
+
+        {/* Events Organized */}
+        <div className="lg:row-span-2 lg:col-start-1 lg:row-start-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 lg:p-8 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+          <Calendar className="w-8 h-8 lg:w-12 lg:h-12 mb-3 lg:mb-4" />
+          <div className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">30+</div>
+          <div className="text-sm lg:text-base font-medium text-center">Events Organized</div>
+          <div className="text-xs lg:text-sm text-blue-100 text-center mt-1">This Year</div>
+        </div>
+
+        {/* Student Branches */}
+        <div className="lg:row-span-2 lg:col-start-2 lg:row-start-4 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl p-6 lg:p-8 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+          <Network className="w-8 h-8 lg:w-12 lg:h-12 mb-3 lg:mb-4" />
+          <div className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">72</div>
+          <div className="text-sm lg:text-base font-medium text-center">Student Branches</div>
+          <div className="text-xs lg:text-sm text-blue-100 text-center mt-1">Across Region</div>
+        </div>
+
+        {/* Leadership Card */}
+        <div className="lg:col-span-3 lg:col-start-3 lg:row-start-4 bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl p-6 lg:p-8 flex items-center shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100">
+          <div className="bg-blue-500 rounded-full p-3 lg:p-4 mr-4 lg:mr-6 flex-shrink-0">
+            <Award className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
+          </div>
+          <div>
+            <h4 className="text-lg lg:text-xl xl:text-2xl font-bold text-blue-800 mb-2">Leadership</h4>
+            <p className="text-blue-700 text-sm lg:text-base leading-relaxed">
+              Guiding and inspiring others toward a common goal through innovation and excellence.
+            </p>
+          </div>
+        </div>
+
+        {/* Networking Card */}
+        <div className="lg:col-span-3 lg:col-start-3 lg:row-start-5 bg-gradient-to-r from-blue-50 to-slate-50 rounded-2xl p-6 lg:p-8 flex items-center shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100">
+          <div className="bg-blue-600 rounded-full p-3 lg:p-4 mr-4 lg:mr-6 flex-shrink-0">
+            <Network className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
+          </div>
+          <div>
+            <h4 className="text-lg lg:text-xl xl:text-2xl font-bold text-blue-800 mb-2">Networking</h4>
+            <p className="text-blue-700 text-sm lg:text-base leading-relaxed">
+              Building valuable connections and collaborations within the tech community.
+            </p>
+          </div>
+        </div>
+
+        {/* Team Members */}
+        <div className="lg:col-span-2 lg:row-span-3 lg:col-start-4 lg:row-start-1 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 lg:p-8 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+          <Users className="w-12 h-12 lg:w-16 lg:h-16 mb-4 lg:mb-6" />
+          <div className="text-center">
+            <div className="text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 lg:mb-4">26</div>
+            <div className="text-lg lg:text-xl font-semibold mb-2">Strong & Committed</div>
+            <div className="text-sm lg:text-base text-blue-100">Team Members</div>
+          </div>
+          <div className="mt-4 lg:mt-6 w-full">
+            <div className="bg-white/20 rounded-full h-2 overflow-hidden">
+              <div className="bg-white h-full w-4/5 rounded-full animate-pulse"></div>
+            </div>
+            <p className="text-xs lg:text-sm text-blue-100 text-center mt-2">Dedication Level</p>
+          </div>
+        </div>
+
+      </div>
+
+
+      {/* Custom CSS for animations */}
+      <style>{`
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fade-in-up {
+          animation: fade-in-up 0.6s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+export default AboutUs;
