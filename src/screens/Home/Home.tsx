@@ -72,7 +72,7 @@ export const Home = (): JSX.Element => {
             <ComputerSocietySection />
 
             {/* Cards Section - Responsive Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8 justify-items-center">
+            <div className="grid grid-cols-1 lg: grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8 justify-items-center">
               {/* CSI India Card */}
               <Card className="w-full max-w-full lg:max-w-[600px] p-4 sm:p-6 shadow-lg rounded-xl flex flex-col justify-between bg-white min-h-[300px] lg:min-h-[400px]">
                 <div className="flex-1">

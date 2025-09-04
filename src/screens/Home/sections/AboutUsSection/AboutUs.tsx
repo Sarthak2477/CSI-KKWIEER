@@ -1,5 +1,3 @@
-// components/ClubHistory.jsx
-
 import { useState } from "react";
 import { Award, Calendar, ChevronDown, ChevronUp, Network, Users } from "lucide-react";
 
@@ -8,12 +6,12 @@ export const AboutUs = () => {
 
   return (
     <section className="px-4 py-10 md:py-16 max-w-6xl mx-auto">
-      <h2 className="text-3xl md:text-4xl font-bold text-center text-blue-700 mb-8">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-blue-700 mb-6 sm:mb-8">
         About Us
       </h2>
 
       {/* Intro (always visible) */}
-      <p className="text-gray-700 text-md md:text-lg leading-relaxed mb-6">
+      <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-6 text-center sm:text-left">
         The CSI student branch at KKWIEER, established in 1995-96, is one of the most vibrant in Maharashtra & Goa.
         Recognized 7 times as the "Best Student Branch", it has over 500 student members and organizes regular technical
         events such as quizzes, seminars, and workshops. Faculty and students benefit from publications, communication
@@ -24,16 +22,16 @@ export const AboutUs = () => {
       <div className="flex justify-center mb-6">
         <button
           onClick={() => setExpanded(!expanded)}
-          className="group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 ease-out hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="group relative inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 ease-out hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
-          <span className="text-sm md:text-base">
+          <span className="text-xs sm:text-sm md:text-base">
             {expanded ? "Read Less" : "Read More"}
           </span>
           <div className="transform transition-transform duration-300 ease-out group-hover:scale-110">
             {expanded ? (
-              <ChevronUp className="w-4 h-4 md:w-5 md:h-5" />
+              <ChevronUp className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
             ) : (
-              <ChevronDown className="w-4 h-4 md:w-5 md:h-5" />
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
             )}
           </div>
 
@@ -45,13 +43,13 @@ export const AboutUs = () => {
       {/* Expanded Content with Smooth Animation */}
       <div
         className={`overflow-hidden transition-all duration-700 ease-in-out ${expanded
-          ? "max-h-[3000px] opacity-100"
+          ? "max-h-[4000px] opacity-100"
           : "max-h-0 opacity-0"
           }`}
       >
-        <div className="space-y-10 pt-4">
+        <div className="space-y-6 sm:space-y-8 md:space-y-10 pt-4">
           {/* Detailed Info */}
-          <div className="text-gray-700 space-y-4 text-sm md:text-base leading-relaxed transform transition-transform duration-500 ease-out">
+          <div className="text-gray-700 space-y-3 sm:space-y-4 text-xs sm:text-sm md:text-base leading-relaxed transform transition-transform duration-500 ease-out">
             <p className="animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
               CSI was founded in 1965 by a small group of IT professionals who wanted to exchange ideas and organize activities
               in the emerging computer science field. Today, CSI is the largest and most professionally managed association for
@@ -68,126 +66,125 @@ export const AboutUs = () => {
             </p>
           </div>
 
-          {/* Image 1 */}
+          {/* Image 1 - Fully Responsive */}
           <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            <img
-              src="/images/csi_img1.png"
-              alt="Prof. Dr. S.S. Sane receiving Best Student Branch Award"
-              className="max-h-[400px] max-w-[600px] object-contain rounded-xl transition-transform duration-500 mx-auto"
-            />
-
-            <p className="text-sm text-gray-600 text-center font-medium mt-2">
-              Prof. Dr. S.S. Sane receiving “Best Student Branch” Award on 51th Annual Convention at Coimbatore. The seed for the Computer Society of India (CSI) was first sown in the year 1965 with a handful of IT enthusiasts who were a computer user group and felt the need to organize their activities.            </p>
+            <div className="w-full max-w-3xl mx-auto">
+              <img
+                src="/images/csi_img1.png"
+                alt="Prof. Dr. S.S. Sane receiving Best Student Branch Award"
+                className="w-full h-auto max-h-[200px] sm:max-h-[300px] md:max-h-[400px] object-contain rounded-lg sm:rounded-xl transition-transform duration-500 hover:scale-105 shadow-md"
+              />
+              <p className="text-xs sm:text-sm text-gray-600 text-center font-medium mt-2 px-2">
+                Prof. Dr. S.S. Sane receiving "Best Student Branch" Award on 51th Annual Convention at Coimbatore. The seed for the Computer Society of India (CSI) was first sown in the year 1965 with a handful of IT enthusiasts who were a computer user group and felt the need to organize their activities.
+              </p>
+            </div>
           </div>
 
-
-          {/* Image 2 */}
+          {/* Image 2 - Fully Responsive */}
           <div className="animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
-            <img
-              src="/images/csi_img2.png"
-              alt="Mr. A. V. Kolapkar receiving Longest Continuous Student Branch Counselor Award"
-              className="max-h-[400px] max-w-[600px] object-contain rounded-xl  transition-transform duration-500 mx-auto"
-            />
-            <p className="mt-2 text-sm text-gray-600 text-center font-medium">
-              Mr. A. V. Kolapkar receiving “Longest Continuous Student Branch Counselor” Award from CSI President Prof. Bipin Mehta on 5dec 2015 at CSI Golden Jubilee Annual convention at New Delhi
-            </p>
+            <div className="w-full max-w-3xl mx-auto">
+              <img
+                src="/images/csi_img2.png"
+                alt="Mr. A. V. Kolapkar receiving Longest Continuous Student Branch Counselor Award"
+                className="w-full h-auto max-h-[200px] sm:max-h-[300px] md:max-h-[400px] object-contain rounded-lg sm:rounded-xl transition-transform duration-500 hover:scale-105 shadow-md"
+              />
+              <p className="mt-2 text-xs sm:text-sm text-gray-600 text-center font-medium px-2">
+                Mr. A. V. Kolapkar receiving "Longest Continuous Student Branch Counselor" Award from CSI President Prof. Bipin Mehta on 5dec 2015 at CSI Golden Jubilee Annual convention at New Delhi
+              </p>
+            </div>
           </div>
 
-          {/* Image 3 */}
+          {/* Image 3 - Fully Responsive */}
           <div className="animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
-            <img
-              src="/images/csi_img3.png"
-              alt="Mr. Khitij Khakurdikar receiving Highest Committed Student Branch Activist Award"
-              className="max-h-[400px] max-w-[600px] object-contain rounded-xl transition-transform duration-500 mx-auto"
-            />
-
-            <p className="mt-2 text-sm text-gray-600 text-center font-medium">
-              Mr. Khitij Khakurdikar receiving “Highest Committed Student Branch Activist” Award by CSI President on 2013 at CSI Annual convention at Vishakapattanam</p>
+            <div className="w-full max-w-3xl mx-auto">
+              <img
+                src="/images/csi_img3.png"
+                alt="Mr. Khitij Khakurdikar receiving Highest Committed Student Branch Activist Award"
+                className="w-full h-auto max-h-[200px] sm:max-h-[300px] md:max-h-[400px] object-contain rounded-lg sm:rounded-xl transition-transform duration-500 hover:scale-105 shadow-md"
+              />
+              <p className="mt-2 text-xs sm:text-sm text-gray-600 text-center font-medium px-2">
+                Mr. Khitij Khakurdikar receiving "Highest Committed Student Branch Activist" Award by CSI President on 2013 at CSI Annual convention at Vishakapattanam
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-
-      <div className="mt-10 grid grid-cols-1 lg:grid-cols-5 lg:grid-rows-5 gap-4 lg:gap-6 min-h-[600px]">
+      {/* Statistics Grid - Enhanced Mobile Responsiveness */}
+      <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 lg:grid-rows-5 gap-3 sm:gap-4 lg:gap-6 min-h-[400px] sm:min-h-[500px] lg:min-h-[600px]">
 
         {/* Main CSI Logo Section */}
-        <div className="lg:col-span-3 lg:row-span-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 lg:p-12 flex flex-col items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100">
+        <div className="sm:col-span-2 lg:col-span-3 lg:row-span-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12 flex flex-col items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100">
           <div className="relative">
             <img
               src="/images/csi.png"
               alt="CSI Logo"
-              className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56 object-contain drop-shadow-lg hover:scale-105 transition-transform duration-300"
+              className="w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56 object-contain drop-shadow-lg hover:scale-105 transition-transform duration-300"
             />
-            <div className="absolute -inset-4 bg-gradient-to-r from-blue-400/20 to-blue-600/20 rounded-full blur-xl -z-10"></div>
+            <div className="absolute -inset-2 sm:-inset-4 bg-gradient-to-r from-blue-400/20 to-blue-600/20 rounded-full blur-xl -z-10"></div>
           </div>
-          <h3 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-800 mt-6 text-center">
+          <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-800 mt-3 sm:mt-6 text-center">
             Computer Society of India
           </h3>
-          <p className="text-blue-600 text-center mt-2 text-sm lg:text-base">
+          <p className="text-blue-600 text-center mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
             KKWIEER Chapter
           </p>
         </div>
 
         {/* Events Organized */}
-        <div className="lg:row-span-2 lg:col-start-1 lg:row-start-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 lg:p-8 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-          <Calendar className="w-8 h-8 lg:w-12 lg:h-12 mb-3 lg:mb-4" />
-          <div className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">30+</div>
-          <div className="text-sm lg:text-base font-medium text-center">Events Organized</div>
+        <div className="lg:row-span-2 lg:col-start-1 lg:row-start-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+          <Calendar className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 mb-2 sm:mb-3 lg:mb-4" />
+          <div className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-1 sm:mb-2">30+</div>
+          <div className="text-xs sm:text-sm lg:text-base font-medium text-center">Events Organized</div>
           <div className="text-xs lg:text-sm text-blue-100 text-center mt-1">This Year</div>
         </div>
 
         {/* Student Branches */}
-        <div className="lg:row-span-2 lg:col-start-2 lg:row-start-4 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl p-6 lg:p-8 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-          <Network className="w-8 h-8 lg:w-12 lg:h-12 mb-3 lg:mb-4" />
-          <div className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">72</div>
-          <div className="text-sm lg:text-base font-medium text-center">Student Branches</div>
+        <div className="lg:row-span-2 lg:col-start-2 lg:row-start-4 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+          <Network className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 mb-2 sm:mb-3 lg:mb-4" />
+          <div className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-1 sm:mb-2">72</div>
+          <div className="text-xs sm:text-sm lg:text-base font-medium text-center">Student Branches</div>
           <div className="text-xs lg:text-sm text-blue-100 text-center mt-1">Across Region</div>
         </div>
 
         {/* Leadership Card */}
-        <div className="lg:col-span-3 lg:col-start-3 lg:row-start-4 bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl p-6 lg:p-8 flex items-center shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100">
-          <div className="bg-blue-500 rounded-full p-3 lg:p-4 mr-4 lg:mr-6 flex-shrink-0">
-            <Award className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
+        <div className="sm:col-span-2 lg:col-span-3 lg:col-start-3 lg:row-start-4 bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex items-center shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100">
+          <div className="bg-blue-500 rounded-full p-2 sm:p-3 lg:p-4 mr-3 sm:mr-4 lg:mr-6 flex-shrink-0">
+            <Award className="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" />
           </div>
           <div>
-            <h4 className="text-lg lg:text-xl xl:text-2xl font-bold text-blue-800 mb-2">Leadership</h4>
-            <p className="text-blue-700 text-sm lg:text-base leading-relaxed">
+            <h4 className="text-sm sm:text-lg lg:text-xl xl:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">Leadership</h4>
+            <p className="text-blue-700 text-xs sm:text-sm lg:text-base leading-relaxed">
               Guiding and inspiring others toward a common goal through innovation and excellence.
             </p>
           </div>
         </div>
 
         {/* Networking Card */}
-        <div className="lg:col-span-3 lg:col-start-3 lg:row-start-5 bg-gradient-to-r from-blue-50 to-slate-50 rounded-2xl p-6 lg:p-8 flex items-center shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100">
-          <div className="bg-blue-600 rounded-full p-3 lg:p-4 mr-4 lg:mr-6 flex-shrink-0">
-            <Network className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
+        <div className="sm:col-span-2 lg:col-span-3 lg:col-start-3 lg:row-start-5 bg-gradient-to-r from-blue-50 to-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex items-center shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100">
+          <div className="bg-blue-600 rounded-full p-2 sm:p-3 lg:p-4 mr-3 sm:mr-4 lg:mr-6 flex-shrink-0">
+            <Network className="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" />
           </div>
           <div>
-            <h4 className="text-lg lg:text-xl xl:text-2xl font-bold text-blue-800 mb-2">Networking</h4>
-            <p className="text-blue-700 text-sm lg:text-base leading-relaxed">
+            <h4 className="text-sm sm:text-lg lg:text-xl xl:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">Networking</h4>
+            <p className="text-blue-700 text-xs sm:text-sm lg:text-base leading-relaxed">
               Building valuable connections and collaborations within the tech community.
             </p>
           </div>
         </div>
 
         {/* Team Members */}
-        <div className="lg:col-span-2 lg:row-span-3 lg:col-start-4 lg:row-start-1 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 lg:p-8 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-          <Users className="w-12 h-12 lg:w-16 lg:h-16 mb-4 lg:mb-6" />
+        <div className="sm:col-span-2 lg:col-span-2 lg:row-span-3 lg:col-start-4 lg:row-start-1 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+          <Users className="w-8 h-8 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mb-3 sm:mb-4 lg:mb-6" />
           <div className="text-center">
-            <div className="text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 lg:mb-4">26</div>
-            <div className="text-lg lg:text-xl font-semibold mb-2">Strong & Committed</div>
-            <div className="text-sm lg:text-base text-blue-100">Team Members</div>
+            <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-3 lg:mb-4">26</div>
+            <div className="text-sm sm:text-lg lg:text-xl font-semibold mb-1 sm:mb-2">Strong & Committed</div>
+            <div className="text-xs sm:text-sm lg:text-base text-blue-100">Team Members</div>
           </div>
-          <div className="mt-4 lg:mt-6 w-full">
-            <div className="bg-white/20 rounded-full h-2 overflow-hidden">
-              <div className="bg-white h-full w-4/5 rounded-full animate-pulse"></div>
-            </div>
-            <p className="text-xs lg:text-sm text-blue-100 text-center mt-2">Dedication Level</p>
-          </div>
+          
         </div>
 
       </div>
-
 
       {/* Custom CSS for animations */}
       <style>{`
