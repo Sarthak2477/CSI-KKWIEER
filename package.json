@@ -20,8 +20,14 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.30.1",
+<<<<<<< HEAD
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
+=======
+    "swiper": "^11.2.10",
+    "tailwind-merge": "2.5.4",
+    "tailwindcss-animate": "1.0.7"
+>>>>>>> df528f352769c8b06fe32b9c4d6a9c05b7795827
   },
   "devDependencies": {
     "@types/node": "^24.3.1",
