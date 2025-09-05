@@ -25,6 +25,7 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Gallery } from "./sections/Gallery/Gallery";
 import { Navbar } from "../../components/ui/navbar";
+
 export const Home = (): JSX.Element => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -62,7 +63,7 @@ export const Home = (): JSX.Element => {
   };
 
   return (
-    <div className="bg-[#f5f7f7] flex flex-col items-center w-full min-h-screen bg-cover bg-center bg-no-repeat">
+    <div className="flex flex-col items-center w-full min-h-screen bg-cover bg-center bg-no-repeat">
       <div className="overflow-hidden w-full relative">
         <div className="relative w-full">
         <Navbar/>
