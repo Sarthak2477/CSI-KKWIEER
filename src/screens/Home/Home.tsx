@@ -65,12 +65,45 @@ export const Home = (): JSX.Element => {
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
-      {/* DarkVeil Background */}
-      <div className="absolute inset-0 -z-10">
-      
-      </div>
+      {/* Tech-inspired SVG Background */}
+      <div className="fixed inset-0 w-full h-full z-0">
+  <svg
+    id="visual"
+    viewBox="0 0 540 960"
+    preserveAspectRatio="xMidYMid slice"
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-full h-full"
+  >
+    <rect x="0" y="0" width="540" height="960" fill="#ffffff"></rect>
+    <defs>
+      <linearGradient id="grad1_0" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="30%" stopColor="#ffffff" stopOpacity="1"></stop>
+        <stop offset="70%" stopColor="#ffffff" stopOpacity="1"></stop>
+      </linearGradient>
+    </defs>
+    <defs>
+      <linearGradient id="grad2_0" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="30%" stopColor="#ffffff" stopOpacity="1"></stop>
+        <stop offset="70%" stopColor="#ffffff" stopOpacity="1"></stop>
+      </linearGradient>
+    </defs>
+    <g transform="translate(540, 960)">
+      <path
+        d="M-405 0C-400.3 -53.5 -395.7 -107 -374.2 -155C-352.7 -203 -314.3 -245.4 -271.5 -271.5C-228.7 -297.7 -181.5 -307.5 -135.5 -327.1C-89.5 -346.6 -44.7 -375.8 0 -405L0 0Z"
+        fill="#004dc1"
+      ></path>
+    </g>
+    <g transform="translate(0, 0)">
+      <path
+        d="M405 0C361.1 36.1 317.3 72.3 304.9 126.3C292.5 180.3 311.5 252.1 286.4 286.4C261.3 320.6 192.1 317.2 137 330.7C81.9 344.3 41 374.6 0 405L0 0Z"
+        fill="#004dc1"
+      ></path>
+    </g>
+  </svg>
+</div>
 
-      <div className="flex flex-col items-center w-full min-h-screen bg-cover bg-center bg-no-repeat">
+
+      <div className="flex flex-col items-center w-full min-h-screen bg-transparent relative z-10">
         <div className="overflow-hidden w-full relative">
           <div className="relative w-full">
             <Navbar />
@@ -121,7 +154,6 @@ export const Home = (): JSX.Element => {
               <CommitteeMembersCarousel />
 
               <EventsCarousel />
-
 
               <Gallery />
 
