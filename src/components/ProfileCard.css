@@ -1,0 +1,304 @@
+:root {
+  --card-border: #004aad;
+  --top-section: #37a4e2;
+  --bottom-section: #e8f7ff;
+  --black-text: #000000;
+  --gray-text: #555555;
+  --linkedin-blue: #0a66c2;
+  --white: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: rgba(0, 0, 0, 0.08);
+}
+
+.pc-card-wrapper {
+  position: relative;
+  width: 320px;
+  height: 480px;
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  color: var(--black-text);
+  border: 5px solid var(--card-border);
+  box-shadow: 2px 8px 24px rgba(0, 0, 0, 0.15);
+  background: var(--bottom-section);
+}
+
+.pc-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Top curved section */
+.pc-top-section {
+  width: 100%;
+  height: 52%;
+  background: var(--top-section);
+  border-radius: 0 0 40px 40px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 30px;
+}
+
+/* Profile Image Section */
+.pc-profile-section {
+  position: absolute;
+  bottom: -70px;
+  z-index: 2;
+}
+
+.pc-main-avatar {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: var(--white);
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--white);
+}
+
+.pc-main-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Bottom content section */
+.pc-bottom-section {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 20px 20px 20px;
+  position: relative;
+}
+
+/* Name and Title Section */
+.pc-name-section {
+  text-align: center;
+  margin-bottom: 40px;
+  margin-top: 10px;
+}
+
+.pc-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--black-text);
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.pc-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--top-section);
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* LinkedIn Glass Box */
+.pc-glass-box {
+  width: calc(100% - 5px);
+  margin-top: auto;
+}
+
+.pc-glass-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: px;
+  box-shadow: 0 2px 8px var(--glass-shadow);
+}
+
+.pc-mini-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--white);
+}
+
+.pc-mini-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pc-user-text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 2px;
+}
+
+.pc-user-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--black-text);
+  line-height: 1.2;
+}
+
+.pc-user-year {
+  font-size: 12px;
+  color: var(--gray-text);
+  line-height: 1.2;
+}
+
+.pc-linkedin-logo {
+  width: 32px;
+  height: 32px;
+  color: var(--linkedin-blue);
+  opacity: 0.7;
+  flex-shrink: 0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pc-linkedin-logo:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 420px) {
+  .pc-card-wrapper {
+    width: 100%;
+    max-width: 300px;
+    height: 550px;
+  }
+
+  .pc-top-section {
+    height: 30%;
+  }
+
+  .pc-profile-section {
+    bottom: -180px;
+  }
+
+  .pc-main-avatar {
+    width: 360px;
+    height: 360px;
+    border: 5px solid var(--white);
+  }
+
+  .pc-bottom-section {
+    padding: 200px 15px 15px 15px;
+  }
+
+  .pc-name {
+    font-size: 24px;
+  }
+
+  .pc-title {
+    font-size: 16px;
+  }
+
+  .pc-glass-content {
+    padding: 14px 18px;
+    gap: 10px;
+  }
+
+  .pc-mini-avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .pc-user-name {
+    font-size: 14px;
+  }
+
+  .pc-user-year {
+    font-size: 11px;
+  }
+
+  .pc-linkedin-logo {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 320px) {
+  .pc-card-wrapper {
+    max-width: 280px;
+    height: 520px;
+  }
+
+  .pc-top-section {
+    height: 28%;
+  }
+
+  .pc-profile-section {
+    bottom: -150px;
+  }
+
+  .pc-main-avatar {
+    width: 300px;
+    height: 300px;
+    border: 4px solid var(--white);
+  }
+
+  .pc-bottom-section {
+    padding: 170px 12px 12px 12px;
+  }
+
+  .pc-name {
+    font-size: 22px;
+  }
+
+  .pc-title {
+    font-size: 15px;
+  }
+
+  .pc-glass-content {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .pc-mini-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .pc-user-name {
+    font-size: 13px;
+  }
+
+  .pc-user-year {
+    font-size: 10px;
+  }
+
+  .pc-linkedin-logo {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+}
