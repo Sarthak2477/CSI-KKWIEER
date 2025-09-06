@@ -14,6 +14,7 @@ type Event = {
   title: string;
   description: string;
   image: string;
+  status: "upcoming" | "ongoing" | "past";
 };
 
 const DESCRIPTION_LIMIT = 120;
@@ -25,6 +26,7 @@ const events: Event[] = [
     description:
       "Installation for the new board members of the CSI KKWIEER for academic year 2025-26. Every ending writes a new beginning, together we carry the legacy ahead",
     image: "/images/installation.jpg",
+    status: "past",
   },
   {
     id: 2,
@@ -32,6 +34,7 @@ const events: Event[] = [
     description:
       "The Department of Computer Engineering at KKWIEER hosted the Google Cloud Arcade Facilitator Program 2025 – Cohort 2 Guidance Sessions, aimed at introducing students to cloud learning opportunities, gamified upskilling, and community building.",
     image: "/images/cohort.jpg",
+    status: "ongoing",
   },
   {
     id: 3,
@@ -39,14 +42,16 @@ const events: Event[] = [
     description:
       "Campus to Corporate was a powerful-packed session filled with industry trends, career insights, and practical tips to help students transition from academic life to the corporate world with confidence.",
     image: "/images/c2c.jpg",
+    status: "upcoming",
   },
   {
     id: 4,
     title: "E-Yantran 2024-25",
     description:
-      "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative . driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
+      "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative, driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
     image: "/images/eyantran.jpg",
-  }
+    status: "past",
+  },
 ];
 
 export const EventsCarousel = (): JSX.Element => {
@@ -83,9 +88,9 @@ export const EventsCarousel = (): JSX.Element => {
       >
         {events.map((event) => (
           <SwiperSlide key={event.id}>
-            <Card className="p-6 shadow-xl rounded-2xl bg-white/80 backdrop-blur-lg border border-white-200 h-[500px] flex flex-col">
-              {/* Fixed Image with constant 1:2 horizontal rectangle ratio */}
-              <div className="w-full h-[180px] md:h-[200px] lg:h-[220px] overflow-hidden rounded-xl shadow-md">
+            <Card className="p-6 shadow-xl rounded-2xl bg-white/80 backdrop-blur-lg border border-white-200 h-[520px] flex flex-col">
+              {/* Event Image */}
+              <div className="relative w-full h-[180px] md:h-[200px] lg:h-[220px] overflow-hidden rounded-xl shadow-md">
                 <img
                   src={event.image}
                   alt={event.title}
@@ -93,14 +98,30 @@ export const EventsCarousel = (): JSX.Element => {
                 />
               </div>
 
+              {/* Status Badge moved here */}
+              <div className="mt-3">
+                <span
+                  className={`px-3 py-1 text-xs font-semibold rounded-md shadow-md tracking-wide
+                    ${
+                      event.status === "upcoming"
+                        ? "bg-blue-100 text-blue-600"
+                        : event.status === "ongoing"
+                        ? "bg-yellow-400 text-black"
+                        : "bg-gray-800 text-white"
+                    }`}
+                >
+                  {event.status.toUpperCase()}
+                </span>
+              </div>
+
               {/* Content */}
-              <div className="flex flex-col flex-1 mt-4">
+              <div className="flex flex-col flex-1 mt-3">
                 <h2 className="text-2xl font-semibold text-gray-800">{event.title}</h2>
                 <p className="mt-2 text-gray-600 leading-relaxed flex-1">
                   {truncateDescription(event.description)}
                 </p>
                 <Button
-                  className="mt-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl shadow hover:opacity-90 transition"
+                  className="mt-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow hover:opacity-90 transition"
                   onClick={() => navigate(`/events/${event.id}`)}
                 >
                   Learn More
@@ -112,18 +133,16 @@ export const EventsCarousel = (): JSX.Element => {
       </Swiper>
 
       {/* View All Button */}
-      {/* View All Button */}
-      {/* View All Button */}
       <div className="flex justify-center mt-6">
         <button
           onClick={() => navigate("/events")}
           className="
             relative
             px-8 py-3
-            bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500
+            bg-gradient-to-b from-blue-600 via-blue-500 to-blue-600
             text-white
             font-semibold
-            rounded-md
+            rounded-lg
             shadow-lg
             overflow-hidden
             group
@@ -134,7 +153,7 @@ export const EventsCarousel = (): JSX.Element => {
           "
         >
           {/* Animated text overlay */}
-          <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></span>
+          <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-400 via-blue-400 to-blue-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></span>
 
           {/* Moving background stripe on hover */}
           <span className="absolute -left-8 top-0 w-24 h-full bg-white/20 rounded-full transform rotate-45 translate-x-0 group-hover:translate-x-[200%] transition-transform duration-700"></span>
@@ -145,8 +164,6 @@ export const EventsCarousel = (): JSX.Element => {
           </span>
         </button>
       </div>
-
-
     </section>
   );
 };
