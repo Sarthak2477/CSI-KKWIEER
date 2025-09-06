@@ -23,6 +23,7 @@ export const AboutUs = () => {
 
   return (
     <section className="py-4 sm:py-6 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
       <h2 className="relative inline-block text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold gradient-text mb-6 sm:mb-8 animate-fade-in-up">
         About Us
         <span className="absolute left-0 -bottom-2 w-full h-[2px] sm:h-[3px] bg-gradient-to-r from-blue-400 via-blue-500 to-blue-700 rounded-full"></span>

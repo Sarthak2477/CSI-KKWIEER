@@ -69,8 +69,8 @@ export const Home = (): JSX.Element => {
 
 
       {/* Background SVG Blob at Top */}
-      <div className="absolute top-0 left-0 w-full -z-10">
-        <svg
+      <div className="absolute top-0 left-0 w-full h-full -z-10">
+      <svg
           viewBox="0 0 540 960"
           preserveAspectRatio="xMidYMid slice"
           xmlns="http://www.w3.org/2000/svg"
@@ -91,6 +91,8 @@ export const Home = (): JSX.Element => {
           </g>
         </svg>
       </div>
+
+
 
       <div className="flex flex-col items-center w-full min-h-screen bg-transparent relative z-10">
         <div className="overflow-hidden w-full relative">

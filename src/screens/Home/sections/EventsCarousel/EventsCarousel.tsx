@@ -58,7 +58,7 @@ export const EventsCarousel = (): JSX.Element => {
   };
 
   return (
-    <section className="relative w-full py-20 overflow-hidden">
+    <section className="relative w-full py-20 overflow-hidden bg-transparent">
       {/* Section heading */}
       <div className="relative z-10 text-center mb-12">
         <h1 className="text-4xl font-bold text-blue-600">Think. Build. Compete</h1>
