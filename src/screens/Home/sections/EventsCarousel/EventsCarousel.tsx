@@ -63,11 +63,15 @@ export const EventsCarousel = (): JSX.Element => {
   };
 
   return (
-    <section className="relative w-full py-20 overflow-hidden bg-transparent">
+    <section className="relative w-full py-10 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-12 bg-transparent">
       {/* Section heading */}
-      <div className="relative z-10 text-center mb-12">
-        <h1 className="text-4xl font-bold text-blue-600">Think. Build. Compete</h1>
-        <p className="text-lg text-black-800 mt-2">Recent Events</p>
+      <div className="relative z-10 text-center mb-10 sm:mb-12">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-600">
+          Think. Build. Compete
+        </h1>
+        <p className="text-base sm:text-lg text-gray-800 mt-2">
+          Recent Events
+        </p>
       </div>
 
       {/* Swiper Carousel */}
@@ -78,19 +82,20 @@ export const EventsCarousel = (): JSX.Element => {
         autoplay={{ delay: 0, disableOnInteraction: false }}
         speed={3000}
         loop={true}
-        spaceBetween={30}
+        spaceBetween={16}
         slidesPerView={1}
         breakpoints={{
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
+          640: { slidesPerView: 1, spaceBetween: 20 },
+          768: { slidesPerView: 2, spaceBetween: 24 },
+          1024: { slidesPerView: 3, spaceBetween: 30 },
         }}
-        className="max-w-6xl px-4 mb-8"
+        className="max-w-7xl mx-auto px-2 sm:px-4 mb-8"
       >
         {events.map((event) => (
           <SwiperSlide key={event.id}>
-            <Card className="p-6 shadow-xl rounded-2xl bg-white/80 backdrop-blur-lg border border-white-200 h-[520px] flex flex-col">
+            <Card className="p-4 sm:p-6 shadow-xl rounded-2xl bg-white/80 backdrop-blur-lg border border-white/200 h-[500px] sm:h-[520px] flex flex-col">
               {/* Event Image */}
-              <div className="relative w-full h-[180px] md:h-[200px] lg:h-[220px] overflow-hidden rounded-xl shadow-md">
+              <div className="relative w-full h-[160px] sm:h-[180px] lg:h-[220px] overflow-hidden rounded-xl shadow-md">
                 <img
                   src={event.image}
                   alt={event.title}
@@ -98,10 +103,10 @@ export const EventsCarousel = (): JSX.Element => {
                 />
               </div>
 
-              {/* Status Badge moved here */}
+              {/* Status Badge */}
               <div className="mt-3">
                 <span
-                  className={`px-3 py-1 text-xs font-semibold rounded-md shadow-md tracking-wide
+                  className={`px-3 py-1 text-xs sm:text-sm font-semibold rounded-md shadow-md tracking-wide
                     ${
                       event.status === "upcoming"
                         ? "bg-blue-100 text-blue-600"
@@ -116,12 +121,14 @@ export const EventsCarousel = (): JSX.Element => {
 
               {/* Content */}
               <div className="flex flex-col flex-1 mt-3">
-                <h2 className="text-2xl font-semibold text-gray-800">{event.title}</h2>
-                <p className="mt-2 text-gray-600 leading-relaxed flex-1">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800">
+                  {event.title}
+                </h2>
+                <p className="mt-2 text-sm sm:text-base text-gray-600 leading-relaxed flex-1">
                   {truncateDescription(event.description)}
                 </p>
                 <Button
-                  className="mt-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow hover:opacity-90 transition"
+                  className="mt-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow hover:opacity-90 transition text-sm sm:text-base px-4 sm:px-6 py-2"
                   onClick={() => navigate(`/events/${event.id}`)}
                 >
                   Learn More
@@ -138,7 +145,7 @@ export const EventsCarousel = (): JSX.Element => {
           onClick={() => navigate("/events")}
           className="
             relative
-            px-8 py-3
+            px-6 sm:px-8 py-2 sm:py-3
             bg-gradient-to-b from-blue-600 via-blue-500 to-blue-600
             text-white
             font-semibold
@@ -159,7 +166,7 @@ export const EventsCarousel = (): JSX.Element => {
           <span className="absolute -left-8 top-0 w-24 h-full bg-white/20 rounded-full transform rotate-45 translate-x-0 group-hover:translate-x-[200%] transition-transform duration-700"></span>
 
           {/* Button text */}
-          <span className="relative z-10 tracking-wider text-lg group-hover:scale-105 transition-transform duration-300">
+          <span className="relative z-10 tracking-wider text-base sm:text-lg group-hover:scale-105 transition-transform duration-300">
             View All
           </span>
         </button>
