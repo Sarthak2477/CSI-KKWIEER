@@ -159,7 +159,7 @@ export const EventsCarousel = (): JSX.Element => {
             hover:scale-105
           "
         >
-          {/* Animated text overlay */}
+          
           <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-400 via-blue-400 to-blue-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></span>
 
           {/* Moving background stripe on hover */}
