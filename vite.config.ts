@@ -10,11 +10,7 @@ export default defineConfig({
   base: "./",
   resolve: {
     alias: {
-<<<<<<< HEAD
       "@": path.resolve(__dirname, "./src"), // 👈 alias fix
-=======
-      "@": path.resolve(__dirname, "./src"),
->>>>>>> 1c2d65953a913f858f294e464453fc4b2cb307da
     },
   },
   css: {

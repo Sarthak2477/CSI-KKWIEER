@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileCard from "../../../../components/ProfileCard";
@@ -8,7 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../../../../components/ui/carousel";
-
+import UserCard from "@/components/UserCard";
 // Define the committee member interface
 interface CommitteeMember {
   id: string;
@@ -41,146 +42,6 @@ const committeeMembers: CommitteeMember[] = [
     linkedin:
       "https://www.linkedin.com/in/ankit-khandelwal-002474295?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
-  {
-    id: "2",
-    name: "Mansi Jadhav",
-    position: "Vice-President",
-    year: "2025",
-    image: "/images/Mansi.jpg",
-    linkedin: "https://www.linkedin.com/in/manasi-jadhav-3ba44228b/",
-  },
-  {
-    id: "3",
-    name: "Shweta Yeola",
-    position: "Secretary",
-    year: "2025",
-    image: "/images/Shweta.jpg",
-    linkedin: "http://www.linkedin.com/in/shweta-yeola-3a8075296/din:",
-  },
-  {
-    id: "4",
-    name: "Meghraj Bhavsar",
-    position: "Joint-Secretary",
-    year: "2025",
-    image: "/images/Meghraj.jpg",
-    linkedin:
-      "https://www.linkedin.com/in/meghraj-bhavsar-3449ba289?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  {
-    id: "5",
-    name: "Atharva Jadhav",
-    position: "Treasurer",
-    year: "2025",
-    image: "/images/Atharva.jpg",
-    linkedin:
-      "https://www.linkedin.com/in/atharva-jadhav-73a997295?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  {
-    id: "6",
-    name: "Sadique Khatib",
-    position: "Joint Treasurer",
-    year: "2025",
-    image: "/images/Sadique.jpg",
-    linkedin:
-      "https://www.linkedin.com/in/sadique-khatib-4175342a9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  // Add sample data for other years to test filtering
-  {
-    id: "7",
-    name: "Kundan Suryawanshi",
-    position: "President",
-    year: "2024",
-    image: "/images/john.jpg",
-    linkedin: "",
-  },
-  {
-    id: "8",
-    name: "Aryan Deshmukh",
-    position: "Vice-President",
-    year: "2024",
-    image: "/image/Aryan.png",
-    linkedin: "",
-  },
-  {
-    id: "9",
-    name: "Khushi Bedmutha",
-    position: "Secretary",
-    year: "2024",
-    image: "/images/Shweta.jpg",
-    linkedin: "",
-  },
-  {
-    id: "10",
-    name: "Harish Lukare",
-    position: "Joint-Secretary",
-    year: "2024",
-    image: "/images/Meghraj.jpg",
-    linkedin: "",
-  },
-  {
-    id: "11",
-    name: "Soham Penshanwar",
-    position: "Treasurer",
-    year: "2024",
-    image: "/images/Atharva.jpg",
-    linkedin: "",
-  },
-  {
-    id: "12",
-    name: "Abhishek Malajangam",
-    position: "Joint Treasurer",
-    year: "2024",
-    image: "/images/Sadique.jpg",
-    linkedin: "",
-  },
-  {
-    id: "13",
-    name: "Aditi Avhad",
-    position: "President",
-    year: "2023",
-    image: "/images/mike.jpg",
-    linkedin: "",
-  },
-  {
-    id: "14",
-    name: "Mrunal Bagal",
-    position: "Vice-President",
-    year: "2023",
-    image: "/images/Sadique.jpg",
-    linkedin: "",
-  },
-  {
-    id: "15",
-    name: "Chinmay Kotkar",
-    position: "Secretary",
-    year: "2023",
-    image: "/images/Shweta.jpg",
-    linkedin: "",
-  },
-  {
-    id: "16",
-    name: "Aditya Date",
-    position: "Joint-Secretary",
-    year: "2023",
-    image: "/images/Meghraj.jpg",
-    linkedin: "",
-  },
-  {
-    id: "17",
-    name: "Karan Patel",
-    position: "Treasurer",
-    year: "2023",
-    image: "/images/Atharva.jpg",
-    linkedin: "",
-  },
-  {
-    id: "18",
-    name: "Om",
-    position: "Joint Treasurer",
-    year: "2023",
-    image: "/images/Sadique.jpg",
-    linkedin: "",
-  },
 ];
 
 // Custom Button Component
@@ -197,30 +58,30 @@ const CustomButton: React.FC<{
   className = "",
   onClick,
 }) => {
-  const baseClasses =
-    "font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center";
+    const baseClasses =
+      "font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center";
 
-  const variantClasses = {
-    default: "bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500",
-    outline:
-      "border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 bg-white",
+    const variantClasses = {
+      default: "bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500",
+      outline:
+        "border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 bg-white",
+    };
+
+    const sizeClasses = {
+      sm: "px-4 py-2 text-sm",
+      md: "px-6 py-2",
+      lg: "px-8 py-3 text-lg",
+    };
+
+    return (
+      <button
+        className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+        onClick={onClick}
+      >
+        {children}
+      </button>
+    );
   };
-
-  const sizeClasses = {
-    sm: "px-4 py-2 text-sm",
-    md: "px-6 py-2",
-    lg: "px-8 py-3 text-lg",
-  };
-
-  return (
-    <button
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-};
 
 // Custom Carousel Component using shadcn/ui Carousel
 const CustomCarousel: React.FC<{
@@ -228,19 +89,25 @@ const CustomCarousel: React.FC<{
   itemsData: CommitteeMember[];
 }> = ({ children }) => {
   return (
-    <Carousel className="w-full max-w-7xl">
+    <Carousel
+      className="w-full max-w-7xl mx-auto"
+      opts={{
+        align: "start",
+        loop: true,
+      }}
+    >
       <CarouselContent className="-ml-2 md:-ml-4">
         {React.Children.map(children, (child, index) => (
           <CarouselItem
             key={index}
-            className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3"
+            className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
           >
-            <div className="p-1">{child}</div>
+            <div className="p-1 h-full">{child}</div>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="hidden sm:flex" />
+      <CarouselNext className="hidden sm:flex" />
     </Carousel>
   );
 };
@@ -274,21 +141,22 @@ const CommitteeMembersCarousel: React.FC = () => {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Lets. Make. It. Happen
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            Let's. Make. It. Happen
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-lg sm:text-xl text-gray-600 mb-8">
             The strength behind CSI's success
           </p>
 
           {/* Year Tabs */}
-          <div className="flex justify-center gap-2 mb-8">
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
             {["2025", "2024", "2023"].map((year) => (
               <CustomButton
                 key={year}
                 variant={year === selectedYear ? "default" : "outline"}
                 size="md"
                 onClick={() => setSelectedYear(year)}
+                className="min-w-[80px]"
               >
                 {year}
               </CustomButton>
@@ -301,19 +169,21 @@ const CommitteeMembersCarousel: React.FC = () => {
           <div className="relative mb-12">
             <CustomCarousel itemsData={sortedMembers}>
               {sortedMembers.slice(0, 6).map((member) => (
-                <ProfileCard
-                  key={member.id}
-                  name={member.name}
-                  title={member.position}
-                  handle={member.year}
-                  status="Active"
-                  contactText="Contact Me"
-                  avatarUrl={member.image}
-                  miniAvatarUrl={member.image}
-                  linkedinUrl={member.linkedin}
-                  showUserInfo={true}
-                  onContactClick={() => console.log(`Contact ${member.name}`)}
-                />
+                <div key={member.id} className="w-full h-full min-h-[400px] flex">
+                  <ProfileCard
+                    name={member.name}
+                    title={member.position}
+                    handle={member.year}
+                    status="Active"
+                    contactText="Contact Me"
+                    avatarUrl={member.image}
+                    miniAvatarUrl={member.image}
+                    linkedinUrl={member.linkedin}
+                    showUserInfo={true}
+                    onContactClick={() => console.log(`Contact ${member.name}`)}
+                  />
+                 
+                </div>
               ))}
             </CustomCarousel>
           </div>
