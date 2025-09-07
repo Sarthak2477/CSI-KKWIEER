@@ -132,7 +132,7 @@ const Events = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-800 via-blue-700 to-blue-800 opacity-100"></div>
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative text-white py-20 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 mt-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 mt-20 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
             CSI Events
           </h1>
           <p className="text-xl md:text-2xl opacity-90 font-light mb-8">
