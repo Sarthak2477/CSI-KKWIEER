@@ -23,6 +23,7 @@ export const AboutUs = () => {
 
   return (
     <section className="py-4 sm:py-6 md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
       <h2 className="relative inline-block text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold gradient-text mb-6 sm:mb-8 animate-fade-in-up">
         About Us
         <span className="absolute left-0 -bottom-2 w-full h-[2px] sm:h-[3px] bg-gradient-to-r from-blue-400 via-blue-500 to-blue-700 rounded-full"></span>
@@ -43,8 +44,7 @@ export const AboutUs = () => {
           className="group relative inline-flex items-center gap-2 px-4 sm:px-5 md:px-7 py-2 sm:py-3 
                bg-white text-blue-600 font-medium rounded-full border border-blue-600
                transition-all duration-300 ease-out
-               hover:bg-blue-600 hover:text-white
-               focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
+               hover:bg-blue-600 hover:text-white"
         >
           <span className="text-sm sm:text-base md:text-lg">
             {expanded ? "Read Less" : "Read More"}
@@ -127,154 +127,144 @@ export const AboutUs = () => {
               </p>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Activity Reports Section with Dropdown */}
-      <div className="mt-8 sm:mt-12 md:mt-16">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
-
-          <button
-            onClick={() => setActivityReportsExpanded(!activityReportsExpanded)}
-            className="group relative inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 
-                  bg-white text-blue-600 font-medium rounded-full border border-blue-600
-                  transition-all duration-300 ease-out
-                  hover:bg-blue-600 hover:text-white
-                  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1
-                  self-center sm:self-auto min-w-[220px] justify-center"
-          >
-            <FileText className="w-4 h-4" />
-            <span className="text-sm sm:text-base">
-              {activityReportsExpanded ? "Hide Activity Reports" : "View Activity Reports"}
-            </span>
-            <div className="transition-transform duration-300 ease-out group-hover:translate-y-[-1px]">
-              {activityReportsExpanded ? (
-                <ChevronUp className="w-4 h-4" />
-              ) : (
-                <ChevronDown className="w-4 h-4" />
-              )}
-            </div>
-          </button>
-        </div>
-
-        {/* Activity Reports Grid with Animation */}
-        <div
-          className={`overflow-hidden transition-all duration-700 ease-in-out ${activityReportsExpanded
-            ? "max-h-[2000px] opacity-100"
-            : "max-h-0 opacity-0"
-            }`}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pt-4">
-            {activityReports.map((report, index) => (
-              <div
-                key={report.year}
-                className="group bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
+          {/* Activity Reports Section with Dropdown */}
+          <div className="mt-8 sm:mt-12 md:mt-16">
+            <div className="flex justify-center mb-6 sm:mb-8">
+              <button
+                onClick={() => setActivityReportsExpanded(!activityReportsExpanded)}
+                className="group relative inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 
+                bg-white text-blue-600 font-medium rounded-full 
+                transition-all duration-300 ease-out
+                focus:outline-none 
+                min-w-[220px] justify-center"
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="bg-blue-500 rounded-full p-2 sm:p-3">
-                      <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="text-base sm:text-lg font-semibold text-gray-800">
-                        Activity Report
-                      </h4>
-                      <p className="text-xs sm:text-sm text-gray-600">{report.year}</p>
-                    </div>
-                  </div>
+                <FileText className="w-4 h-4" />
+                <span className="text-sm sm:text-base">
+                  {activityReportsExpanded ? "Hide Activity Reports" : "View Activity Reports"}
+                </span>
+                <div className="transition-transform duration-300 ease-out group-hover:translate-y-[-1px]">
+                  {activityReportsExpanded ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
                 </div>
-
-                <a
-                  href={report.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center w-full justify-center px-3 sm:px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200 font-medium text-sm sm:text-base"
-                >
-                  <FileText className="w-4 h-4 mr-2" />
-                  View Report
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* CSI Committee Lists Section with Dropdown */}
-      <div className="mt-8 sm:mt-12 md:mt-16">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
-
-          <button
-            onClick={() => setCommitteeListsExpanded(!committeeListsExpanded)}
-            className="group relative inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 
-       bg-white text-blue-600 font-medium rounded-full border border-blue-600
-       transition-all duration-300 ease-out
-       hover:bg-blue-600 hover:text-white
-       focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1
-       self-center sm:self-auto min-w-[220px] justify-center"
-          >
-            <Users className="w-4 h-4" />
-            <span className="text-sm sm:text-base">
-              {committeeListsExpanded ? "Hide Lists" : "View Lists"}
-            </span>
-            <div className="transition-transform duration-300 ease-out group-hover:translate-y-[-1px]">
-              {committeeListsExpanded ? (
-                <ChevronUp className="w-4 h-4" />
-              ) : (
-                <ChevronDown className="w-4 h-4" />
-              )}
+         <span className="absolute left-0 -bottom-2 w-full h-[2px] sm:h-[3px] bg-gradient-to-r from-blue-400 via-blue-500 to-blue-700 rounded-full"></span>
+              </button>
             </div>
-          </button>
-        </div>
 
-        {/* Committee Lists Grid with Animation */}
-        <div
-          className={`overflow-hidden transition-all duration-700 ease-in-out ${committeeListsExpanded
-            ? "max-h-[2000px] opacity-100"
-            : "max-h-0 opacity-0"
-            }`}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pt-4">
-            {committeeData.map((committee, index) => (
-              <div
-                key={committee.year}
-                className="group bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="bg-blue-500 rounded-full p-2 sm:p-3">
-                      <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            {/* Activity Reports Grid with Animation */}
+            <div
+              className={`overflow-hidden transition-all duration-700 ease-in-out ${activityReportsExpanded
+                ? "max-h-[2000px] opacity-100"
+                : "max-h-0 opacity-0"
+                }`}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pt-4">
+                {activityReports.map((report, index) => (
+                  <div
+                    key={report.year}
+                    className="group bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 animate-fade-in-up"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-blue-500 rounded-full p-2 sm:p-3">
+                          <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="text-base sm:text-lg font-semibold text-gray-800">
+                            Activity Report
+                          </h4>
+                          <p className="text-xs sm:text-sm text-gray-600">{report.year}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-base sm:text-lg font-semibold text-gray-800">
-                        Committee List
-                      </h4>
-                      <p className="text-xs sm:text-sm text-gray-600">{committee.year}</p>
-                    </div>
-                  </div>
-                  <div className="bg-red-500 rounded-lg p-2">
-                    <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5 text-white"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+
+                    <a
+                      href={report.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center w-full justify-center px-3 sm:px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200 font-medium text-sm sm:text-base"
                     >
-                      <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" />
-                    </svg>
+                      <FileText className="w-4 h-4 mr-2" />
+                      View Report
+                    </a>
                   </div>
-                </div>
-
-                <a
-                  href={committee.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center w-full justify-center px-3 sm:px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200 font-medium text-sm sm:text-base"
-                >
-                  <FileText className="w-4 h-4 mr-2" />
-                  View List
-                </a>
+                ))}
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* CSI Committee Lists Section with Dropdown */}
+          <div className="mt-8 sm:mt-12 md:mt-16">
+            <div className="flex justify-center mb-6 sm:mb-8">
+              <button
+                onClick={() => setCommitteeListsExpanded(!committeeListsExpanded)}
+                className="group relative inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 
+                bg-white text-blue-600 font-medium rounded-full 
+                transition-all duration-300 ease-out
+                focus:outline-none 
+                min-w-[220px] justify-center"
+              >
+                <Users className="w-4 h-4" />
+                <span className="text-sm sm:text-base">
+                  {committeeListsExpanded ? "Hide Committee Lists" : "View Committee Lists"}
+                </span>
+                <div className="transition-transform duration-300 ease-out group-hover:translate-y-[-1px]">
+                  {committeeListsExpanded ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </div>
+         <span className="absolute left-0 -bottom-2 w-full h-[2px] sm:h-[3px] bg-gradient-to-r from-blue-400 via-blue-500 to-blue-700 rounded-full"></span>
+
+              </button>
+            </div>
+
+            {/* Committee Lists Grid with Animation */}
+            <div
+              className={`overflow-hidden transition-all duration-700 ease-in-out ${committeeListsExpanded
+                ? "max-h-[2000px] opacity-100"
+                : "max-h-0 opacity-0"
+                }`}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pt-4">
+                {committeeData.map((committee, index) => (
+                  <div
+                    key={committee.year}
+                    className="group bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 animate-fade-in-up"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-blue-500 rounded-full p-2 sm:p-3">
+                          <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="text-base sm:text-lg font-semibold text-gray-800">
+                            Committee List
+                          </h4>
+                          <p className="text-xs sm:text-sm text-gray-600">{committee.year}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <a
+                      href={committee.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center w-full justify-center px-3 sm:px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200 font-medium text-sm sm:text-base"
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      View List
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

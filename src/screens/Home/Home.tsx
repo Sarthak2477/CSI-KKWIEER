@@ -14,9 +14,15 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "../../components/ui/navigation-menu";
+<<<<<<< HEAD
 
 import CommitteeMembersCarousel from "./sections/CommitteeMembersCarousel/CommitteeMembersCarousel";
 
+=======
+// @ts-ignore
+import DarkVeil from '../../components/DarkVeil.jsx'
+import { CommitteeMembersCarousel } from "./sections/CommitteeMembersCarousel";
+>>>>>>> 1c2d65953a913f858f294e464453fc4b2cb307da
 // Import all sections
 import { ComputerSocietySection } from "./sections/ComputerSocietySection";
 import { FooterSection } from "./sections/FooterSection";
@@ -64,6 +70,7 @@ export const Home = (): JSX.Element => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="flex flex-col items-center w-full min-h-screen bg-cover bg-center bg-no-repeat">
       <div className="overflow-hidden w-full relative">
         <div className="relative w-full">
@@ -130,9 +137,95 @@ export const Home = (): JSX.Element => {
             <EventsCarousel />
 
             <Gallery />
+=======
+    <div className="relative w-full min-h-screen overflow-hidden">
+      {/* Tech-inspired SVG Background */}
 
-            <div className="w-full min-h-[400px] sm:min-h-[500px] lg:min-h-[666px] bg-[#1e1e1e]">
-              <FooterSection />
+
+      {/* Background SVG Blob at Top */}
+      <div className="absolute top-0 left-0 w-full h-full -z-10">
+      <svg
+          viewBox="0 0 540 960"
+          preserveAspectRatio="xMidYMid slice"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-full h-[960px]"
+        >
+          <rect x="0" y="0" width="540" height="960" fill="#ffffff" />
+          <defs>
+            <linearGradient id="grad1_0" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="30%" stopColor="#ffffff" stopOpacity="1" />
+              <stop offset="70%" stopColor="#ffffff" stopOpacity="1" />
+            </linearGradient>
+          </defs>
+          <g transform="translate(0, 0)">
+            <path
+              d="M405 0C361.1 36.1 317.3 72.3 304.9 126.3C292.5 180.3 311.5 252.1 286.4 286.4C261.3 320.6 192.1 317.2 137 330.7C81.9 344.3 41 374.6 0 405L0 0Z"
+              fill="#004dc1"
+            />
+          </g>
+        </svg>
+      </div>
+>>>>>>> 1c2d65953a913f858f294e464453fc4b2cb307da
+
+
+
+      <div className="flex flex-col items-center w-full min-h-screen bg-transparent relative z-10">
+        <div className="overflow-hidden w-full relative">
+          <div className="relative w-full">
+            <Navbar />
+            {/* Main content sections */}
+            <div className="relative w-full pt-16 lg:pt-0">
+              {/* Computer Society Section */}
+              <ComputerSocietySection />
+
+              {/* Cards Section - Responsive Grid */}
+              <div className="grid grid-cols-1 lg: grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8 justify-items-center">
+                {/* CSI India Card */}
+                <Card className="w-full max-w-full lg:max-w-[600px] p-4 sm:p-6 shadow-lg rounded-xl flex flex-col justify-between bg-white min-h-[300px] lg:min-h-[400px]">
+                  <div className="flex-1">
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-[#304674] text-center">
+                      CSI India
+                    </h2>
+                    <p className="text-gray-700 sm:text-sm leading-relaxed text-justify">
+                      The seed for the Computer Society of India (CSI) was first shown in the year 1965 with a handful of IT enthusiasts who were a computer user group and felt the need to organize their activities. They also wanted to share their knowledge and exchange ideas on what they felt was a fast emerging sector. Today the CSI takes pride in being the largest and most professionally managed...
+                    </p>
+                  </div>
+                  <div className="mt-4 sm:mt-6 flex justify-center">
+                    <Button className="bg-blue-600 text-white hover:bg-blue-700 transition-colors w-full sm:w-auto">
+                      Read more
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* CSI Nashik Chapter Card */}
+                <Card className="w-full max-w-full lg:max-w-[600px] p-4 sm:p-6 shadow-lg rounded-xl flex flex-col justify-between bg-white min-h-[300px] lg:min-h-[400px]">
+                  <div className="flex-1">
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-[#304674] text-center">
+                      CSI Nashik Chapter
+                    </h2>
+                    <p className="text-gray-700 sm:text-sm leading-relaxed text-justify">
+                      Nashik chapter of Computer Society of India (CSI) was formed in 1988-89. During the years, the chapter conducted several activities. We have won the Best Chapter award several times. The First student branch was formed in 1992, Today there are more than 20 student branches in and around in Nashik. Our ACCESS has won the Best Newsletter Award several times. The student...
+                    </p>
+                  </div>
+                  <div className="mt-4 sm:mt-6 flex justify-center">
+                    <Button className="bg-blue-600 text-white hover:bg-blue-700 transition-colors w-full sm:w-auto">
+                      Read more
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+
+              <AboutUs />
+
+              <CommitteeMembersCarousel />
+
+              <EventsCarousel />
+
+              <Gallery />
+
+              <div className="w-full min-h-[400px] sm:min-h-[500px] lg:min-h-[666px] bg-[#1e1e1e]">
+                <FooterSection />
+              </div>
             </div>
           </div>
         </div>
