@@ -19,7 +19,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   grainUrl,
   className = "",
   name = "Ankit Khandelwal",
-  title = "President",
+  title = "P",
   linkedinUrl,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -61,12 +61,11 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
           <div className="pc-user-info">
             <div className="pc-user-details">
               {/* Mini avatar inside the frosted box */}
-              
-
               {/* User text (name + status) */}
               <div className="pc-user-text">
                 <div className="pc-handle">{name}</div>
-                <div className="pc-status">President</div>
+                <div className="pc-status">{title}</div>{" "}
+                {/* Fixed: Use title prop instead of hardcoded "President" */}
               </div>
             </div>
 
@@ -77,19 +76,18 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                 onClick={handleLinkedInClick}
                 type="button"
               >
-                <FaLinkedin/>
+                <FaLinkedin />
               </button>
             )}
 
-<button
-                className="pc-contact-btn"
-                onClick={handleLinkedInClick}
-                type="button"
-              >
-                <FaGithub/>
-              </button>
+            <button
+              className="pc-contact-btn"
+              onClick={handleLinkedInClick}
+              type="button"
+            >
+              <FaGithub />
+            </button>
           </div>
-
         </div>
       </section>
     </div>

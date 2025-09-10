@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileCard from "../../../../components/ProfileCard";
@@ -38,9 +38,149 @@ const committeeMembers: CommitteeMember[] = [
     name: "Ankit Khandelwal",
     position: "President",
     year: "2025",
-    image: "/images/Ankit.png",
+    image: "/images/2025/1Ankit.png",
     linkedin:
       "https://www.linkedin.com/in/ankit-khandelwal-002474295?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+  },
+  {
+    id: "2",
+    name: "Manasi Jadhav",
+    position: "Vice-President",
+    year: "2025",
+    image: "/images/2025/2Manasi.png",
+    linkedin: "https://www.linkedin.com/in/manasi-jadhav-3ba44228b/",
+  },
+  {
+    id: "3",
+    name: "Shweta Yeola",
+    position: "Secretary",
+    year: "2025",
+    image: "/images/2025/3Shweta.png",
+    linkedin: "http://www.linkedin.com/in/shweta-yeola-3a8075296/din:",
+  },
+  {
+    id: "4",
+    name: "Meghraj Bhavsar",
+    position: "Joint-Secretary",
+    year: "2025",
+    image: "/images/2025/4Meghraj.png",
+    linkedin:
+      "https://www.linkedin.com/in/meghraj-bhavsar-3449ba289?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+  },
+  {
+    id: "5",
+    name: "Atharva Jadhav",
+    position: "Treasurer",
+    year: "2025",
+    image: "/images/2025/5Atharva.png",
+    linkedin:
+      "https://www.linkedin.com/in/atharva-jadhav-73a997295?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+  },
+  {
+    id: "6",
+    name: "Sadique Khatib",
+    position: "Joint Treasurer",
+    year: "2025",
+    image: "/images/2025/6Sadique.png",
+    linkedin:
+      "https://www.linkedin.com/in/sadique-khatib-4175342a9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+  },
+  {
+    id: "27",
+    name: "Kundan Suryawanshi",
+    position: "President",
+    year: "2024",
+    image: "/images/2024/1Kundan.png",
+    linkedin: "https://www.linkedin.com/in/kundansurya/",
+  },
+  {
+    id: "28",
+    name: "Aryan Deshmukh",
+    position: "Vice-President",
+    year: "2024",
+    image: "/images/2024/2aryan.png",
+    linkedin: "https://www.linkedin.com/in/aryan-deshmukh-793840259/",
+  },
+  {
+    id: "29",
+    name: "Khushi Bedmutha",
+    position: "Secretary",
+    year: "2024",
+    image: "/images/2024/3Khushi.png",
+    linkedin: "https://www.linkedin.com/in/khushi-bedmutha-850041257/",
+  },
+  {
+    id: "30",
+    name: "Harish Lukare",
+    position: "Joint-Secretary",
+    year: "2024",
+    image: "/images/2024/4Harish.png",
+    linkedin: "https://www.linkedin.com/in/lukare-harish/",
+  },
+  {
+    id: "31",
+    name: "Soham Penshanwar",
+    position: "Treasurer",
+    year: "2024",
+    image: "/images/2024/5Soham.png",
+    linkedin: "https://www.linkedin.com/in/thesoham2203/",
+  },
+  {
+    id: "32",
+    name: "Abhishek Malajangam",
+    position: "Joint Treasurer",
+    year: "2024",
+    image: "/images/2024/6Abhishek.png",
+    linkedin: "https://www.linkedin.com/in/abhishek-malajangam/",
+  },
+  {
+    id: "51",
+    name: "Aditi Avhad",
+    position: "President",
+    year: "2023",
+    image: "/images/2023/1Aditi.png",
+    linkedin:
+      "https://www.linkedin.com/in/aditi-avhad-a82bb0244/?trk=opento_nprofile_details",
+  },
+  {
+    id: "52",
+    name: "Mrunal Bagal",
+    position: "Vice-President",
+    year: "2023",
+    image: "/images/2023/2Mrunal.png",
+    linkedin: "https://www.linkedin.com/in/mrunal-bagal-3b8934294/",
+  },
+  {
+    id: "53",
+    name: "Chinmay Kotkar",
+    position: "Secretary",
+    year: "2023",
+    image: "/images/2023/3Chinmay.png",
+    linkedin: "https://www.linkedin.com/in/chinmaykotkar/",
+  },
+  {
+    id: "54",
+    name: "Aditya Date",
+    position: "Joint-Secretary",
+    year: "2023",
+    image: "/images/2023/4aditya.png",
+    linkedin: "https://www.linkedin.com/in/adityadate917/",
+  },
+  {
+    id: "55",
+    name: "Karan Patel",
+    position: "Treasurer",
+    year: "2023",
+    image: "/images/2023/5karan.png",
+    linkedin: "",
+  },
+  {
+    id: "56",
+    name: "Om Bankar",
+    position: "Joint Treasurer",
+    year: "2023",
+    image: "/images/2023/6Om.png",
+    linkedin: "",
   },
 ];
 
@@ -58,30 +198,30 @@ const CustomButton: React.FC<{
   className = "",
   onClick,
 }) => {
-    const baseClasses =
-      "font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center";
+  const baseClasses =
+    "font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center";
 
-    const variantClasses = {
-      default: "bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500",
-      outline:
-        "border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 bg-white",
-    };
-
-    const sizeClasses = {
-      sm: "px-4 py-2 text-sm",
-      md: "px-6 py-2",
-      lg: "px-8 py-3 text-lg",
-    };
-
-    return (
-      <button
-        className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
-        onClick={onClick}
-      >
-        {children}
-      </button>
-    );
+  const variantClasses = {
+    default: "bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500",
+    outline:
+      "border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 bg-white",
   };
+
+  const sizeClasses = {
+    sm: "px-4 py-2 text-sm",
+    md: "px-6 py-2",
+    lg: "px-8 py-3 text-lg",
+  };
+
+  return (
+    <button
+      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
 
 // Custom Carousel Component using shadcn/ui Carousel
 const CustomCarousel: React.FC<{
@@ -169,7 +309,10 @@ const CommitteeMembersCarousel: React.FC = () => {
           <div className="relative mb-12">
             <CustomCarousel itemsData={sortedMembers}>
               {sortedMembers.slice(0, 6).map((member) => (
-                <div key={member.id} className="w-full h-full min-h-[400px] flex">
+                <div
+                  key={member.id}
+                  className="w-full h-full min-h-[400px] flex"
+                >
                   <ProfileCard
                     name={member.name}
                     title={member.position}
@@ -182,7 +325,6 @@ const CommitteeMembersCarousel: React.FC = () => {
                     showUserInfo={true}
                     onContactClick={() => console.log(`Contact ${member.name}`)}
                   />
-                 
                 </div>
               ))}
             </CustomCarousel>

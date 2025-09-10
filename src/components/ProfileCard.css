@@ -19,7 +19,12 @@
 
   /* Light gradient base with reduced opacity */
   background: #ffffff;
-  background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgb(239, 239, 239) 94%, rgb(230, 230, 230) 100%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgb(239, 239, 239) 94%,
+    rgb(230, 230, 230) 100%
+  );
   overflow: hidden;
   min-height: 500px;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -44,12 +49,17 @@
   /* optional, makes it sleek */
   font-weight: 700;
   background: #ffffff;
-  background: radial-gradient(circle, rgb(74, 74, 74) 0%, rgb(65, 65, 65) 94%, rgb(34, 34, 34) 100%);
+  background: radial-gradient(
+    circle,
+    rgb(74, 74, 74) 0%,
+    rgb(65, 65, 65) 94%,
+    rgb(34, 34, 34) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-family: 'Poppins', 'Helvetica Neue', sans-serif;
+  font-family: "Poppins", "Helvetica Neue", sans-serif;
   /* modern feel */
 }
 
@@ -95,20 +105,21 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 
   /* Smooth fade using mask */
-  -webkit-mask: linear-gradient(to top,
-      rgba(0, 0, 0, 1) 70%,
-      rgba(0, 0, 0, 0.6) 85%,
-      rgba(0, 0, 0, 0.3) 95%,
-      rgba(0, 0, 0, 0) 100%);
-  mask: linear-gradient(to top,
-      rgba(0, 0, 0, 1) 70%,
-      rgba(0, 0, 0, 0.6) 85%,
-      rgba(0, 0, 0, 0.3) 95%,
-      rgba(0, 0, 0, 0) 100%);
+  -webkit-mask: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 70%,
+    rgba(0, 0, 0, 0.6) 85%,
+    rgba(0, 0, 0, 0.3) 95%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 70%,
+    rgba(0, 0, 0, 0.6) 85%,
+    rgba(0, 0, 0, 0.3) 95%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
-
-
-
 
 /* Mini avatar inside bar */
 .pc-mini-avatar {
