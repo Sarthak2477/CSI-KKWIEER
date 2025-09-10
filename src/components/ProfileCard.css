@@ -154,12 +154,12 @@
 .pc-handle {
   font-size: 20px;
   font-weight: 600;
-  color: white;
+  color: var(--primary-blue);
 }
 
 .pc-status {
   font-size: 18px;
-  color: white;
+  color: var(--primary-blue);
   font-weight: 500;
 }
 
