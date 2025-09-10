@@ -131,7 +131,7 @@ export const EventsCarousel = (): JSX.Element => {
                 <Button
                   className="mt-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow hover:opacity-90 transition text-sm sm:text-base px-4 sm:px-6 py-2"
                   onClick={() => navigate(`/events/${event.id}`)}
-                >`
+                >
                   Learn More
                 </Button>
               </div>
