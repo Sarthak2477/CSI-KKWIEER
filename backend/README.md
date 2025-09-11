@@ -52,11 +52,6 @@ A comprehensive backend API for the CSI KKWIEER Event Management Platform built 
 4. **Start MongoDB**
    Make sure MongoDB is running on your system.
 
-5. **Seed the database (optional)**
-   ```bash
-   npm run seed
-   ```
-
 6. **Start the server**
    ```bash
    # Development mode
