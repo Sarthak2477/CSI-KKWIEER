@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, Calendar, Users, MapPin, Award, ExternalLink } from "lucide-react";
 
-interface GalleryItem {
+export interface GalleryItem {
   id: number;
   src: string;
   title: string;
@@ -14,11 +15,11 @@ interface GalleryItem {
   highlights: string[];
 }
 
-// ✅ Gallery data (change images here in `src`)
-const galleryData: GalleryItem[] = [
+// ✅ Gallery data
+export const galleryData: GalleryItem[] = [
   {
     id: 1,
-    src: "/images/installation.jpg", // <--- Change image path here
+    src: "/images/installation.jpg",
     title: "AI Workshop",
     event: "Hands-on session on AI and ML",
     date: "March 2025",
@@ -30,7 +31,7 @@ const galleryData: GalleryItem[] = [
   },
   {
     id: 2,
-    src: "/images/cohort.jpg", // <--- Change image path here
+    src: "/images/cohort.jpg",
     title: "Hackathon 2025",
     event: "24-hour coding challenge",
     date: "April 2025",
@@ -42,7 +43,7 @@ const galleryData: GalleryItem[] = [
   },
   {
     id: 3,
-    src: "/images/csi-kkw-logo.png", // <--- Change image path here
+    src: "/images/csi-kkw-logo.png",
     title: "Tech Seminar",
     event: "Talk on Cybersecurity",
     date: "May 2025",
@@ -54,7 +55,7 @@ const galleryData: GalleryItem[] = [
   },
   {
     id: 4,
-    src: "/images/eyantran.jpg", // <--- Change image path here
+    src: "/images/eyantran.jpg",
     title: "Exhibition Day",
     event: "Student project showcase",
     date: "June 2025",
@@ -66,7 +67,7 @@ const galleryData: GalleryItem[] = [
   },
   {
     id: 5,
-    src: "/images/c2c.jpg", // <--- Change image path here
+    src: "/images/c2c.jpg",
     title: "Coding Competition",
     event: "Algorithmic coding challenge",
     date: "July 2025",
@@ -78,7 +79,7 @@ const galleryData: GalleryItem[] = [
   },
   {
     id: 6,
-    src: "/images/pc.jpg", // <--- Change image path here
+    src: "/images/pc.jpg",
     title: "Networking Meetup",
     event: "Connect with alumni and industry professionals",
     date: "August 2025",
@@ -106,6 +107,7 @@ export const Gallery = (): JSX.Element => {
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [filteredData, setFilteredData] = useState(galleryData);
+  const navigate = useNavigate();
 
   const handleCategoryFilter = (category: string) => {
     setActiveCategory(category);
@@ -132,10 +134,10 @@ export const Gallery = (): JSX.Element => {
         {/* Header Section */}
         <div className="text-center mb-20">
           <div className="mb-8">
-            <span className="inline-block px-5 py-2 bg-blue-600/90 text-white text-sm font-medium rounded-full mb-6 tracking-wide uppercase shadow-md">
+            <span className="inline-block px-5 py-2 bg-blue-600/90 text-white text-sm font-medium rounded-xl mb-6 tracking-wide uppercase shadow-md">
               Event Gallery
             </span>
-            <h1 className="text-5xl md:text-6xl font-light text-slate-900 mb-6 tracking-tight">
+            <h1 className="text-5xl xl:text-6xl font-light text-slate-900 mb-6 tracking-tight">
               Excellence in Action
             </h1>
             <div className="w-96 h-1.5 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto mb-8 rounded-full"></div>
@@ -192,7 +194,6 @@ export const Gallery = (): JSX.Element => {
               "col-span-12 md:col-span-6 lg:col-span-4 row-span-1",
               "col-span-12 md:col-span-6 lg:col-span-8 row-span-2",
               "col-span-12 md:col-span-6 lg:col-span-4 row-span-2",
-              // "col-span-12 md:col-span-6 lg:col-span-4 row-span-1",
               "col-span-12 md:col-span-6 lg:col-span-8 row-span-1",
             ];
 
@@ -248,6 +249,24 @@ export const Gallery = (): JSX.Element => {
               </div>
             );
           })}
+        </div>
+
+        {/* View All Button */}
+        <div className="flex justify-center mt-10">
+          <button
+            onClick={() => navigate("/all-gallery")}
+            className="relative px-6 sm:px-8 py-2 sm:py-3
+              bg-gradient-to-b from-blue-600 via-blue-500 to-blue-600
+              text-white font-semibold rounded-lg shadow-lg
+              overflow-hidden group transition-all duration-300
+              ease-in-out hover:scale-105"
+          >
+            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-400 via-blue-400 to-blue-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></span>
+            <span className="absolute -left-8 top-0 w-24 h-full bg-white/20 rounded-full transform rotate-45 translate-x-0 group-hover:translate-x-[200%] transition-transform duration-700"></span>
+            <span className="relative z-10 tracking-wider text-base sm:text-lg group-hover:scale-105 transition-transform duration-300">
+              View Gallery
+            </span>
+          </button>
         </div>
 
         {/* Modal */}
