@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Autoplay from "embla-carousel-autoplay";
-
 import ProfileCard from "../../../../components/ProfileCard";
 import {
   Carousel,
@@ -11,8 +9,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../../../../components/ui/carousel";
-
-// Define committee member interface
+import UserCard from "@/components/UserCard";
+// Define the committee member interface
 interface CommitteeMember {
   id: string;
   name: string;
@@ -23,7 +21,7 @@ interface CommitteeMember {
   description?: string;
 }
 
-// Position hierarchy
+// Define all 6 positions in order
 const ALL_POSITIONS = [
   "President",
   "Vice-President",
@@ -33,7 +31,7 @@ const ALL_POSITIONS = [
   "Joint Treasurer",
 ];
 
-// Committee members data
+// Sample committee members data
 const committeeMembers: CommitteeMember[] = [
   {
     id: "1",
@@ -87,7 +85,103 @@ const committeeMembers: CommitteeMember[] = [
     linkedin:
       "https://www.linkedin.com/in/sadique-khatib-4175342a9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
-  // Add 2024 + 2023 members (same as before) ...
+  {
+    id: "27",
+    name: "Kundan Suryawanshi",
+    position: "President",
+    year: "2024",
+    image: "/images/2024/1Kundan.png",
+    linkedin: "https://www.linkedin.com/in/kundansurya/",
+  },
+  {
+    id: "28",
+    name: "Aryan Deshmukh",
+    position: "Vice-President",
+    year: "2024",
+    image: "/images/2024/2aryan.png",
+    linkedin: "https://www.linkedin.com/in/aryan-deshmukh-793840259/",
+  },
+  {
+    id: "29",
+    name: "Khushi Bedmutha",
+    position: "Secretary",
+    year: "2024",
+    image: "/images/2024/3Khushi.png",
+    linkedin: "https://www.linkedin.com/in/khushi-bedmutha-850041257/",
+  },
+  {
+    id: "30",
+    name: "Harish Lukare",
+    position: "Joint-Secretary",
+    year: "2024",
+    image: "/images/2024/4Harish.png",
+    linkedin: "https://www.linkedin.com/in/lukare-harish/",
+  },
+  {
+    id: "31",
+    name: "Soham Penshanwar",
+    position: "Treasurer",
+    year: "2024",
+    image: "/images/2024/5Soham.png",
+    linkedin: "https://www.linkedin.com/in/thesoham2203/",
+  },
+  {
+    id: "32",
+    name: "Abhishek Malajangam",
+    position: "Joint Treasurer",
+    year: "2024",
+    image: "/images/2024/6Abhishek.png",
+    linkedin: "https://www.linkedin.com/in/abhishek-malajangam/",
+  },
+  {
+    id: "51",
+    name: "Aditi Avhad",
+    position: "President",
+    year: "2023",
+    image: "/images/2023/1Aditi.png",
+    linkedin:
+      "https://www.linkedin.com/in/aditi-avhad-a82bb0244/?trk=opento_nprofile_details",
+  },
+  {
+    id: "52",
+    name: "Mrunal Bagal",
+    position: "Vice-President",
+    year: "2023",
+    image: "/images/2023/2Mrunal.png",
+    linkedin: "https://www.linkedin.com/in/mrunal-bagal-3b8934294/",
+  },
+  {
+    id: "53",
+    name: "Chinmay Kotkar",
+    position: "Secretary",
+    year: "2023",
+    image: "/images/2023/3Chinmay.png",
+    linkedin: "https://www.linkedin.com/in/chinmaykotkar/",
+  },
+  {
+    id: "54",
+    name: "Aditya Date",
+    position: "Joint-Secretary",
+    year: "2023",
+    image: "/images/2023/4aditya.png",
+    linkedin: "https://www.linkedin.com/in/adityadate917/",
+  },
+  {
+    id: "55",
+    name: "Karan Patel",
+    position: "Treasurer",
+    year: "2023",
+    image: "/images/2023/5karan.png",
+    linkedin: "",
+  },
+  {
+    id: "56",
+    name: "Om Bankar",
+    position: "Joint Treasurer",
+    year: "2023",
+    image: "/images/2023/6Om.png",
+    linkedin: "",
+  },
 ];
 
 // Custom Button Component
@@ -129,7 +223,7 @@ const CustomButton: React.FC<{
   );
 };
 
-// Custom Carousel with autoplay
+// Custom Carousel Component using shadcn/ui Carousel
 const CustomCarousel: React.FC<{
   children: React.ReactNode;
   itemsData: CommitteeMember[];
@@ -141,12 +235,6 @@ const CustomCarousel: React.FC<{
         align: "start",
         loop: true,
       }}
-      plugins={[
-        Autoplay({
-          delay: 3000,
-          stopOnInteraction: false,
-        }),
-      ]}
     >
       <CarouselContent className="-ml-2 md:-ml-4">
         {React.Children.map(children, (child, index) => (
@@ -164,18 +252,25 @@ const CustomCarousel: React.FC<{
   );
 };
 
-// Main Component
+// Main Carousel Component
 const CommitteeMembersCarousel: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState("2025");
   const navigate = useNavigate();
+
+  const handleViewAllMembers = () => {
+    navigate("/committee");
+  };
 
   const filteredMembers = committeeMembers.filter(
     (member) => selectedYear === "all" || member.year === selectedYear
   );
 
+  // Sort members by position hierarchy (including all 6 positions)
   const sortedMembers = filteredMembers.sort((a, b) => {
     const aIndex = ALL_POSITIONS.indexOf(a.position);
     const bIndex = ALL_POSITIONS.indexOf(b.position);
+
+    // If position is not found, put it at the end
     if (aIndex === -1) return 1;
     if (bIndex === -1) return -1;
     return aIndex - bIndex;
@@ -228,9 +323,7 @@ const CommitteeMembersCarousel: React.FC = () => {
                     miniAvatarUrl={member.image}
                     linkedinUrl={member.linkedin}
                     showUserInfo={true}
-                    onContactClick={() =>
-                      console.log(`Contact ${member.name}`)
-                    }
+                    onContactClick={() => console.log(`Contact ${member.name}`)}
                   />
                 </div>
               ))}
@@ -245,9 +338,9 @@ const CommitteeMembersCarousel: React.FC = () => {
         )}
 
         {/* View All Members Button */}
-        <div className="flex justify-center mt-10">
+        <div className="text-center">
           <button
-            onClick={() => navigate("/committee")}
+            onClick={() => navigate("/Committee")}
             className="relative px-6 sm:px-8 py-2 sm:py-3
               bg-gradient-to-b from-blue-600 via-blue-500 to-blue-600
               text-white font-semibold rounded-lg shadow-lg
