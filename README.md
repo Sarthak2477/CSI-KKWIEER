@@ -1,5 +1,54 @@
 # CSI KKWIEER Project Setup Guidelines
 
+## Frontend-Backend Integration
+
+The frontend is now integrated with the backend API. Here's how to run both:
+
+### Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+   Update the `.env` file with your MongoDB connection string and other configurations.
+
+4. Seed the database (optional):
+   ```bash
+   npm run seed
+   ```
+
+5. Start the backend server:
+   ```bash
+   npm run dev
+   ```
+   The backend will run on `http://localhost:5000`
+
+### Frontend Setup
+1. In the root directory, install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the frontend development server:
+   ```bash
+   npm run dev
+   ```
+   The frontend will run on `http://localhost:5173`
+
+### API Integration Features
+- **Events**: Fetches events from backend API with filtering and pagination
+- **Committee Members**: Loads committee members dynamically from database
+- **Gallery**: Displays gallery images from backend with category filtering
+- **Error Handling**: Graceful fallbacks when backend is unavailable
+- **Loading States**: User-friendly loading indicators
+- **Environment Configuration**: Configurable API endpoints via environment variables
+
 ## Prerequisites
 
 Before you start, make sure you have the following installed on your computer:

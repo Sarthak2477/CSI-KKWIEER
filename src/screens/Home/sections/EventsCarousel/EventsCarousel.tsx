@@ -2,6 +2,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
+import { useEvents } from "../../../../hooks/useEvents";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -10,7 +11,7 @@ import "swiper/css/pagination";
 import { Card } from "../../../../components/ui/card";
 import { Button } from "../../../../components/ui/button";
 
-type Event = {
+type StaticEvent = {
   id: number;
   title: string;
   description: string;
@@ -20,7 +21,14 @@ type Event = {
 
 const DESCRIPTION_LIMIT = 120;
 
-const events: Event[] = [
+export const EventsCarousel = (): JSX.Element => {
+  const navigate = useNavigate();
+  
+  // Fetch events from backend
+  const { events: backendEvents, loading } = useEvents({ limit: 6, status: 'published' });
+
+  // Fallback static events
+  const staticEvents: StaticEvent[] = [
   {
     id: 1,
     title: "CSI Installation Ceremony",
@@ -55,8 +63,14 @@ const events: Event[] = [
   },
 ];
 
-export const EventsCarousel = (): JSX.Element => {
-  const navigate = useNavigate();
+  // Use backend events if available, otherwise use static events
+  const events = backendEvents.length > 0 ? backendEvents.map(event => ({
+    id: parseInt(event._id.slice(-6), 16), // Convert ObjectId to number for compatibility
+    title: event.title,
+    description: event.description,
+    image: event.image,
+    status: event.status as "upcoming" | "ongoing" | "past"
+  })) : staticEvents;
 
   const truncateDescription = (text: string) => {
     if (text.length <= DESCRIPTION_LIMIT) return text;
@@ -75,8 +89,17 @@ export const EventsCarousel = (): JSX.Element => {
         </p>
       </div>
 
+      {/* Loading State */}
+      {loading && (
+        <div className="flex justify-center items-center py-10">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <span className="ml-2 text-gray-600">Loading events...</span>
+        </div>
+      )}
+
       {/* Swiper Carousel */}
-      <Swiper
+      {!loading && (
+        <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         navigation={false}
         pagination={{ clickable: true }}
@@ -139,6 +162,7 @@ export const EventsCarousel = (): JSX.Element => {
           </SwiperSlide>
         ))}
       </Swiper>
+      )}
 
       {/* View All Button */}
       <div className="flex justify-center mt-6">

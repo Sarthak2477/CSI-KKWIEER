@@ -11,17 +11,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../../../../components/ui/carousel";
-
-// Define committee member interface
-interface CommitteeMember {
-  id: string;
-  name: string;
-  position: string;
-  year: string;
-  image: string;
-  linkedin?: string;
-  description?: string;
-}
+import { useCommitteeMembers } from "../../../../hooks/useCommittee";
 
 // Position hierarchy
 const ALL_POSITIONS = [
@@ -31,63 +21,6 @@ const ALL_POSITIONS = [
   "Joint-Secretary",
   "Treasurer",
   "Joint Treasurer",
-];
-
-// Committee members data
-const committeeMembers: CommitteeMember[] = [
-  {
-    id: "1",
-    name: "Ankit Khandelwal",
-    position: "President",
-    year: "2025",
-    image: "/images/2025/1Ankit.png",
-    linkedin:
-      "https://www.linkedin.com/in/ankit-khandelwal-002474295?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  {
-    id: "2",
-    name: "Manasi Jadhav",
-    position: "Vice-President",
-    year: "2025",
-    image: "/images/2025/2Manasi.png",
-    linkedin: "https://www.linkedin.com/in/manasi-jadhav-3ba44228b/",
-  },
-  {
-    id: "3",
-    name: "Shweta Yeola",
-    position: "Secretary",
-    year: "2025",
-    image: "/images/2025/3Shweta.png",
-    linkedin: "http://www.linkedin.com/in/shweta-yeola-3a8075296/din:",
-  },
-  {
-    id: "4",
-    name: "Meghraj Bhavsar",
-    position: "Joint-Secretary",
-    year: "2025",
-    image: "/images/2025/4Meghraj.png",
-    linkedin:
-      "https://www.linkedin.com/in/meghraj-bhavsar-3449ba289?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  {
-    id: "5",
-    name: "Atharva Jadhav",
-    position: "Treasurer",
-    year: "2025",
-    image: "/images/2025/5Atharva.png",
-    linkedin:
-      "https://www.linkedin.com/in/atharva-jadhav-73a997295?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  {
-    id: "6",
-    name: "Sadique Khatib",
-    position: "Joint Treasurer",
-    year: "2025",
-    image: "/images/2025/6Sadique.png",
-    linkedin:
-      "https://www.linkedin.com/in/sadique-khatib-4175342a9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-  },
-  // Add 2024 + 2023 members (same as before) ...
 ];
 
 // Custom Button Component
@@ -132,7 +65,7 @@ const CustomButton: React.FC<{
 // Custom Carousel with autoplay
 const CustomCarousel: React.FC<{
   children: React.ReactNode;
-  itemsData: CommitteeMember[];
+  itemsData: any[];
 }> = ({ children }) => {
   return (
     <Carousel
@@ -168,11 +101,14 @@ const CustomCarousel: React.FC<{
 const CommitteeMembersCarousel: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState("2025");
   const navigate = useNavigate();
+  
+  // Fetch committee members from backend
+  const { members, loading } = useCommitteeMembers({
+    year: selectedYear,
+    limit: 6,
+  });
 
-  const filteredMembers = committeeMembers.filter(
-    (member) => selectedYear === "all" || member.year === selectedYear
-  );
-
+  const filteredMembers = members;
   const sortedMembers = filteredMembers.sort((a, b) => {
     const aIndex = ALL_POSITIONS.indexOf(a.position);
     const bIndex = ALL_POSITIONS.indexOf(b.position);
@@ -209,13 +145,21 @@ const CommitteeMembersCarousel: React.FC = () => {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-10">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span className="ml-2 text-gray-600">Loading committee members...</span>
+          </div>
+        )}
+
         {/* Carousel */}
-        {sortedMembers.length > 0 ? (
+        {!loading && sortedMembers.length > 0 ? (
           <div className="relative mb-12">
             <CustomCarousel itemsData={sortedMembers}>
               {sortedMembers.slice(0, 6).map((member) => (
                 <div
-                  key={member.id}
+                  key={member._id}
                   className="w-full h-full min-h-[400px] flex"
                 >
                   <ProfileCard
@@ -237,7 +181,7 @@ const CommitteeMembersCarousel: React.FC = () => {
             </CustomCarousel>
           </div>
         ) : (
-          <div className="text-center py-12">
+          !loading && <div className="text-center py-12">
             <p className="text-gray-500 text-lg">
               No committee members found for {selectedYear}
             </p>

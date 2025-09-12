@@ -6,83 +6,89 @@ import {
   Sparkles,
   Users,
   Award,
+  Loader2,
 } from "lucide-react";
 import { Navbar } from "../../components/ui/navbar";
+import { useEvents } from "../../hooks/useEvents";
+import { Event } from "../../services/eventService";
 
 const Events = () => {
   const [activeCategory, setActiveCategory] = useState("all");
+  
+  // Fetch events from backend
+  const { events: backendEvents, loading, error } = useEvents({
+    page: 1,
+    limit: 20,
+    ...(activeCategory !== "all" && { category: activeCategory }),
+    ...(activeCategory === "upcoming" && { upcoming: true }),
+  });
 
-  const events = [
+  // Fallback static events for development
+  const staticEvents = [
     {
-      id: 1,
+      _id: "1",
       title: "CSI Installation Ceremony",
       category: "all",
-      date: "2025-08-11",
-      time: "01:00 PM - 5:00 PM",
+      startDate: "2025-08-11",
+      startTime: "13:00",
+      endTime: "17:00",
       location: "JVN Hall",
       description:
         "Installation for the new board members of the CSI KKWIEER for academic year 2025-26.",
       image: "/images/installation.jpg",
-      attendees: 45,
+      registrationCount: 45,
+      status: "completed" as const,
     },
     {
-      id: 2,
+      _id: "2",
       title: "Google Cohort Programme",
       category: "talks",
-      date: "2025-08-05",
-      time: "10:00 AM - 12:00 PM",
+      startDate: "2025-08-05",
+      startTime: "10:00",
+      endTime: "12:00",
       location: "JVN Hall",
       description:
         "Cohort 2 Guidance Sessions, aimed at introducing students to cloud learning opportunities",
       image: "/images/cohort.jpg",
-      attendees: 120,
-      featured: false,
+      registrationCount: 120,
+      status: "ongoing" as const,
     },
     {
-      id: 3,
+      _id: "3",
       title: "Campus To Corporate 3.0",
       category: "competitions",
-      date: "2025-03-17",
-      time: "9:00 AM",
+      startDate: "2025-03-17",
+      startTime: "09:00",
       location: "Multiple Labs",
       description:
         "Campus to Corporate was a powerful-packed session filled with industry trends, career insights, and practical tips to help students transition from academic life to the corporate world with confidence.",
       image: "/images/c2c.jpg",
-      attendees: 180,
+      registrationCount: 180,
+      status: "published" as const,
     },
     {
-      id: 4,
+      _id: "4",
       title: "E-Yantran 2024-25",
       category: "workshops",
-      date: "2025-01-28",
-      time: "9:00 AM",
+      startDate: "2025-01-28",
+      startTime: "09:00",
       location: "Multiple Labs",
       description:
         "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative, driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
       image: "/images/eyantran.jpg",
-      attendees: 32,
-      featured: false,
-    },
-    {
-      id: 5,
-      title: "E-Yantran 2024-25",
-      category: "upcoming",
-      date: "2025-01-28",
-      time: "9:00 AM",
-      location: "Multiple Labs",
-      description:
-        "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative, driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
-      image: "/images/eyantran.jpg",
-      attendees: 32,
-      featured: false,
+      registrationCount: 32,
+      status: "completed" as const,
     },
   ];
+
+  // Use backend events if available, otherwise fallback to static events
+  const events = backendEvents.length > 0 ? backendEvents : staticEvents;
 
   const categories = [
     {
       id: "upcoming",
       name: "Upcoming",
-      count: events.filter((e) => new Date(e.date) > new Date()).length,
+      count: events.filter((e) => new Date(e.startDate) > new Date()).length,
     },
     { id: "all", name: "All Events", count: events.length },
     {
@@ -106,7 +112,7 @@ const Events = () => {
     activeCategory === "all"
       ? events
       : activeCategory === "upcoming"
-      ? events.filter((event) => new Date(event.date) > new Date())
+      ? events.filter((event) => new Date(event.startDate) > new Date())
       : events.filter((event) => event.category === activeCategory);
 
   const formatDate = (dateString: string) => {
@@ -121,6 +127,12 @@ const Events = () => {
   const truncate = (text: string, limit: number) => {
     if (text.length <= limit) return text;
     return text.slice(0, limit) + "...";
+  };
+
+  const formatTime = (time: string) => {
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    return `${hour > 12 ? hour - 12 : hour}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`;
   };
 
   return (
@@ -174,13 +186,29 @@ const Events = () => {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            <span className="ml-2 text-gray-600">Loading events...</span>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12 text-red-600">
+            <p>Error loading events: {error}</p>
+          </div>
+        )}
+
         {/* Events Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        {!loading && !error && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {filteredEvents.map((event) => (
             <div
-              key={event.id}
+              key={event._id}
               className={`group relative bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col justify-between border border-white/20 ${
-                event.featured ? "ring-2 ring-indigo-200 ring-offset-2" : ""
+                event.isFeatured ? "ring-2 ring-indigo-200 ring-offset-2" : ""
               }`}
             >
               {/* Image */}
@@ -208,10 +236,10 @@ const Events = () => {
                   {/* Date Box */}
                   <div className="ml-4 bg-white border border-gray-800 rounded-xl p-3 text-center shadow-md w-16">
                     <div className="text-xl font-bold text-gray-900">
-                      {formatDate(event.date).day}
+                      {formatDate(event.startDate).day}
                     </div>
                     <div className="text-sm text-blue-600 font-semibold">
-                      {formatDate(event.date).month}
+                      {formatDate(event.startDate).month}
                     </div>
                   </div>
                 </div>
@@ -221,7 +249,10 @@ const Events = () => {
                   <div className="flex items-center text-sm gap-2">
                     <div className="flex items-center gap-2 rounded-lg px-3 py-1">
                       <Clock className="w-4 h-4 text-blue-600" />
-                      <span className="font-medium">{event.time}</span>
+                      <span className="font-medium">
+                        {formatTime(event.startTime)}
+                        {event.endTime && ` - ${formatTime(event.endTime)}`}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center text-sm gap-2">
@@ -234,7 +265,7 @@ const Events = () => {
                   </div>
                   <div className="flex items-center gap-1 text-sm text-gray-500 rounded-lg px-3 py-1 mt-2 w-max">
                     <Users className="w-4 h-4 text-blue-600" />
-                    <span className="font-medium">{event.attendees} joined</span>
+                    <span className="font-medium">{event.registrationCount || 0} joined</span>
                   </div>
                 </div>
 
@@ -250,9 +281,10 @@ const Events = () => {
             </div>
           ))}
         </div>
+        )}
 
         {/* Empty State */}
-        {filteredEvents.length === 0 && (
+        {!loading && !error && filteredEvents.length === 0 && (
           <div className="text-center py-20">
             <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
               <Calendar className="w-12 h-12 text-gray-400" />
