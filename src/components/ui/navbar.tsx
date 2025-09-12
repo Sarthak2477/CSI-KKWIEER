@@ -19,10 +19,10 @@ export const Navbar = () => {
   // Navigation links with route paths
   const navigationItems = [
     { icon: <HomeIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Home", path: "/" },
+    { icon: <UserSquareIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "About Us", path: "/#AboutUs" },
     { icon: <FlagIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Events", path: "/events" },
     { icon: <GalleryVerticalIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Committee", path: "/committee" },
     { icon: <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Gallery", path: "/gallery" },
-    { icon: <UserSquareIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "About Us", path: "/#AboutUs" },
   ];
 
   useEffect(() => {
