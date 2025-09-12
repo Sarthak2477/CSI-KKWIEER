@@ -245,15 +245,9 @@ const CommitteeMembersCarousel: React.FC = () => {
         )}
 
         {/* View All Members Button */}
-<<<<<<< HEAD
         <div className="flex justify-center mt-10">
           <button
             onClick={() => navigate("/committee")}
-=======
-        <div className="text-center">
-          <button
-            onClick={() => navigate("/Committee")}
->>>>>>> f0cd4773c637bcf91e63b5821c203680450ad50e
             className="relative px-6 sm:px-8 py-2 sm:py-3
               bg-gradient-to-b from-blue-600 via-blue-500 to-blue-600
               text-white font-semibold rounded-lg shadow-lg

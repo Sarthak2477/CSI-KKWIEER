@@ -103,7 +103,7 @@ const categories = [
   "Networking",
 ];
 
-export const Gallery = (): JSX.Element => {
+export const GallerySection = (): JSX.Element => {
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [filteredData, setFilteredData] = useState(galleryData);

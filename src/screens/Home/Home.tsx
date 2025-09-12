@@ -25,7 +25,7 @@ import { EventsCarousel } from "./sections/EventsCarousel";
 import { useState, useEffect } from "react";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { Gallery } from "./sections/Gallery/Gallery";
+import { GallerySection } from "./sections/GallerySection/GallerySection";
 import { Navbar } from "../../components/ui/navbar";
 
 export const Home = (): JSX.Element => {
@@ -129,7 +129,7 @@ export const Home = (): JSX.Element => {
 
             <EventsCarousel />
 
-            <Gallery />
+            <GallerySection />
 
             {/* Footer Section */}
             <div className="w-full min-h-[400px] sm:min-h-[500px] lg:min-h-[666px] bg-[#1e1e1e]">
