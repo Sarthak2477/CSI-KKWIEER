@@ -10,7 +10,7 @@ export const ComputerSocietySection = (): JSX.Element => {
   const [showCursor2, setShowCursor2] = useState(false);
 
   const text1 = "Computer Society Of India,";
-  const text2 = "KKWIEER Student Committee";
+  const text2 = "KKWIEER Student's Branch";
 
   useEffect(() => {
     // Trigger fade in after mount
@@ -60,30 +60,33 @@ export const ComputerSocietySection = (): JSX.Element => {
     transform transition-all duration-1000 ease-out
     ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
     >
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl lg:text-[80px] font-bold text-black tracking-[-1.28px] leading-tight mb-4 min-h-[1.2em]">
-          {typedText1}
-          {showCursor1 && (
-            <span className="animate-pulse text-[#304674]">|</span>
-          )}
-        </h1>
-        <h2 className="text-3xl md:text-5xl lg:text-[64px] font-semibold text-[#515151] tracking-[-0.82px] min-h-[1.2em]">
-          {typedText2}
-          {showCursor2 && (
-            <span className="animate-pulse text-[#304674]">|</span>
-          )}
-        </h2>
+      <div className="max-w-5xl mx-auto">
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="text-4xl md:text-6xl lg:text-[80px] font-bold text-black tracking-[-1.28px] leading-tight min-h-[1.2em]">
+            {typedText1}
+            {showCursor1 && (
+              <span className="animate-pulse text-[#304674]">|</span>
+            )}
+          </h1>
+
+          <h2 className="text-3xl md:text-5xl lg:text-[64px] font-semibold text-[#515151] tracking-[-0.82px] min-h-[1.2em]">
+            {typedText2}
+            {showCursor2 && (
+              <span className="animate-pulse text-[#304674]">|</span>
+            )}
+          </h2>
+        </div>
       </div>
 
-      <Card className="border-0 w-full max-w-[1053px] mx-auto my-8 md:my-12 font-['Urbanist',Helvetica]">
+      {/* <Card className="border-0 w-full max-w-[1053px] mx-auto my-8 md:my-12 font-['Urbanist',Helvetica]">
         <CardContent className="p-8 md:p-12 text-center">
           <p className="text-lg md:text-2xl tracking-[0.92px] leading-[29px] px-4">
             Advancing IT, Empowering Knowledge Sharing, and Cultivating Professional Excellence.
           </p>
         </CardContent>
-      </Card>
+      </Card> */}
 
-      
+
     </section>
 
 

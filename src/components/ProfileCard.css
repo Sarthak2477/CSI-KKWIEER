@@ -94,7 +94,7 @@
   align-items: center;
   justify-content: space-between;
 
-  background: rgba(191, 191, 191, 0.25);
+  background: rgba(23, 23, 23, 0.25);
   backdrop-filter: blur(14px) saturate(180%);
   -webkit-backdrop-filter: blur(14px) saturate(180%);
 
@@ -142,12 +142,12 @@
 .pc-handle {
   font-size: 15px;
   font-weight: 600;
-  color: var(--primary-blue);
+  color: white;
 }
 
 .pc-status {
   font-size: 12px;
-  color: var(--primary-blue);
+  color: white;
   font-weight: 500;
 }
 

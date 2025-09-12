@@ -19,10 +19,10 @@ export const Navbar = () => {
   // Navigation links with route paths
   const navigationItems = [
     { icon: <HomeIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Home", path: "/" },
+    { icon: <UserSquareIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "About Us", path: "/#AboutUs" },
     { icon: <FlagIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Events", path: "/events" },
     { icon: <GalleryVerticalIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Committee", path: "/committee" },
     { icon: <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Gallery", path: "/gallery" },
-    { icon: <UserSquareIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "About Us", path: "/#AboutUs" },
   ];
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export const Navbar = () => {
       >
         <img
           src="/images/csi-kkw-logo.png"
-          className="h-14 w-14 lg:h-[60px] lg:w-[100px] ml-4 lg:ml-20 mr-4 lg:mr-10"
+          className="h-20 w-20 lg:h-[100px] lg:w-[160px] ml-4 lg:ml-20 mr-4 lg:mr-10"
           alt="CSI Logo"
         />
 
@@ -68,7 +68,7 @@ export const Navbar = () => {
 
         <img
           src="/images/csi.png"
-          className="h-12 w-12 lg:h-[40px] lg:w-[40px] ml-0 lg:ml-10 mr-8 lg:mr-20"
+          className="h-15 w-15 lg:h-[60px] lg:w-[60px] ml-0 lg:ml-10 mr-8 lg:mr-20"
           alt="CSI Logo"
         />
       </NavigationMenu>

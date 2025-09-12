@@ -80,13 +80,6 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
               </button>
             )}
 
-            <button
-              className="pc-contact-btn"
-              onClick={handleLinkedInClick}
-              type="button"
-            >
-              <FaGithub />
-            </button>
           </div>
         </div>
       </section>

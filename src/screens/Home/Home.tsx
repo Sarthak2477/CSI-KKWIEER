@@ -7,6 +7,7 @@ import {
   UserSquareIcon,
   MenuIcon,
   XIcon,
+  Link,
 } from "lucide-react";
 
 import {
@@ -76,51 +77,49 @@ export const Home = (): JSX.Element => {
             {/* Cards Section - Responsive Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8 justify-items-center">
               {/* CSI India Card */}
-              <Card className="w-full max-w-full lg:max-w-[600px] p-4 sm:p-6 shadow-lg rounded-xl flex flex-col justify-between bg-white min-h-[300px] lg:min-h-[400px]">
-                <div className="flex-1">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-[#304674] text-center">
-                    CSI India
-                  </h2>
-                  <p className="text-gray-700 sm:text-sm leading-relaxed text-justify">
-                    The seed for the Computer Society of India (CSI) was first
-                    shown in the year 1965 with a handful of IT enthusiasts who
-                    were a computer user group and felt the need to organize
-                    their activities. They also wanted to share their knowledge
-                    and exchange ideas on what they felt was a fast emerging
-                    sector. Today the CSI takes pride in being the largest and
-                    most professionally managed...
-                  </p>
-                </div>
+              <Card className="w-full max-w-full lg:max-w-[600px] p-4 sm:p-6 shadow-lg rounded-xl bg-white">
+                <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-[#304674] text-center">
+                  CSI India
+                </h2>
+                <p className="text-gray-700 sm:text-sm leading-relaxed text-justify">
+                  The seed for the Computer Society of India (CSI) was first
+                  shown in the year 1965 with a handful of IT enthusiasts who
+                  were a computer user group and felt the need to organize
+                  their activities. They also wanted to share their knowledge
+                  and exchange ideas on what they felt was a fast emerging
+                  sector. Today the CSI takes pride in being the largest and
+                  most professionally managed...
+                </p>
                 <div className="mt-4 sm:mt-6 flex justify-center">
+
                   <Button className="bg-blue-600 text-white hover:bg-blue-700 transition-colors w-full sm:w-auto">
-                    Read more
+                    <a href="https://csiindia.org/" target="_blank" rel="noopener noreferrer">Read more</a>
                   </Button>
                 </div>
               </Card>
 
               {/* CSI Nashik Chapter Card */}
-              <Card className="w-full max-w-full lg:max-w-[600px] p-4 sm:p-6 shadow-lg rounded-xl flex flex-col justify-between bg-white min-h-[300px] lg:min-h-[400px]">
-                <div className="flex-1">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-[#304674] text-center">
-                    CSI Nashik Chapter
-                  </h2>
-                  <p className="text-gray-700 sm:text-sm leading-relaxed text-justify">
-                    Nashik chapter of Computer Society of India (CSI) was formed
-                    in 1988-89. During the years, the chapter conducted several
-                    activities. We have won the Best Chapter award several
-                    times. The First student branch was formed in 1992, Today
-                    there are more than 20 student branches in and around in
-                    Nashik. Our ACCESS has won the Best Newsletter Award several
-                    times. The student...
-                  </p>
-                </div>
+              <Card className="w-full max-w-full lg:max-w-[600px] p-4 sm:p-6 shadow-lg rounded-xl bg-white">
+                <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-[#304674] text-center">
+                  CSI Nashik Chapter
+                </h2>
+                <p className="text-gray-700 sm:text-sm leading-relaxed text-justify">
+                  Nashik chapter of Computer Society of India (CSI) was formed
+                  in 1988-89. During the years, the chapter conducted several
+                  activities. We have won the Best Chapter award several
+                  times. The First student branch was formed in 1992, Today
+                  there are more than 20 student branches in and around in
+                  Nashik. Our ACCESS has won the Best Newsletter Award several
+                  times. The student...
+                </p>
                 <div className="mt-4 sm:mt-6 flex justify-center">
                   <Button className="bg-blue-600 text-white hover:bg-blue-700 transition-colors w-full sm:w-auto">
-                    Read more
+                    <a href="https://www.csi-nashik.org.in/" target="_blank" rel="noopener noreferrer">Read more</a>
                   </Button>
                 </div>
               </Card>
             </div>
+
 
             <AboutUs />
 

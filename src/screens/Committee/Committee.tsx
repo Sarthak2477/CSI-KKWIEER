@@ -742,13 +742,6 @@ export const Committee = (): JSX.Element => {
                 {year}
               </CustomButton>
             ))}
-            <CustomButton
-              variant={selectedYear === "all" ? "default" : "outline"}
-              size="md"
-              onClick={() => setSelectedYear("all")}
-            >
-              All Years
-            </CustomButton>
           </div>
         </div>
 
@@ -781,15 +774,6 @@ export const Committee = (): JSX.Element => {
         )}
 
         {/* Bottom Action Buttons */}
-        <div className="flex justify-center gap-4">
-          <CustomButton
-            variant="default"
-            size="lg"
-            onClick={handleViewAllMembers}
-          >
-            Membership
-          </CustomButton>
-        </div>
       </div>
     </div>
   );
