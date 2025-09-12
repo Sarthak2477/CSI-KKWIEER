@@ -42,7 +42,7 @@ export const AboutUs = () => {
         <button
           onClick={() => setExpanded(!expanded)}
           className="group relative inline-flex items-center gap-2 px-4 sm:px-5 md:px-7 py-2 sm:py-3 
-               bg-white text-blue-600 font-medium rounded-full border border-blue-600
+               bg-white text-blue-600 font-medium rounded-2xl border border-blue-600
                transition-all duration-300 ease-out
                hover:bg-blue-600 hover:text-white"
         >
