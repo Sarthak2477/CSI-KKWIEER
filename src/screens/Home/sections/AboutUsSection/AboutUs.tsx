@@ -70,16 +70,16 @@ export const AboutUs = () => {
         <div className="space-y-6 sm:space-y-8 md:space-y-10 pt-4">
           {/* Detailed Info */}
           <div className="text-gray-700 space-y-3 sm:space-y-4 text-xs sm:text-sm md:text-base leading-relaxed transform transition-transform duration-500 ease-out">
-            <p className="animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <p className="animate-fade-in-up" style={{ animationDelay: "0.1s", textAlign: "justify" }}>
               CSI was founded in 1965 by a small group of IT professionals who wanted to exchange ideas and organize activities
               in the emerging computer science field. Today, CSI is the largest and most professionally managed association for
               IT professionals in India with over 100,000 members.
             </p>
-            <p className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <p className="animate-fade-in-up" style={{ animationDelay: "0.2s", textAlign: "justify" }}>
               Members include software developers, scientists, academicians, CIOs, CTOs, and vendors across various sectors.
               CSI currently has over 500 student branches across 73+ locations and aims to expand further into smaller towns and cities.
             </p>
-            <p className="animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+            <p className="animate-fade-in-up" style={{ animationDelay: "0.3s", textAlign: "justify" }}>
               At KKWIEER, Prof. A. V. Kolapkar leads the student branch as Coordinator and has received the "Best Student Branch Coordinator" award.
               Faculty receive access to CSI Journals and Communications, and both students and faculty benefit from research grants and tech exposure.
               Prof. Dr. S. S. Sane, a key contributor, now serves as Regional Vice President for Maharashtra & Goa.
