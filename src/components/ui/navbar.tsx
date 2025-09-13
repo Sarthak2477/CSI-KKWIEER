@@ -37,7 +37,7 @@ export const Navbar = () => {
     <>
       {/* Desktop Navigation */}
       <NavigationMenu
-        className={`hidden lg:flex fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 px-4 sm:px-18 py-2 rounded-xl shadow-lg transition-all duration-500 ease-in-out
+        className={`hidden lg:flex fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 px-4 sm:px-18 rounded-xl shadow-lg transition-all duration-500 ease-in-out
           ${isAtTop
             ? "opacity-100 translate-y-0 backdrop-blur-md bg-white/80"
             : "opacity-100 -translate-y-4 backdrop-blur-sm bg-white/60"

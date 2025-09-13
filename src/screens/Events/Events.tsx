@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Calendar,
   MapPin,
@@ -8,8 +8,15 @@ import {
   Award,
 } from "lucide-react";
 import { Navbar } from "../../components/ui/navbar";
+import { useLocation } from "react-router-dom";
 
 const Events = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   const [activeCategory, setActiveCategory] = useState("all");
 
   const events = [

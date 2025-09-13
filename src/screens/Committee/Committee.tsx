@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar } from "../../components/ui/navbar";
 import ProfileCard from "../../components/ProfileCard";
+import { useLocation } from "react-router-dom";
 
 // Define the committee member interface
 interface CommitteeMember {
@@ -659,6 +660,13 @@ const CustomButton: React.FC<{
   className = "",
   onClick,
 }) => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  
   const baseClasses =
     "font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center";
 
@@ -670,7 +678,7 @@ const CustomButton: React.FC<{
 
   const sizeClasses = {
     sm: "px-4 py-2 text-sm",
-    md: "px-6 py-2",
+    md: "px-5 py-2 text-base",
     lg: "px-8 py-3 text-lg",
   };
 
@@ -687,20 +695,13 @@ const CustomButton: React.FC<{
 export const Committee = (): JSX.Element => {
   const [selectedYear, setSelectedYear] = useState("2025");
 
-  const handleViewAllMembers = () => {
-    console.log("Navigate to all members view");
-  };
-
   const filteredMembers = committeeMembers.filter(
     (member) => selectedYear === "all" || member.year === selectedYear
   );
 
-  // Sort members by position hierarchy
   const sortedMembers = filteredMembers.sort((a, b) => {
     const aIndex = ALL_POSITIONS.indexOf(a.position);
     const bIndex = ALL_POSITIONS.indexOf(b.position);
-
-    // If position is not found, put it at the end
     if (aIndex === -1) return 1;
     if (bIndex === -1) return -1;
     return aIndex - bIndex;
@@ -715,10 +716,10 @@ export const Committee = (): JSX.Element => {
       <Navbar />
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-36">
+      <div className="mt-10 container mx-auto px-6 sm:px-6 lg:px- py-24 sm:py-28 md:py-32">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             CSI KKWIEER Core Team for{" "}
             {selectedYear === "all"
               ? "All Years"
@@ -726,17 +727,17 @@ export const Committee = (): JSX.Element => {
                   -2
                 )}`}
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-8">
             Fuelled by an Unstoppable Crew, Charting the Course to Achievement
           </p>
 
           {/* Year Navigation */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-8">
             {availableYears.map((year) => (
               <CustomButton
                 key={year}
                 variant={year === selectedYear ? "default" : "outline"}
-                size="md"
+                size="sm"
                 onClick={() => setSelectedYear(year)}
               >
                 {year}
@@ -747,7 +748,7 @@ export const Committee = (): JSX.Element => {
 
         {/* Members Grid */}
         {sortedMembers.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 mb-12">
             {sortedMembers.map((member) => (
               <div key={member.id} className="flex justify-center">
                 <ProfileCard
@@ -772,8 +773,6 @@ export const Committee = (): JSX.Element => {
             </p>
           </div>
         )}
-
-        {/* Bottom Action Buttons */}
       </div>
     </div>
   );

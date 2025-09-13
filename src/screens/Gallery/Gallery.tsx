@@ -2,13 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import type React from "react";
 import { Navbar } from "../../components/ui/navbar";
 import { FooterSection } from "../Home/sections/FooterSection";
-import { 
-    X, 
-    Search, 
-    Filter, 
-    ExternalLink, 
-    ChevronLeft, 
-    ChevronRight, 
+import {
+    X,
+    Search,
+    Filter,
+    ExternalLink,
+    ChevronLeft,
+    ChevronRight,
     ChevronUp,
     Calendar,
     Tag,
@@ -21,6 +21,7 @@ import {
     ArrowLeft,
     Play
 } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 type EventPhoto = {
     id: number;
@@ -105,7 +106,7 @@ const EVENTS: Event[] = [
         description: "",
         coverImage: "/images/csi_img1.png",
         photoCount: 5,
-        
+
     },
     {
         id: "counselor-award",
@@ -116,7 +117,7 @@ const EVENTS: Event[] = [
         description: "",
         coverImage: "/images/csi_img2.png",
         photoCount: 3,
-        
+
     }
 ];
 
@@ -125,21 +126,21 @@ const EVENT_PHOTOS: EventPhoto[] = [
     { id: 1, src: "/images/installation.jpg", title: "Installation Ceremony", eventId: "installation-2025", eventName: "CSI Installation Ceremony", date: "March 2025", category: "Ceremony" },
     { id: 2, src: "/images/installation.jpg", title: "Award Presentation", eventId: "installation-2025", eventName: "CSI Installation Ceremony", date: "March 2025", category: "Ceremony" },
     { id: 3, src: "/images/installation.jpg", title: "Committee Members", eventId: "installation-2025", eventName: "CSI Installation Ceremony", date: "March 2025", category: "Ceremony" },
-    
+
     // Google Cohort photos
     { id: 4, src: "/images/cohort.jpg", title: "Google Cloud Workshop", eventId: "google-cohort", eventName: "Google Cohort Programme", date: "April 2025", category: "Workshop" },
     { id: 5, src: "/images/cohort.jpg", title: "Hands-on Learning", eventId: "google-cohort", eventName: "Google Cohort Programme", date: "April 2025", category: "Workshop" },
-    
+
     // C2C Seminar photos
     { id: 6, src: "/images/c2c.jpg", title: "Career Guidance Session", eventId: "c2c-seminar", eventName: "Campus To Corporate", date: "May 2025", category: "Seminar" },
     { id: 7, src: "/images/c2c.jpg", title: "Industry Expert Talk", eventId: "c2c-seminar", eventName: "Campus To Corporate", date: "May 2025", category: "Seminar" },
-    
+
     // E-Yantran photos
     { id: 8, src: "/images/eyantran.jpg", title: "E-Waste Collection", eventId: "eyantran", eventName: "E-Yantran Initiative", date: "June 2025", category: "Activity" },
-    
+
     // Professional Connect photos
     { id: 9, src: "/images/pc.jpg", title: "Networking Event", eventId: "professional-connect", eventName: "Professional Connect", date: "July 2025", category: "Networking" },
-    
+
     // Award photos
     { id: 10, src: "/images/csi_img1.png", title: "Best Student Branch Award", eventId: "awards-2018", eventName: "Best Student Branch Award", date: "December 2018", category: "Award" },
     { id: 11, src: "/images/csi_img2.png", title: "Counselor Award", eventId: "counselor-award", eventName: "Counselor Award", date: "December 2015", category: "Award" }
@@ -148,15 +149,21 @@ const EVENT_PHOTOS: EventPhoto[] = [
 const CATEGORIES = ["All", "Workshop", "Seminar", "Ceremony", "Networking", "Activity", "Award"] as const;
 
 const Gallery = (): JSX.Element => {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
     const [query, setQuery] = useState("");
     const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]>("All");
     const [events] = useState<Event[]>(EVENTS);
     const [eventPhotos] = useState<EventPhoto[]>(EVENT_PHOTOS);
-    
+
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [showTop, setShowTop] = useState(false);
     const [viewMode, setViewMode] = useState<'grid' | 'masonry'>('grid');
-    const [isLoading, setIsLoading] = useState(false); 
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const [currentView, setCurrentView] = useState<'events' | 'photos'>('events');
 
@@ -216,7 +223,7 @@ const Gallery = (): JSX.Element => {
         return () => obs.disconnect();
     }, [filteredEvents, filteredPhotos]);
 
-    
+
     useEffect(() => {
         const onScroll = () => setShowTop(window.scrollY > 400);
         window.addEventListener("scroll", onScroll);
@@ -244,12 +251,12 @@ const Gallery = (): JSX.Element => {
     const closeLightbox = () => setLightboxIndex(null);
     const next = () => setLightboxIndex((i) => (i === null ? i : (i + 1) % filteredPhotos.length));
     const prev = () => setLightboxIndex((i) => (i === null ? i : (i - 1 + filteredPhotos.length) % filteredPhotos.length));
-    
+
     const handleEventClick = (event: Event) => {
         setSelectedEvent(event);
         setCurrentView('photos');
     };
-    
+
     const handleBackToEvents = () => {
         setCurrentView('events');
         setSelectedEvent(null);
@@ -280,7 +287,7 @@ const Gallery = (): JSX.Element => {
 
             <Navbar />
 
-            <main className="container mx-auto mt-8 px-4 pt-32 pb-20 relative z-10"> 
+            <main className="container mx-auto mt-8 px-4 pt-32 pb-20 relative z-10">
                 {/* Compact Hero Section */}
                 <section className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-sm font-medium border border-blue-200/50 backdrop-blur-sm shadow-lg animate-fadeInUp">
@@ -288,28 +295,28 @@ const Gallery = (): JSX.Element => {
                         CSI Photo Gallery
                         <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping"></div>
                     </div>
-                    
+
                     <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-900 via-blue-600 to-indigo-600 animate-fadeInUp delay-200 leading-tight"> {/* Increased top margin */}
                         Moments that define
                         <span className="block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600">
                             our community
                         </span>
                     </h1>
-                    
+
                     <p className="mt-4 text-base text-slate-600 max-w-2xl mx-auto leading-relaxed animate-fadeInUp delay-400">
                         Explore highlights from CSI events, workshops, and achievements.
                     </p>
 
-                     <div className="mt-6 flex flex-wrap justify-center gap-3 animate-fadeInUp delay-600">
-                         <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 backdrop-blur-sm rounded-full border border-blue-200/50">
-                             <Eye size={14} className="text-blue-600" />
-                             <span className="text-sm font-medium text-blue-800">{currentView === 'events' ? filteredEvents.length : filteredPhotos.length} {currentView === 'events' ? 'Events' : 'Photos'}</span>
-                         </div>
-                         <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 backdrop-blur-sm rounded-full border border-blue-200/50">
-                             <Tag size={14} className="text-indigo-600" />
-                             <span className="text-sm font-medium text-indigo-800">{CATEGORIES.length - 1} Categories</span>
-                         </div>
-                     </div>
+                    <div className="mt-6 flex flex-wrap justify-center gap-3 animate-fadeInUp delay-600">
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 backdrop-blur-sm rounded-full border border-blue-200/50">
+                            <Eye size={14} className="text-blue-600" />
+                            <span className="text-sm font-medium text-blue-800">{currentView === 'events' ? filteredEvents.length : filteredPhotos.length} {currentView === 'events' ? 'Events' : 'Photos'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 backdrop-blur-sm rounded-full border border-blue-200/50">
+                            <Tag size={14} className="text-indigo-600" />
+                            <span className="text-sm font-medium text-indigo-800">{CATEGORIES.length - 1} Categories</span>
+                        </div>
+                    </div>
                 </section>
 
                 {/* Compact Filter Section */}
@@ -340,11 +347,10 @@ const Gallery = (): JSX.Element => {
                                         <button
                                             key={cat}
                                             onClick={() => setActiveCategory(cat)}
-                                            className={`group px-3 py-1.5 rounded-full text-xs border transition-all duration-300 transform hover:scale-105 ${
-                                                activeCategory === cat
+                                            className={`group px-3 py-1.5 rounded-full text-xs border transition-all duration-300 transform hover:scale-105 ${activeCategory === cat
                                                     ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-600 shadow-md shadow-blue-600/25"
                                                     : "bg-white/80 text-slate-700 border-slate-200 hover:border-blue-300 hover:bg-blue-50/80"
-                                            }`}
+                                                }`}
                                         >
                                             {cat}
                                         </button>
@@ -367,21 +373,19 @@ const Gallery = (): JSX.Element => {
                                 <div className="flex bg-white/90 rounded-xl border border-slate-200 p-0.5 shadow-md">
                                     <button
                                         onClick={() => setViewMode('grid')}
-                                        className={`p-2 rounded-lg transition-all duration-300 ${
-                                            viewMode === 'grid' 
-                                                ? 'bg-blue-600 text-white shadow-md' 
+                                        className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'grid'
+                                                ? 'bg-blue-600 text-white shadow-md'
                                                 : 'text-slate-600 hover:bg-blue-50'
-                                        }`}
+                                            }`}
                                     >
                                         <Grid3X3 size={16} />
                                     </button>
                                     <button
                                         onClick={() => setViewMode('masonry')}
-                                        className={`p-2 rounded-lg transition-all duration-300 ${
-                                            viewMode === 'masonry' 
-                                                ? 'bg-blue-600 text-white shadow-md' 
+                                        className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'masonry'
+                                                ? 'bg-blue-600 text-white shadow-md'
                                                 : 'text-slate-600 hover:bg-blue-50'
-                                        }`}
+                                            }`}
                                     >
                                         <List size={16} />
                                     </button>
@@ -405,7 +409,7 @@ const Gallery = (): JSX.Element => {
                             </div>
                         ) : (
                             <div className={
-                                viewMode === 'masonry' 
+                                viewMode === 'masonry'
                                     ? "columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 [column-fill:_balance]"
                                     : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
                             }>
@@ -414,8 +418,8 @@ const Gallery = (): JSX.Element => {
                                         key={event.id}
                                         onClick={() => handleEventClick(event)}
                                         className="group relative mb-6 break-inside-avoid overflow-hidden rounded-2xl border border-blue-100/50 bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer js-reveal transform-gpu"
-                                        style={{ 
-                                            transform: "translateY(10px) scale(0.95)", 
+                                        style={{
+                                            transform: "translateY(10px) scale(0.95)",
                                             opacity: 0,
                                             filter: "blur(3px)"
                                         }}
@@ -435,10 +439,10 @@ const Gallery = (): JSX.Element => {
                                                         className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                                                     />
                                                 </div>
-                                                
+
                                                 {/* Hover overlay */}
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                                
+
                                                 {/* Category badge */}
                                                 <div className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-semibold rounded-full border border-blue-200/50">
                                                     {event.category}
@@ -461,11 +465,11 @@ const Gallery = (): JSX.Element => {
                                             <h3 className="text-lg font-bold text-slate-800 leading-tight mb-2 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
                                                 {event.name}
                                             </h3>
-                                            
+
                                             <p className="text-sm text-slate-600 mb-3 line-clamp-2">
                                                 {event.description}
                                             </p>
-                                            
+
                                             <div className="space-y-2">
                                                 <div className="flex items-center gap-2 text-xs text-slate-500">
                                                     <Calendar size={12} className="text-blue-500" />
@@ -492,7 +496,7 @@ const Gallery = (): JSX.Element => {
                             </div>
                         ) : (
                             <div className={
-                                viewMode === 'masonry' 
+                                viewMode === 'masonry'
                                     ? "columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 gap-3 [column-fill:_balance]"
                                     : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"
                             }>
@@ -501,8 +505,8 @@ const Gallery = (): JSX.Element => {
                                         key={photo.id}
                                         onClick={() => openLightbox(idx)}
                                         className="group relative mb-3 break-inside-avoid overflow-hidden rounded-xl border border-blue-100/50 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer js-reveal transform-gpu"
-                                        style={{ 
-                                            transform: "translateY(10px) scale(0.95)", 
+                                        style={{
+                                            transform: "translateY(10px) scale(0.95)",
                                             opacity: 0,
                                             filter: "blur(3px)"
                                         }}
@@ -521,9 +525,9 @@ const Gallery = (): JSX.Element => {
                                                         className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                                                     />
                                                 </div>
-                                                
+
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                                
+
                                                 <div className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-medium rounded-md border border-blue-200/50 transform translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                                                     {photo.category}
                                                 </div>
@@ -538,13 +542,13 @@ const Gallery = (): JSX.Element => {
                                             <h3 className="text-sm font-semibold text-slate-800 leading-tight mb-1 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
                                                 {photo.title}
                                             </h3>
-                                            
+
                                             <div className="space-y-0.5">
                                                 <div className="flex items-center gap-1 text-xs text-slate-600">
                                                     <Tag size={10} className="text-blue-500" />
                                                     <span className="truncate">{photo.eventName}</span>
                                                 </div>
-                                                
+
                                                 <div className="flex items-center gap-1 text-xs text-slate-500">
                                                     <Calendar size={10} className="text-indigo-500" />
                                                     <span>{photo.date}</span>
@@ -580,7 +584,7 @@ const Gallery = (): JSX.Element => {
             {lightboxIndex !== null && filteredPhotos[lightboxIndex] && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-fadeIn">
                     <div className="absolute inset-0" onClick={closeLightbox}></div>
-                    
+
                     {/* Controls */}
                     <button
                         aria-label="Close"
@@ -622,7 +626,7 @@ const Gallery = (): JSX.Element => {
                                 alt={filteredPhotos[lightboxIndex].title}
                                 className="w-full max-h-[70vh] object-contain"
                             />
-                            
+
                             {/* Image info */}
                             <div className="p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                                 <div className="text-center text-white">
