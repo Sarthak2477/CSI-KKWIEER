@@ -7,18 +7,24 @@ export const AboutUs = () => {
   const [committeeListsExpanded, setCommitteeListsExpanded] = useState(false);
 
   const committeeData = [
-    { year: "2023-2024", link: "/pdfs/committee_2023_2024.pdf" },
-    { year: "2022-2023", link: "/pdfs/committee_2022_2023.pdf" },
-    { year: "2021-2022", link: "/pdfs/committee_2021_2022.pdf" },
-    { year: "2020-2021", link: "/pdfs/committee_2020_2021.pdf" },
-    { year: "2019-2020", link: "/pdfs/committee_2019_2020.pdf" },
+    { year: "2023-2024", link: "https://www.kkwagh.edu.in/engineering/pdf/csi-committee-list-2023-24.pdf" },
+    { year: "2022-2023", link: "https://www.kkwagh.edu.in/engineering/pdf/csi-committee-list-2022-23.pdf" },
+    { year: "2021-2022", link: "https://www.kkwagh.edu.in/engineering/pdf/csi-committee-list-2021-22.pdf" },
+    { year: "2020-2021", link: "https://www.kkwagh.edu.in/engineering/pdf/csi-committee-list-2020-21.pdf" },
+    { year: "2019-2020", link: "https://www.kkwagh.edu.in/engineering/pdf/csi-committee-list-2019-02.pdf" },
+    
   ];
 
   const activityReports = [
-    { year: "2022-2023", link: "/pdfs/activity_2022_2023.pdf" },
-    { year: "2021-2022", link: "/pdfs/activity_2021_2022.pdf" },
-    { year: "2020-2021", link: "/pdfs/activity_2020_2021.pdf" },
-    { year: "2019-2020", link: "/pdfs/activity_2019_2020.pdf" },
+    { year: "2022-2023", link: "https://www.kkwagh.edu.in/engineering/pdf/2022-23-ar.pdf" },
+    { year: "2021-2022", link: "https://www.kkwagh.edu.in/engineering/pdf/2021-22-ar.pdf" },
+    { year: "2020-2021", link: "https://www.kkwagh.edu.in/engineering/pdf/2020-21-ar.pdf"},
+    { year: "2019-2020", link: "https://www.kkwagh.edu.in/engineering/pdf/2019-20-cr.pdf"},
+    { year: "2018-2019", link: "https://www.kkwagh.edu.in/engineering/pdf/iste-students-chapter-annual-report-2017-18.pdf" },
+    { year: "2017-2018", link: "https://www.kkwagh.edu.in/engineering/pdf/iste-students-chapter-annual-report-2017-18.pdf" },
+    { year: "2016-2017", link: "https://www.kkwagh.edu.in/engineering/pdf/iste-students-chapter-annual-report-2016-17.pdf" },
+    { year: "2015-2016", link: "https://www.kkwagh.edu.in/engineering/pdf/csi-committee-list-2019-02.pdf" },
+    { year: "2014-2015", link: "https://www.kkwagh.edu.in/engineering/pdf/iste-students-chapter-annual-report-2015-16.pdf" },
   ];
 
   return (
