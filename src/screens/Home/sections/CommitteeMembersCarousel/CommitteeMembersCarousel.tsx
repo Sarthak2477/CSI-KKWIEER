@@ -2,14 +2,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileCard from "../../../../components/ProfileCard";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../../../../components/ui/carousel";
-// Define the committee member interface
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay, Pagination } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+// -------------------- Types --------------------
 interface CommitteeMember {
   id: string;
   name: string;
@@ -20,7 +20,7 @@ interface CommitteeMember {
   description?: string;
 }
 
-// Define all 6 positions in order
+// Position Order
 const ALL_POSITIONS = [
   "President",
   "Vice-President",
@@ -30,7 +30,7 @@ const ALL_POSITIONS = [
   "Joint Treasurer",
 ];
 
-// Sample committee members data
+// -------------------- Data --------------------
 const committeeMembers: CommitteeMember[] = [
   {
     id: "1",
@@ -55,7 +55,7 @@ const committeeMembers: CommitteeMember[] = [
     position: "Secretary",
     year: "2025",
     image: "/images/2025/3Shweta.png",
-    linkedin: "http://www.linkedin.com/in/shweta-yeola-3a8075296/din:",
+    linkedin: "https://www.linkedin.com/in/shweta-yeola-3a8075296/",
   },
   {
     id: "4",
@@ -84,6 +84,8 @@ const committeeMembers: CommitteeMember[] = [
     linkedin:
       "https://www.linkedin.com/in/sadique-khatib-4175342a9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
+
+  // 2024
   {
     id: "27",
     name: "Kundan Suryawanshi",
@@ -132,6 +134,8 @@ const committeeMembers: CommitteeMember[] = [
     image: "/images/2024/6Abhishek.png",
     linkedin: "https://www.linkedin.com/in/abhishek-malajangam/",
   },
+
+  // 2023
   {
     id: "51",
     name: "Aditi Avhad",
@@ -183,7 +187,7 @@ const committeeMembers: CommitteeMember[] = [
   },
 ];
 
-// Custom Button Component
+// -------------------- Button Component --------------------
 const CustomButton: React.FC<{
   children: React.ReactNode;
   variant?: "default" | "outline";
@@ -222,36 +226,7 @@ const CustomButton: React.FC<{
   );
 };
 
-// Custom Carousel Component using shadcn/ui Carousel
-const CustomCarousel: React.FC<{
-  children: React.ReactNode;
-  itemsData: CommitteeMember[];
-}> = ({ children }) => {
-  return (
-    <Carousel
-      className="w-full max-w-7xl mx-auto"
-      opts={{
-        align: "start",
-        loop: true,
-      }}
-    >
-      <CarouselContent className="-ml-2 md:-ml-4">
-        {React.Children.map(children, (child, index) => (
-          <CarouselItem
-            key={index}
-            className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
-          >
-            <div className="p-1 h-full">{child}</div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="hidden sm:flex" />
-      <CarouselNext className="hidden sm:flex" />
-    </Carousel>
-  );
-};
-
-// Main Carousel Component
+// -------------------- Main Component --------------------
 const CommitteeMembersCarousel: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState("2025");
   const navigate = useNavigate();
@@ -260,20 +235,22 @@ const CommitteeMembersCarousel: React.FC = () => {
     navigate("/committee");
   };
 
+  // Filter by year
   const filteredMembers = committeeMembers.filter(
     (member) => selectedYear === "all" || member.year === selectedYear
   );
 
-  // Sort members by position hierarchy (including all 6 positions)
+  // Sort by defined positions
   const sortedMembers = filteredMembers.sort((a, b) => {
     const aIndex = ALL_POSITIONS.indexOf(a.position);
     const bIndex = ALL_POSITIONS.indexOf(b.position);
-
-    // If position is not found, put it at the end
     if (aIndex === -1) return 1;
     if (bIndex === -1) return -1;
     return aIndex - bIndex;
   });
+
+  // Decide loop condition (fixes Swiper warning)
+  const enableLoop = sortedMembers.length > 3;
 
   return (
     <section className="py-16 bg-gray-50">
@@ -303,30 +280,48 @@ const CommitteeMembersCarousel: React.FC = () => {
           </div>
         </div>
 
-        {/* Carousel */}
+        {/* Swiper Carousel */}
         {sortedMembers.length > 0 ? (
           <div className="relative mb-12">
-            <CustomCarousel itemsData={sortedMembers}>
-              {sortedMembers.slice(0, 6).map((member) => (
-                <div
-                  key={member.id}
-                  className="w-full h-full min-h-[400px] flex"
-                >
-                  <ProfileCard
-                    name={member.name}
-                    title={member.position}
-                    handle={member.year}
-                    status="Active"
-                    contactText="Contact Me"
-                    avatarUrl={member.image}
-                    miniAvatarUrl={member.image}
-                    linkedinUrl={member.linkedin}
-                    showUserInfo={true}
-                    onContactClick={() => console.log(`Contact ${member.name}`)}
-                  />
-                </div>
+            <Swiper
+              modules={[Navigation, Autoplay, Pagination]}
+              spaceBetween={20}
+              slidesPerView={1}
+              loop={enableLoop}
+              autoplay={{
+                delay: 2500,
+                disableOnInteraction: false,
+              }}
+              navigation
+              pagination={{ clickable: true }}
+              breakpoints={{
+                640: { slidesPerView: 1 },
+                768: { slidesPerView: Math.min(2, sortedMembers.length) },
+                1024: { slidesPerView: Math.min(3, sortedMembers.length) },
+              }}
+              className="w-full max-w-7xl mx-auto"
+            >
+              {sortedMembers.map((member) => (
+                <SwiperSlide key={member.id}>
+                  <div className="flex justify-center">
+                    <ProfileCard
+                      name={member.name}
+                      title={member.position}
+                      handle={member.year}
+                      status="Active"
+                      contactText="Contact Me"
+                      avatarUrl={member.image}
+                      miniAvatarUrl={member.image}
+                      linkedinUrl={member.linkedin}
+                      showUserInfo={true}
+                      onContactClick={() =>
+                        console.log(`Contact ${member.name}`)
+                      }
+                    />
+                  </div>
+                </SwiperSlide>
               ))}
-            </CustomCarousel>
+            </Swiper>
           </div>
         ) : (
           <div className="text-center py-12">
@@ -338,9 +333,37 @@ const CommitteeMembersCarousel: React.FC = () => {
 
         {/* View All Members Button */}
         <div className="text-center">
-          <CustomButton onClick={handleViewAllMembers} size="lg">
-            View All Members
-          </CustomButton>
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={() => navigate("/committee")}
+              className="
+                relative
+                px-6 sm:px-8 py-2 sm:py-3
+                bg-gradient-to-b from-blue-600 via-blue-500 to-blue-600
+                text-white
+                font-semibold
+                rounded-lg
+                shadow-lg
+                overflow-hidden
+                group
+                transition-all
+                duration-300
+                ease-in-out
+                hover:scale-105
+              "
+            >
+              
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-400 via-blue-400 to-blue-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></span>
+
+              {/* Moving background stripe on hover */}
+              <span className="absolute -left-8 top-0 w-24 h-full bg-white/20 rounded-full transform rotate-45 translate-x-0 group-hover:translate-x-[200%] transition-transform duration-700"></span>
+
+              {/* Button text */}
+              <span className="relative z-10 tracking-wider text-base sm:text-lg group-hover:scale-105 transition-transform duration-300">
+                View All Members
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </section>

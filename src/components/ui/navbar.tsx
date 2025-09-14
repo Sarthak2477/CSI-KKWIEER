@@ -9,7 +9,11 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "../ui/navigation-menu";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+} from "../ui/navigation-menu";
 import { Button } from "../ui/button";
 
 export const Navbar = () => {
@@ -18,11 +22,31 @@ export const Navbar = () => {
 
   // Navigation links with route paths
   const navigationItems = [
-    { icon: <HomeIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Home", path: "/" },
-    { icon: <UserSquareIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "About Us", path: "/#AboutUs" },
-    { icon: <FlagIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Events", path: "/events" },
-    { icon: <GalleryVerticalIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Committee", path: "/committee" },
-    { icon: <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Gallery", path: "/gallery" },
+    {
+      icon: <HomeIcon className="w-5 h-5 sm:w-6 sm:h-6" />,
+      label: "Home",
+      path: "/",
+    },
+    {
+      icon: <UserSquareIcon className="w-5 h-5 sm:w-6 sm:h-6" />,
+      label: "About Us",
+      path: "/#AboutUs",
+    },
+    {
+      icon: <FlagIcon className="w-5 h-5 sm:w-6 sm:h-6" />,
+      label: "Events",
+      path: "/events",
+    },
+    {
+      icon: <GalleryVerticalIcon className="w-5 h-5 sm:w-6 sm:h-6" />,
+      label: "Committee",
+      path: "/committee",
+    },
+    {
+      icon: <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6" />,
+      label: "Gallery",
+      path: "/gallery",
+    },
   ];
 
   useEffect(() => {
@@ -37,10 +61,11 @@ export const Navbar = () => {
     <>
       {/* Desktop Navigation */}
       <NavigationMenu
-        className={`hidden lg:flex fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 px-4 sm:px-18 rounded-xl shadow-lg transition-all duration-500 ease-in-out
-          ${isAtTop
-            ? "opacity-100 translate-y-0 backdrop-blur-md bg-white/80"
-            : "opacity-100 -translate-y-4 backdrop-blur-sm bg-white/60"
+        className={`hidden lg:flex fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 px-4 sm:px-18 py-2 rounded-xl shadow-lg transition-all duration-500 ease-in-out
+          ${
+            isAtTop
+              ? "opacity-100 translate-y-0 backdrop-blur-md bg-white/80"
+              : "opacity-100 -translate-y-4 backdrop-blur-sm bg-white/60"
           }`}
       >
         <img
@@ -48,7 +73,6 @@ export const Navbar = () => {
           className="h-20 w-20 lg:h-[100px] lg:w-[160px] ml-4 lg:ml-20 mr-4 lg:mr-10"
           alt="CSI Logo"
         />
-
 
         <NavigationMenuList className="flex gap-4 lg:gap-8">
           {navigationItems.map((item, index) => (
@@ -76,27 +100,28 @@ export const Navbar = () => {
       {/* Mobile Navigation */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50">
         <div
-          className={`w-full px-4 py-3 transition-all duration-300 ${isAtTop
-            ? "bg-white/90 backdrop-blur-md"
-            : "bg-white/95 backdrop-blur-sm shadow-md"
-            }`}
+          className={`w-full px-4 py-3 transition-all duration-300 ${
+            isAtTop
+              ? "bg-white/90 backdrop-blur-md"
+              : "bg-white/95 backdrop-blur-sm shadow-md"
+          }`}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-
+              {/* Bigger logo for mobile */}
               <img
                 src="/images/csi-kkw-logo.png"
-                className="h-14 w-14 lg:h-[60px] lg:w-[100px] lg:ml-4 mr-2 lg:mr-6"
+                className="h-16 w-16 sm:h-18 sm:w-18 lg:h-[60px] lg:w-[100px] lg:ml-4 mr-2 lg:mr-6"
                 alt="CSI KKW Logo"
               />
               {/* Divider */}
-              <div className="h-8 sm:h-10 w-px bg-gray-300"></div>
+              <div className="h-10 w-px bg-gray-300"></div>
+              {/* Bigger CSI logo for mobile */}
               <img
                 src="/images/csi.png"
-                className="h-8 w-8 sm:h-10 sm:w-10"
+                className="h-10 w-10 sm:h-12 sm:w-12"
                 alt="CSI Logo"
               />
-
             </div>
 
             <Button
@@ -105,7 +130,11 @@ export const Navbar = () => {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2"
             >
-              {isMobileMenuOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+              {isMobileMenuOpen ? (
+                <XIcon className="w-6 h-6" />
+              ) : (
+                <MenuIcon className="w-6 h-6" />
+              )}
             </Button>
           </div>
         </div>
@@ -130,7 +159,7 @@ export const Navbar = () => {
             </div>
           </div>
         )}
-      </div >
+      </div>
     </>
   );
 };

@@ -37,7 +37,7 @@ export const FooterSection = (): JSX.Element => {
   ];
 
   return (
-    <footer className="w-full bg-gradient-to-r from-blue-800 via-blue-500 to-blue-800 text-white font-['Poppins',Helvetica]">
+    <footer className="w-full bg-gradient-to-r from-blue-950 via-blue-700 to-blue-950 text-white font-['Poppins',Helvetica]">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10">
         
         {/* Row 1: Logos + Title (inline) */}
@@ -68,11 +68,19 @@ export const FooterSection = (): JSX.Element => {
           {/* Address */}
           <div>
             <h4 className="text-lg font-semibold mb-3">Address</h4>
-            <address className="not-italic text-gray-200 text-sm leading-relaxed">
-              KK Wagh Institute of Engineering Education and Research <br />
-              Hirabai Haridas Vidyanagari, Amrutdham, Panchavati, <br />
-              Nashik, Maharashtra 422003, India.
-            </address>
+            <a
+  href="https://www.google.com/maps/dir/K.K+Wagh+Institute+Of+Engineering+Education+and+Research,+Panchavati,+Nashik,+Maharashtra/Hirabai+Haridas+Vidyanagari,+Mumbai+Agra+Road+Amrutdham,+Panchavati,+Nashik,+Maharashtra+422003/@20.0135866,73.7810616,13z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x3bddebab15555555:0xdb01367e9d5cf969!2m2!1d73.8222614!2d20.0135914!1m5!1m1!1s0x3bddebab15555555:0xdb01367e9d5cf969!2m2!1d73.8222614!2d20.0135914?entry=ttu&g_ep=EgoyMDI1MDkxMC4wIKXMDSoASAFQAw%3D%3D"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="block not-italic text-gray-200 text-sm leading-relaxed hover:text-white transition-colors"
+>
+  <address className="not-italic">
+    KK Wagh Institute of Engineering Education and Research <br />
+    Hirabai Haridas Vidyanagari, Amrutdham, Panchavati, <br />
+    Nashik, Maharashtra 422003, India.
+  </address>
+</a>
+
           </div>
 
           {/* Footer Sections */}

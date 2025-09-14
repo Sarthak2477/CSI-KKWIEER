@@ -131,7 +131,7 @@ export const Home = (): JSX.Element => {
             <GallerySection />
 
             {/* Footer Section */}
-            <div className="w-full min-h-[400px] sm:min-h-[500px] lg:min-h-[666px] bg-[#1e1e1e]">
+            <div className="w-full bg-[#1e1e1e]">
               <FooterSection />
             </div>
           </div>
