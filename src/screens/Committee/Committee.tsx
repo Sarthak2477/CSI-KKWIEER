@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { Navbar } from "../../components/ui/navbar";
 import ProfileCard from "../../components/ProfileCard";
 
@@ -610,7 +610,6 @@ const committeeMembers: CommitteeMember[] = [
     image: "/images/2023/18Vedarth.png",
     linkedin: "https://www.linkedin.com/in/vedarth-khandve-tech-professional/",
   },
-
   {
     id: "71",
     name: "Anshara Pathan",
@@ -645,6 +644,53 @@ const committeeMembers: CommitteeMember[] = [
   },
 ];
 
+// Lazy Loading Hook
+const useLazyLoading = (itemsPerPage = 12) => {
+  const [visibleItems, setVisibleItems] = useState(itemsPerPage);
+  const [loading, setLoading] = useState(false);
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const lastElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          setLoading(true);
+          setTimeout(() => {
+            setVisibleItems((prevVisible) => prevVisible + itemsPerPage);
+            setLoading(false);
+          }, 500); // Small delay to show loading state
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, itemsPerPage]
+  );
+
+  const resetVisibleItems = () => {
+    setVisibleItems(itemsPerPage);
+  };
+
+  return { visibleItems, loading, lastElementRef, resetVisibleItems };
+};
+
+// Loading Skeleton Component
+const LoadingSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm mx-auto">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-24 h-24 bg-gray-300 rounded-full"></div>
+        <div className="space-y-2 w-full">
+          <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto"></div>
+          <div className="h-3 bg-gray-300 rounded w-1/2 mx-auto"></div>
+        </div>
+        <div className="w-full h-10 bg-gray-300 rounded"></div>
+      </div>
+    </div>
+  </div>
+);
+
 // Custom Button Component
 const CustomButton: React.FC<{
   children: React.ReactNode;
@@ -676,17 +722,23 @@ const CustomButton: React.FC<{
 
   return (
     <button
-    className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
-    onClick={onClick}
-  >
-    {children}
-  </button>
-  
+      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
   );
 };
 
 export const Committee = (): JSX.Element => {
   const [selectedYear, setSelectedYear] = useState("2025");
+  const { visibleItems, loading, lastElementRef, resetVisibleItems } = useLazyLoading(12);
+
+  const handleYearChange = (year: string) => {
+    setSelectedYear(year);
+    resetVisibleItems();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleViewAllMembers = () => {
     console.log("Navigate to all members view");
@@ -710,6 +762,10 @@ export const Committee = (): JSX.Element => {
   const availableYears = Array.from(
     new Set(committeeMembers.map((member) => member.year))
   ).sort((a, b) => b.localeCompare(a));
+
+  // Get visible members for lazy loading
+  const visibleMembers = sortedMembers.slice(0, visibleItems);
+  const hasMoreMembers = visibleItems < sortedMembers.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -738,34 +794,73 @@ export const Committee = (): JSX.Element => {
                 key={year}
                 variant={year === selectedYear ? "default" : "outline"}
                 size="md"
-                onClick={() => setSelectedYear(year)}
+                onClick={() => handleYearChange(year)}
               >
                 {year}
               </CustomButton>
             ))}
           </div>
+
+         
         </div>
 
         {/* Members Grid */}
         {sortedMembers.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
-            {sortedMembers.map((member) => (
-              <div key={member.id} className="flex justify-center">
-                <ProfileCard
-                  name={member.name}
-                  title={member.position}
-                  handle={member.year}
-                  status="Active"
-                  contactText="Contact Me"
-                  avatarUrl={member.image}
-                  miniAvatarUrl={member.image}
-                  linkedinUrl={member.linkedin}
-                  showUserInfo={true}
-                  onContactClick={() => console.log(`Contact ${member.name}`)}
-                />
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
+              {visibleMembers.map((member, index) => (
+                <div 
+                  key={member.id} 
+                  className="flex justify-center"
+                  ref={
+                    index === visibleMembers.length - 1 && hasMoreMembers
+                      ? lastElementRef
+                      : null
+                  }
+                >
+                  <ProfileCard
+                    name={member.name}
+                    title={member.position}
+                    handle={member.year}
+                    status="Active"
+                    contactText="Contact Me"
+                    avatarUrl={member.image}
+                    miniAvatarUrl={member.image}
+                    linkedinUrl={member.linkedin}
+                    showUserInfo={true}
+                    onContactClick={() => console.log(`Contact ${member.name}`)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Loading Skeletons */}
+            {loading && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <LoadingSkeleton key={`skeleton-${index}`} />
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+
+            {/* Load More Button (fallback for users who prefer manual loading) */}
+            {hasMoreMembers && !loading && (
+              <div className="text-center">
+                <CustomButton
+                  onClick={() => {
+                    setVisibleItems(prev => prev + 12);
+                  }}
+                  variant="outline"
+                  size="lg"
+                  className="mb-8"
+                >
+                  Load More Members
+                </CustomButton>
+              </div>
+            )}
+
+            
+          </>
         ) : (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">
@@ -774,7 +869,17 @@ export const Committee = (): JSX.Element => {
           </div>
         )}
 
-        {/* Bottom Action Buttons */}
+        {/* Scroll to Top Button */}
+        {visibleItems > 24 && (
+          <div className="fixed bottom-8 right-8">
+            <CustomButton
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="rounded-full w-12 h-12 p-0 shadow-lg"
+            >
+              ↑
+            </CustomButton>
+          </div>
+        )}
       </div>
     </div>
   );
