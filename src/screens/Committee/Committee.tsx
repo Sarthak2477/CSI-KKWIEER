@@ -2,7 +2,6 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Navbar } from "../../components/ui/navbar";
 import ProfileCard from "../../components/ProfileCard";
 import { useLocation } from "react-router-dom";
-import { committeeService, CommitteeMember } from "../../services/committeeService";
 
 // Define the committee member interface
 interface CommitteeMember {
@@ -351,27 +350,7 @@ const CustomButton: React.FC<{
 
 export const Committee = (): JSX.Element => {
   const [selectedYear, setSelectedYear] = useState("2025");
-  const [members, setMembers] = useState<CommitteeMember[]>([]);
-  const [apiLoading, setApiLoading] = useState(true);
   const { visibleItems, loading, lastElementRef, resetVisibleItems } = useLazyLoading(12);
-
-  useEffect(() => {
-    fetchMembers();
-  }, [selectedYear]);
-
-  const fetchMembers = async () => {
-    try {
-      setApiLoading(true);
-      const params = selectedYear !== "all" ? { year: selectedYear } : {};
-      const response = await committeeService.getAllMembers(params);
-      setMembers(response.data.members || []);
-    } catch (error) {
-      console.error('Error fetching members:', error);
-      setMembers([]);
-    } finally {
-      setApiLoading(false);
-    }
-  };
 
   const handleYearChange = (year: string) => {
     setSelectedYear(year);
@@ -383,7 +362,7 @@ export const Committee = (): JSX.Element => {
     console.log("Navigate to all members view");
   };
 
-  const displayMembers = members;
+  const displayMembers = committeeMembers;
   
   const filteredMembers = displayMembers.filter(
     (member) => selectedYear === "all" || member.year === selectedYear

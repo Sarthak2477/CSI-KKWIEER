@@ -38,13 +38,23 @@ import RollingGallery from "@/components/RollingGallery";
 export const Home = (): JSX.Element => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      setIsAtTop(window.scrollY < 200);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setIsAtTop(window.scrollY < 200);
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -85,10 +95,16 @@ export const Home = (): JSX.Element => {
 
 
 
-            {/* Computer Society Section */}
-            <ComputerSocietySection />
+            {/* Computer Society Section - Fixed */}
+            <div className="fixed top-0 left-0 w-full h-screen z-[-1]">
+              <ComputerSocietySection />
+            </div>
 
-            <div className="px-5 lg:px-20">
+            {/* Spacer for fixed section */}
+            <div className="h-screen"></div>
+
+            {/* Content that slides over ComputerSocietySection */}
+            <div className="relative z-20 bg-white px-5 lg:px-20">
               <div className="p-4 mt-8 sm:mt-10 md:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-4 gap-3 sm:gap-4 lg:gap-5 min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[350px]">
 
                 {/* Main CSI Logo Section */}
@@ -206,7 +222,7 @@ export const Home = (): JSX.Element => {
 
 
 
-            <div id="AboutUs">
+            <div id="AboutUs" className="bg-gray-50">
               <AboutUs />
             </div>
 
@@ -214,7 +230,9 @@ export const Home = (): JSX.Element => {
             {/* Committee Carousel Section */}
             <CommitteeMembersCarousel />
 
-            <EventsCarousel />
+            <div className="bg-blue-50">
+              <EventsCarousel />
+            </div>
 
             <GallerySection />
 

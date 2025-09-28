@@ -58,6 +58,43 @@ export const ComputerSocietySection = (): JSX.Element => {
         backgroundPosition: "center",
       }}
     >
+        {/* Half-Circle Image Arrangement */}
+        <div className="absolute left-8 sm:left-16 md:left-24 lg:left-32 top-1/2 transform -translate-y-1/2 w-72 sm:w-80 md:w-96 h-72 sm:h-80 md:h-96 opacity-20 z-0 hidden sm:block">
+          <div className="relative w-full h-full">
+            {[
+              '/images/installation.jpg',
+              '/images/cohort.jpg', 
+              '/images/c2c.jpg',
+              '/images/eyantran.jpg',
+              '/images/pc.jpg',
+              '/images/csi_img1.png'
+            ].map((img, index) => {
+              const angle = (index * 50) + 90; // 90° to 340° for maximum spacing
+              const radius = window.innerWidth < 640 ? 120 : window.innerWidth < 768 ? 150 : 200;
+              const x = Math.cos((angle * Math.PI) / 180) * radius;
+              const y = Math.sin((angle * Math.PI) / 180) * radius;
+              
+              return (
+                <div 
+                  key={index} 
+                  className="absolute w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 overflow-hidden rounded-lg"
+                  style={{
+                    left: `calc(50% + ${x}px - ${window.innerWidth < 640 ? '40px' : window.innerWidth < 768 ? '48px' : window.innerWidth < 1024 ? '64px' : '72px'})`,
+                    top: `calc(50% + ${y}px - ${window.innerWidth < 640 ? '40px' : window.innerWidth < 768 ? '48px' : window.innerWidth < 1024 ? '64px' : '72px'})`,
+                  }}
+                >
+                  <img 
+                    src={img} 
+                    alt="CSI Event" 
+                    className="w-full h-full object-cover filter grayscale"
+                  />
+                </div>
+              );
+            })}
+            {/* Center circle */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-blue-100/30 rounded-full border-2 border-blue-200/50"></div>
+          </div>
+        </div>
       {/* Text Content */}
       <div className="ml-10 relative z-10 max-w-5xl mx-auto sm:mx-0 sm:ml-10">
   <div className="flex flex-col gap-2 text-center sm:text-left mt-4 sm:mt-10">
@@ -158,8 +195,8 @@ export const ComputerSocietySection = (): JSX.Element => {
       </div> */}
       
       {/* Decorative Elements */}
-      <div className="absolute right-4 top-20 w-2 h-2 bg-[#304674] rounded-full opacity-60 animate-pulse"></div>
-      <div className="absolute right-12 bottom-32 w-3 h-3 bg-[#515151] rounded-full opacity-40 animate-pulse delay-500"></div>
+      {/* <div className="absolute right-4 top-20 w-2 h-2 bg-[#304674] rounded-full opacity-60 animate-pulse"></div>
+      <div className="absolute right-12 bottom-32 w-3 h-3 bg-[#515151] rounded-full opacity-40 animate-pulse delay-500"></div> */}
     </section>
   );
 };
