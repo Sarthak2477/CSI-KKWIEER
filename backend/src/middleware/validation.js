@@ -55,7 +55,7 @@ const eventValidation = {
       .isLength({ min: 10, max: 2000 })
       .withMessage('Description must be between 10 and 2000 characters'),
     body('category')
-      .isIn(['workshop', 'seminar', 'competition', 'hackathon', 'conference', 'networking', 'exhibition', 'other'])
+      .isIn(['workshop', 'seminar', 'competition', 'hackathon', 'conference', 'networking', 'exhibition', 'talks', 'ceremony', 'activity', 'award', 'other'])
       .withMessage('Invalid category'),
     body('startDate')
       .isISO8601()

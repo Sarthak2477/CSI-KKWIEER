@@ -9,112 +9,70 @@ import {
 } from "lucide-react";
 import { Navbar } from "../../components/ui/navbar";
 import { useLocation } from "react-router-dom";
+import { eventService, Event } from "../../services/eventService";
 
 const Events = () => {
   const { pathname } = useLocation();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("all");
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  const [activeCategory, setActiveCategory] = useState("all");
+  useEffect(() => {
+    fetchEvents();
+  }, [activeCategory]);
 
-  const events = [
-    {
-      id: 1,
-      title: "CSI Installation Ceremony",
-      category: "all",
-      date: "2025-08-11",
-      time: "01:00 PM - 5:00 PM",
-      location: "JVN Hall",
-      description:
-        "Installation for the new board members of the CSI KKWIEER for academic year 2025-26.",
-      image: "/images/installation.jpg",
-      attendees: 45,
-    },
-    {
-      id: 2,
-      title: "Google Cohort Programme",
-      category: "talks",
-      date: "2025-08-05",
-      time: "10:00 AM - 12:00 PM",
-      location: "JVN Hall",
-      description:
-        "Cohort 2 Guidance Sessions, aimed at introducing students to cloud learning opportunities",
-      image: "/images/cohort.jpg",
-      attendees: 120,
-      featured: false,
-    },
-    {
-      id: 3,
-      title: "Campus To Corporate 3.0",
-      category: "competitions",
-      date: "2025-03-17",
-      time: "9:00 AM",
-      location: "Multiple Labs",
-      description:
-        "Campus to Corporate was a powerful-packed session filled with industry trends, career insights, and practical tips to help students transition from academic life to the corporate world with confidence.",
-      image: "/images/c2c.jpg",
-      attendees: 180,
-    },
-    {
-      id: 4,
-      title: "E-Yantran 2024-25",
-      category: "workshops",
-      date: "2025-01-28",
-      time: "9:00 AM",
-      location: "Multiple Labs",
-      description:
-        "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative, driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
-      image: "/images/eyantran.jpg",
-      attendees: 32,
-      featured: false,
-    },
-    {
-      id: 5,
-      title: "E-Yantran 2024-25",
-      category: "upcoming",
-      date: "2025-01-28",
-      time: "9:00 AM",
-      location: "Multiple Labs",
-      description:
-        "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative, driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
-      image: "/images/eyantran.jpg",
-      attendees: 32,
-      featured: false,
-    },
-  ];
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const params: any = {};
+      
+      if (activeCategory === "upcoming") {
+        params.upcoming = true;
+      } else if (activeCategory !== "all") {
+        params.category = activeCategory;
+      }
+
+      const response = await eventService.getAllEvents(params);
+      setEvents(response.data.events || []);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setEvents([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const displayEvents = events;
 
   const categories = [
     {
       id: "upcoming",
       name: "Upcoming",
-      count: events.filter((e) => new Date(e.date) > new Date()).length,
+      count: displayEvents.filter((e) => new Date(e.startDate) > new Date()).length,
     },
-    { id: "all", name: "All Events", count: events.length },
+    { id: "all", name: "All Events", count: displayEvents.length },
     {
       id: "talks",
       name: "Talks",
-      count: events.filter((e) => e.category === "talks").length,
+      count: displayEvents.filter((e) => e.category === "talks").length,
     },
     {
-      id: "competitions",
+      id: "competition",
       name: "Competitions",
-      count: events.filter((e) => e.category === "competitions").length,
+      count: displayEvents.filter((e) => e.category === "competition").length,
     },
     {
-      id: "workshops",
+      id: "workshop",
       name: "Workshops",
-      count: events.filter((e) => e.category === "workshops").length,
+      count: displayEvents.filter((e) => e.category === "workshop").length,
     },
   ];
 
-  const filteredEvents =
-    activeCategory === "all"
-      ? events
-      : activeCategory === "upcoming"
-      ? events.filter((event) => new Date(event.date) > new Date())
-      : events.filter((event) => event.category === activeCategory);
+  const filteredEvents = displayEvents;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -215,10 +173,10 @@ const Events = () => {
                   {/* Date Box */}
                   <div className="ml-4 bg-white border border-gray-800 rounded-xl p-3 text-center shadow-md w-16">
                     <div className="text-xl font-bold text-gray-900">
-                      {formatDate(event.date).day}
+                      {formatDate(event.startDate).day}
                     </div>
                     <div className="text-sm text-blue-600 font-semibold">
-                      {formatDate(event.date).month}
+                      {formatDate(event.startDate).month}
                     </div>
                   </div>
                 </div>
@@ -228,7 +186,7 @@ const Events = () => {
                   <div className="flex items-center text-sm gap-2">
                     <div className="flex items-center gap-2 rounded-lg px-3 py-1">
                       <Clock className="w-4 h-4 text-blue-600" />
-                      <span className="font-medium">{event.time}</span>
+                      <span className="font-medium">{event.startTime}{event.endTime ? ` - ${event.endTime}` : ''}</span>
                     </div>
                   </div>
                   <div className="flex items-center text-sm gap-2">
@@ -241,7 +199,7 @@ const Events = () => {
                   </div>
                   <div className="flex items-center gap-1 text-sm text-gray-500 rounded-lg px-3 py-1 mt-2 w-max">
                     <Users className="w-4 h-4 text-blue-600" />
-                    <span className="font-medium">{event.attendees} joined</span>
+                    <span className="font-medium">{event.attendees || event.participants || 0} joined</span>
                   </div>
                 </div>
 

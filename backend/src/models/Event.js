@@ -19,7 +19,7 @@ const EventSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Event category is required'],
-    enum: ['workshop', 'seminar', 'competition', 'hackathon', 'conference', 'networking', 'exhibition', 'other'],
+    enum: ['workshop', 'seminar', 'competition', 'hackathon', 'conference', 'networking', 'exhibition', 'talks', 'ceremony', 'activity', 'award', 'other'],
   },
   status: {
     type: String,
@@ -88,6 +88,14 @@ const EventSchema = new mongoose.Schema({
     ref: 'Admin',
     required: [true, 'Admin ID is required'],
   },
+  participants: {
+    type: Number,
+    default: 0,
+  },
+  attendees: {
+    type: Number,
+    default: 0,
+  },
 }, {
   timestamps: true,
 });
@@ -105,6 +113,11 @@ EventSchema.virtual('registrationCount', {
   localField: '_id',
   foreignField: 'eventId',
   count: true,
+});
+
+// Virtual for formatted time
+EventSchema.virtual('time').get(function() {
+  return `${this.startTime}${this.endTime ? ' - ' + this.endTime : ''}`;
 });
 
 // Ensure virtual fields are serialized

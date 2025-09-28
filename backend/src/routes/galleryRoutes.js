@@ -3,6 +3,8 @@ const GalleryImage = require('../models/GalleryImage');
 const { auth } = require('../middleware/auth');
 const { commonValidation, handleValidationErrors } = require('../middleware/validation');
 const { body } = require('express-validator');
+const upload = require('../middleware/upload');
+const path = require('path');
 
 const router = express.Router();
 
@@ -18,7 +20,7 @@ const galleryValidation = {
       .withMessage('Image URL is required'),
     body('category')
       .optional()
-      .isIn(['workshop', 'seminar', 'competition', 'hackathon', 'conference', 'networking', 'exhibition', 'other'])
+      .isIn(['workshop', 'seminar', 'competition', 'hackathon', 'conference', 'networking', 'exhibition', 'talks', 'ceremony', 'activity', 'award', 'other'])
       .withMessage('Invalid category'),
   ],
 };
@@ -201,6 +203,41 @@ router.get('/:id', commonValidation.mongoId, handleValidationErrors, getGalleryI
 router.use(auth);
 
 router.post('/', galleryValidation.create, handleValidationErrors, createGalleryImage);
+router.post('/upload', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'No image file provided',
+      });
+    }
+
+    const imageUrl = `/uploads/gallery/${req.file.filename}`;
+    const imageData = {
+      ...req.body,
+      imageUrl,
+      uploadedBy: req.admin._id,
+    };
+
+    const image = await GalleryImage.create(imageData);
+    const populatedImage = await GalleryImage.findById(image._id)
+      .populate('uploadedBy', 'name');
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Image uploaded successfully',
+      data: {
+        image: populatedImage,
+      },
+    });
+  } catch (error) {
+    console.error('Upload image error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error during image upload',
+    });
+  }
+});
 router.put('/:id', commonValidation.mongoId, handleValidationErrors, updateGalleryImage);
 router.delete('/:id', commonValidation.mongoId, handleValidationErrors, deleteGalleryImage);
 

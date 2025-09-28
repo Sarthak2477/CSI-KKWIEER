@@ -2,6 +2,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
+import { eventService, Event as ApiEvent } from "../../../../services/eventService";
+import { useState, useEffect } from "react";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -20,7 +22,7 @@ type Event = {
 
 const DESCRIPTION_LIMIT = 120;
 
-const events: Event[] = [
+const staticEvents: Event[] = [
   {
     id: 1,
     title: "CSI Installation Ceremony",
@@ -57,6 +59,34 @@ const events: Event[] = [
 
 export const EventsCarousel = (): JSX.Element => {
   const navigate = useNavigate();
+  const [apiEvents, setApiEvents] = useState<ApiEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const response = await eventService.getAllEvents({ limit: 6 });
+      setApiEvents(response.data.events || []);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setApiEvents([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const displayEvents = apiEvents.map(event => ({
+    id: parseInt(event._id.slice(-6), 16),
+    title: event.title,
+    description: event.description,
+    image: event.image,
+    status: event.status === 'completed' ? 'past' as const : 
+            event.status === 'ongoing' ? 'ongoing' as const : 'upcoming' as const
+  }));
 
   const truncateDescription = (text: string) => {
     if (text.length <= DESCRIPTION_LIMIT) return text;
@@ -92,7 +122,7 @@ export const EventsCarousel = (): JSX.Element => {
         }}
         className="max-w-7xl mx-auto px-2 sm:px-4 mb-8"
       >
-        {events.map((event) => (
+        {displayEvents.map((event) => (
           <SwiperSlide key={event.id}>
             <Card className="p-4 sm:p-6 shadow-xl rounded-2xl bg-white/80 backdrop-blur-lg border border-white/200 h-[500px] sm:h-[520px] flex flex-col">
               {/* Event Image */}

@@ -22,7 +22,7 @@ const GalleryImageSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['workshop', 'seminar', 'competition', 'hackathon', 'conference', 'networking', 'exhibition', 'other'],
+    enum: ['workshop', 'seminar', 'competition', 'hackathon', 'conference', 'networking', 'exhibition', 'talks', 'ceremony', 'activity', 'award', 'other'],
   },
   isActive: {
     type: Boolean,

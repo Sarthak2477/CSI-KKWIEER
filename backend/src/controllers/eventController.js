@@ -28,6 +28,11 @@ const getAllEvents = async (req, res) => {
     // Date filters
     if (req.query.upcoming === 'true') {
       filter.startDate = { $gte: new Date() };
+      filter.status = { $in: ['published', 'ongoing'] };
+    }
+    
+    if (req.query.past === 'true') {
+      filter.startDate = { $lt: new Date() };
     }
 
     const events = await Event.find(filter)

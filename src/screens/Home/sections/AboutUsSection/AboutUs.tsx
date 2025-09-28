@@ -35,7 +35,6 @@ export const AboutUs = () => {
         <span className="absolute left-0 -bottom-2 w-full h-[2px] sm:h-[3px] bg-gradient-to-r from-blue-400 via-blue-500 to-blue-700 rounded-full"></span>
       </h2>
 
-      {/* Intro */}
       <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4 sm:mb-6 text-center sm:text-left">
         The CSI student branch at KKWIEER, established in 1995-96, is one of the most vibrant in Maharashtra & Goa.
         Recognized 7 times as the "Best Student Branch", it has over 500 student members and organizes regular technical

@@ -22,6 +22,7 @@ import {
     Play
 } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { galleryService, GalleryImage } from "../../services/galleryService";
 
 type EventPhoto = {
     id: number;
@@ -46,142 +47,75 @@ type Event = {
     participants?: number;
 };
 
-const EVENTS: Event[] = [
-    {
-        id: "installation-2025",
-        name: "CSI Installation Ceremony",
-        date: "March 2025",
-        location: "",
-        category: "Ceremony",
-        description: "",
-        coverImage: "/images/installation.jpg",
-        photoCount: 15
-    },
-    {
-        id: "google-cohort",
-        name: "Google Cohort Programme",
-        date: "April 2025",
-        location: "",
-        category: "Workshop",
-        description: "",
-        coverImage: "/images/cohort.jpg",
-        photoCount: 8,
-    },
-    {
-        id: "c2c-seminar",
-        name: "Campus To Corporate",
-        date: "May 2025",
-        location: "",
-        category: "Seminar",
-        description: "",
-        coverImage: "/images/c2c.jpg",
-        photoCount: 12
-    },
-    {
-        id: "eyantran",
-        name: "E-Yantran Initiative",
-        date: "June 2025",
-        location: "",
-        category: "Activity",
-        description: "",
-        coverImage: "/images/eyantran.jpg",
-        photoCount: 6
-    },
-    {
-        id: "professional-connect",
-        name: "Professional Connect",
-        date: "July 2025",
-        location: "",
-        category: "Networking",
-        description: "",
-        coverImage: "/images/pc.jpg",
-        photoCount: 10,
-    },
-    {
-        id: "awards-2018",
-        name: "Best Student Branch Award",
-        date: "December 2018",
-        location: "",
-        category: "Award",
-        description: "",
-        coverImage: "/images/csi_img1.png",
-        photoCount: 5,
 
-    },
-    {
-        id: "counselor-award",
-        name: "Counselor Award",
-        date: "December 2015",
-        location: "",
-        category: "Award",
-        description: "",
-        coverImage: "/images/csi_img2.png",
-        photoCount: 3,
 
-    }
-];
 
-const EVENT_PHOTOS: EventPhoto[] = [
-    // Installation Ceremony photos
-    { id: 1, src: "/images/installation.jpg", title: "Installation Ceremony", eventId: "installation-2025", eventName: "CSI Installation Ceremony", date: "March 2025", category: "Ceremony" },
-    { id: 2, src: "/images/installation.jpg", title: "Award Presentation", eventId: "installation-2025", eventName: "CSI Installation Ceremony", date: "March 2025", category: "Ceremony" },
-    { id: 3, src: "/images/installation.jpg", title: "Committee Members", eventId: "installation-2025", eventName: "CSI Installation Ceremony", date: "March 2025", category: "Ceremony" },
-
-    // Google Cohort photos
-    { id: 4, src: "/images/cohort.jpg", title: "Google Cloud Workshop", eventId: "google-cohort", eventName: "Google Cohort Programme", date: "April 2025", category: "Workshop" },
-    { id: 5, src: "/images/cohort.jpg", title: "Hands-on Learning", eventId: "google-cohort", eventName: "Google Cohort Programme", date: "April 2025", category: "Workshop" },
-
-    // C2C Seminar photos
-    { id: 6, src: "/images/c2c.jpg", title: "Career Guidance Session", eventId: "c2c-seminar", eventName: "Campus To Corporate", date: "May 2025", category: "Seminar" },
-    { id: 7, src: "/images/c2c.jpg", title: "Industry Expert Talk", eventId: "c2c-seminar", eventName: "Campus To Corporate", date: "May 2025", category: "Seminar" },
-
-    // E-Yantran photos
-    { id: 8, src: "/images/eyantran.jpg", title: "E-Waste Collection", eventId: "eyantran", eventName: "E-Yantran Initiative", date: "June 2025", category: "Activity" },
-
-    // Professional Connect photos
-    { id: 9, src: "/images/pc.jpg", title: "Networking Event", eventId: "professional-connect", eventName: "Professional Connect", date: "July 2025", category: "Networking" },
-
-    // Award photos
-    { id: 10, src: "/images/csi_img1.png", title: "Best Student Branch Award", eventId: "awards-2018", eventName: "Best Student Branch Award", date: "December 2018", category: "Award" },
-    { id: 11, src: "/images/csi_img2.png", title: "Counselor Award", eventId: "counselor-award", eventName: "Counselor Award", date: "December 2015", category: "Award" }
-];
 
 const CATEGORIES = ["All", "Workshop", "Seminar", "Ceremony", "Networking", "Activity", "Award"] as const;
 
 const Gallery = (): JSX.Element => {
     const { pathname } = useLocation();
+    const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+    const [apiLoading, setApiLoading] = useState(true);
+    const [query, setQuery] = useState("");
+    const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]>("All");
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pathname]);
 
-    const [query, setQuery] = useState("");
-    const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]>("All");
-    const [events] = useState<Event[]>(EVENTS);
-    const [eventPhotos] = useState<EventPhoto[]>(EVENT_PHOTOS);
+    useEffect(() => {
+        fetchGalleryImages();
+    }, [activeCategory]);
+
+    const fetchGalleryImages = async () => {
+        try {
+            setApiLoading(true);
+            const params: any = {};
+            
+            if (activeCategory !== "All") {
+                params.category = activeCategory.toLowerCase();
+            }
+
+            const response = await galleryService.getAllImages(params);
+            setGalleryImages(response.data.images || []);
+        } catch (error) {
+            console.error('Error fetching gallery images:', error);
+            setGalleryImages([]);
+        } finally {
+            setApiLoading(false);
+        }
+    };
+
 
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [showTop, setShowTop] = useState(false);
     const [viewMode, setViewMode] = useState<'grid' | 'masonry'>('grid');
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-    const [currentView, setCurrentView] = useState<'events' | 'photos'>('events');
 
-    const filteredEvents = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        const filtered = events.filter((event) => {
-            const matchesCategory = activeCategory === "All" || event.category === activeCategory;
-            if (!q) return matchesCategory;
-            const hay = `${event.name} ${event.description} ${event.location} ${event.category}`.toLowerCase();
-            return matchesCategory && hay.includes(q);
-        });
-        return filtered;
-    }, [events, query, activeCategory]);
+
+
+
+    const displayPhotos = galleryImages.map(img => ({
+        id: img._id,
+        src: img.imageUrl,
+        title: img.title,
+        eventId: img.eventName || 'unknown',
+        eventName: img.eventName || 'Unknown Event',
+        date: new Date(img.uploadedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        category: img.category || 'other',
+        description: img.description
+    }));
 
     const filteredPhotos = useMemo(() => {
-        if (!selectedEvent) return [];
-        return eventPhotos.filter(photo => photo.eventId === selectedEvent.id);
-    }, [eventPhotos, selectedEvent]);
+        const q = query.trim().toLowerCase();
+        return displayPhotos.filter(photo => {
+            const matchesCategory = activeCategory === "All" || photo.category.toLowerCase() === activeCategory.toLowerCase();
+            if (!q) return matchesCategory;
+            const searchText = `${photo.title} ${photo.eventName} ${photo.description || ''}`.toLowerCase();
+            return matchesCategory && searchText.includes(q);
+        });
+    }, [displayPhotos, query, activeCategory]);
 
     // Skip loading animation
     useEffect(() => {
@@ -221,7 +155,7 @@ const Gallery = (): JSX.Element => {
         );
         elements.forEach((el) => obs.observe(el));
         return () => obs.disconnect();
-    }, [filteredEvents, filteredPhotos]);
+    }, [filteredPhotos]);
 
 
     useEffect(() => {
@@ -252,15 +186,7 @@ const Gallery = (): JSX.Element => {
     const next = () => setLightboxIndex((i) => (i === null ? i : (i + 1) % filteredPhotos.length));
     const prev = () => setLightboxIndex((i) => (i === null ? i : (i - 1 + filteredPhotos.length) % filteredPhotos.length));
 
-    const handleEventClick = (event: Event) => {
-        setSelectedEvent(event);
-        setCurrentView('photos');
-    };
 
-    const handleBackToEvents = () => {
-        setCurrentView('events');
-        setSelectedEvent(null);
-    };
 
     if (isLoading) {
         return (
@@ -310,7 +236,7 @@ const Gallery = (): JSX.Element => {
                     <div className="mt-6 flex flex-wrap justify-center gap-3 animate-fadeInUp delay-600">
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 backdrop-blur-sm rounded-full border border-blue-200/50">
                             <Eye size={14} className="text-blue-600" />
-                            <span className="text-sm font-medium text-blue-800">{currentView === 'events' ? filteredEvents.length : filteredPhotos.length} {currentView === 'events' ? 'Events' : 'Photos'}</span>
+                            <span className="text-sm font-medium text-blue-800">{filteredPhotos.length} Photos</span>
                         </div>
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 backdrop-blur-sm rounded-full border border-blue-200/50">
                             <Tag size={14} className="text-indigo-600" />
@@ -323,23 +249,14 @@ const Gallery = (): JSX.Element => {
                 <section className="mb-8">
                     <div className="sticky top-20 z-30 bg-white/80 backdrop-blur-md border border-white/60 rounded-2xl shadow-lg p-4 animate-slideInFromTop">
                         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-                            {/* Back button for photos view */}
-                            {currentView === 'photos' && (
-                                <button
-                                    onClick={handleBackToEvents}
-                                    className="flex items-center gap-2 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-all duration-300"
-                                >
-                                    <ArrowLeft size={16} />
-                                    <span className="text-sm font-medium">Back to Events</span>
-                                </button>
-                            )}
+
 
                             {/* Categories */}
                             <div className="w-full lg:flex-1">
                                 <div className="flex items-center gap-2 mb-2">
                                     <Filter size={16} className="text-blue-600" />
                                     <span className="text-sm font-medium text-slate-700">
-                                        {currentView === 'events' ? 'Event Categories' : 'Photo Categories'}
+                                        Photo Categories
                                     </span>
                                 </div>
                                 <div className="flex flex-wrap gap-1.5">
@@ -365,12 +282,12 @@ const Gallery = (): JSX.Element => {
                                     <input
                                         value={query}
                                         onChange={(e) => setQuery(e.target.value)}
-                                        placeholder={currentView === 'events' ? "Search events..." : "Search photos..."}
+                                        placeholder="Search photos..."
                                         className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 bg-white/90 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300 shadow-md text-sm"
                                     />
                                 </div>
 
-                                <div className="flex bg-white/90 rounded-xl border border-slate-200 p-0.5 shadow-md">
+                                {/* <div className="flex bg-white/90 rounded-xl border border-slate-200 p-0.5 shadow-md">
                                     <button
                                         onClick={() => setViewMode('grid')}
                                         className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'grid'
@@ -389,178 +306,84 @@ const Gallery = (): JSX.Element => {
                                     >
                                         <List size={16} />
                                     </button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Events/Photos Gallery Section */}
+                {/* Photos Gallery Section */}
                 <section>
-                    {currentView === 'events' ? (
-                        // Events View
-                        filteredEvents.length === 0 ? (
-                            <div className="text-center py-20">
-                                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
-                                    <Search size={24} className="text-blue-500" />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-700 mb-2">No events found</h3>
-                                <p className="text-slate-500 text-sm">Try adjusting your search or filter criteria</p>
+                    {filteredPhotos.length === 0 ? (
+                        <div className="text-center py-20">
+                            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
+                                <Search size={24} className="text-blue-500" />
                             </div>
-                        ) : (
-                            <div className={
-                                viewMode === 'masonry'
-                                    ? "columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 [column-fill:_balance]"
-                                    : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-                            }>
-                                {filteredEvents.map((event) => (
+                            <h3 className="text-xl font-bold text-slate-700 mb-2">No photos found</h3>
+                            <p className="text-slate-500 text-sm">Try adjusting your search or filter criteria</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+                            {filteredPhotos.map((photo, idx) => (
+                                <figure
+                                    key={`${photo.id}-${idx}`}
+                                    onClick={() => openLightbox(idx)}
+                                    className="group relative mb-3 break-inside-avoid overflow-hidden rounded-xl border border-blue-100/50 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer js-reveal transform-gpu"
+                                    style={{
+                                        transform: "translateY(10px) scale(0.95)",
+                                        opacity: 0,
+                                        filter: "blur(3px)"
+                                    }}
+                                >
                                     <div
-                                        key={event.id}
-                                        onClick={() => handleEventClick(event)}
-                                        className="group relative mb-6 break-inside-avoid overflow-hidden rounded-2xl border border-blue-100/50 bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer js-reveal transform-gpu"
-                                        style={{
-                                            transform: "translateY(10px) scale(0.95)",
-                                            opacity: 0,
-                                            filter: "blur(3px)"
-                                        }}
+                                        onMouseMove={handleTilt}
+                                        onMouseLeave={resetTilt}
+                                        className="transition-transform duration-300 will-change-transform"
                                     >
-                                        <div
-                                            onMouseMove={handleTilt}
-                                            onMouseLeave={resetTilt}
-                                            className="transition-transform duration-300 will-change-transform"
-                                        >
-                                            <div className="relative overflow-hidden">
-                                                {/* Event cover image */}
-                                                <div className="aspect-[4/3] overflow-hidden">
-                                                    <img
-                                                        src={event.coverImage}
-                                                        alt={event.name}
-                                                        loading="lazy"
-                                                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-                                                    />
-                                                </div>
-
-                                                {/* Hover overlay */}
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                                                {/* Category badge */}
-                                                <div className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-semibold rounded-full border border-blue-200/50">
-                                                    {event.category}
-                                                </div>
-
-                                                {/* View photos button */}
-                                                <div className="absolute top-3 right-3 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                                    <Play size={16} className="text-white ml-0.5" />
-                                                </div>
-
-                                                {/* Photo count badge */}
-                                                <div className="absolute bottom-3 left-3 px-2 py-1 bg-black/50 backdrop-blur-sm text-white text-xs font-medium rounded-md">
-                                                    {event.photoCount} photos
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Event details */}
-                                        <div className="p-5">
-                                            <h3 className="text-lg font-bold text-slate-800 leading-tight mb-2 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-                                                {event.name}
-                                            </h3>
-
-                                            <p className="text-sm text-slate-600 mb-3 line-clamp-2">
-                                                {event.description}
-                                            </p>
-
-                                            <div className="space-y-2">
-                                                <div className="flex items-center gap-2 text-xs text-slate-500">
-                                                    <Calendar size={12} className="text-blue-500" />
-                                                    <span>{event.date}</span>
-                                                </div>
+                                        <div className="relative overflow-hidden">
+                                            <div className="aspect-[4/3] overflow-hidden">
+                                                <img
+                                                    src={photo.src}
+                                                    alt={photo.title}
+                                                    loading="lazy"
+                                                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                                                />
                                             </div>
 
-                                            {/* Hover indicator */}
-                                            <div className="mt-3 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                                            <div className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-medium rounded-md border border-blue-200/50 transform translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                                                {photo.category}
+                                            </div>
+
+                                            <div className="absolute top-2 right-2 w-7 h-7 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center transform translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                                                <ExternalLink size={12} className="text-white" />
+                                            </div>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        )
-                    ) : (
-                        // Photos View
-                        filteredPhotos.length === 0 ? (
-                            <div className="text-center py-20">
-                                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
-                                    <Search size={24} className="text-blue-500" />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-700 mb-2">No photos found</h3>
-                                <p className="text-slate-500 text-sm">Try adjusting your search or filter criteria</p>
-                            </div>
-                        ) : (
-                            <div className={
-                                viewMode === 'masonry'
-                                    ? "columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 gap-3 [column-fill:_balance]"
-                                    : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"
-                            }>
-                                {filteredPhotos.map((photo, idx) => (
-                                    <figure
-                                        key={photo.id}
-                                        onClick={() => openLightbox(idx)}
-                                        className="group relative mb-3 break-inside-avoid overflow-hidden rounded-xl border border-blue-100/50 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer js-reveal transform-gpu"
-                                        style={{
-                                            transform: "translateY(10px) scale(0.95)",
-                                            opacity: 0,
-                                            filter: "blur(3px)"
-                                        }}
-                                    >
-                                        <div
-                                            onMouseMove={handleTilt}
-                                            onMouseLeave={resetTilt}
-                                            className="transition-transform duration-300 will-change-transform"
-                                        >
-                                            <div className="relative overflow-hidden">
-                                                <div className="aspect-[4/3] overflow-hidden">
-                                                    <img
-                                                        src={photo.src}
-                                                        alt={photo.title}
-                                                        loading="lazy"
-                                                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-                                                    />
-                                                </div>
 
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    <figcaption className="p-3">
+                                        <h3 className="text-sm font-semibold text-slate-800 leading-tight mb-1 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
+                                            {photo.title}
+                                        </h3>
 
-                                                <div className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-medium rounded-md border border-blue-200/50 transform translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                                    {photo.category}
-                                                </div>
+                                        <div className="space-y-0.5">
+                                            <div className="flex items-center gap-1 text-xs text-slate-600">
+                                                <Tag size={10} className="text-blue-500" />
+                                                <span className="truncate">{photo.eventName}</span>
+                                            </div>
 
-                                                <div className="absolute top-2 right-2 w-7 h-7 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center transform translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                                    <ExternalLink size={12} className="text-white" />
-                                                </div>
+                                            <div className="flex items-center gap-1 text-xs text-slate-500">
+                                                <Calendar size={10} className="text-indigo-500" />
+                                                <span>{photo.date}</span>
                                             </div>
                                         </div>
 
-                                        <figcaption className="p-3">
-                                            <h3 className="text-sm font-semibold text-slate-800 leading-tight mb-1 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-                                                {photo.title}
-                                            </h3>
-
-                                            <div className="space-y-0.5">
-                                                <div className="flex items-center gap-1 text-xs text-slate-600">
-                                                    <Tag size={10} className="text-blue-500" />
-                                                    <span className="truncate">{photo.eventName}</span>
-                                                </div>
-
-                                                <div className="flex items-center gap-1 text-xs text-slate-500">
-                                                    <Calendar size={10} className="text-indigo-500" />
-                                                    <span>{photo.date}</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="mt-2 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-                                        </figcaption>
-                                    </figure>
-                                ))}
-                            </div>
-                        )
+                                        <div className="mt-2 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                                    </figcaption>
+                                </figure>
+                            ))}
+                        </div>
                     )}
                 </section>
             </main>

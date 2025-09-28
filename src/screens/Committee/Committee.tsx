@@ -1,6 +1,8 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Navbar } from "../../components/ui/navbar";
 import ProfileCard from "../../components/ProfileCard";
+import { useLocation } from "react-router-dom";
+import { committeeService, CommitteeMember } from "../../services/committeeService";
 
 // Define the committee member interface
 interface CommitteeMember {
@@ -705,6 +707,12 @@ const CustomButton: React.FC<{
   className = "",
   onClick,
 }) => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  
   const baseClasses =
     "font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center";
 
@@ -732,7 +740,27 @@ const CustomButton: React.FC<{
 
 export const Committee = (): JSX.Element => {
   const [selectedYear, setSelectedYear] = useState("2025");
+  const [members, setMembers] = useState<CommitteeMember[]>([]);
+  const [apiLoading, setApiLoading] = useState(true);
   const { visibleItems, loading, lastElementRef, resetVisibleItems } = useLazyLoading(12);
+
+  useEffect(() => {
+    fetchMembers();
+  }, [selectedYear]);
+
+  const fetchMembers = async () => {
+    try {
+      setApiLoading(true);
+      const params = selectedYear !== "all" ? { year: selectedYear } : {};
+      const response = await committeeService.getAllMembers(params);
+      setMembers(response.data.members || []);
+    } catch (error) {
+      console.error('Error fetching members:', error);
+      setMembers([]);
+    } finally {
+      setApiLoading(false);
+    }
+  };
 
   const handleYearChange = (year: string) => {
     setSelectedYear(year);
@@ -744,7 +772,9 @@ export const Committee = (): JSX.Element => {
     console.log("Navigate to all members view");
   };
 
-  const filteredMembers = committeeMembers.filter(
+  const displayMembers = members;
+  
+  const filteredMembers = displayMembers.filter(
     (member) => selectedYear === "all" || member.year === selectedYear
   );
 
@@ -760,7 +790,7 @@ export const Committee = (): JSX.Element => {
   });
 
   const availableYears = Array.from(
-    new Set(committeeMembers.map((member) => member.year))
+    new Set(displayMembers.map((member) => member.year))
   ).sort((a, b) => b.localeCompare(a));
 
   // Get visible members for lazy loading
