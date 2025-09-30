@@ -1,10 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileCard from "../../../../components/ProfileCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Pagination } from "swiper/modules";
-import { committeeService, CommitteeMember } from "../../../../services/committeeService";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -129,36 +128,14 @@ const CustomButton: React.FC<{
 // -------------------- Main Component --------------------
 const CommitteeMembersCarousel: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState("2025");
-  const [members, setMembers] = useState<CommitteeMember[]>([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchMembers();
-  }, [selectedYear]);
-
-  const fetchMembers = async () => {
-    try {
-      setLoading(true);
-      const params = selectedYear !== "all" ? { year: selectedYear } : {};
-      const response = await committeeService.getAllMembers(params);
-      setMembers(response.data.members || []);
-    } catch (error) {
-      console.error('Error fetching members:', error);
-      setMembers([]);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleViewAllMembers = () => {
     navigate("/committee");
   };
 
-  const displayMembers = members;
-  
   // Filter by year
-  const filteredMembers = displayMembers.filter(
+  const filteredMembers = committeeMembers.filter(
     (member) => selectedYear === "all" || member.year === selectedYear
   );
 

@@ -9,70 +9,112 @@ import {
 } from "lucide-react";
 import { Navbar } from "../../components/ui/navbar";
 import { useLocation } from "react-router-dom";
-import { eventService, Event } from "../../services/eventService";
 
 const Events = () => {
   const { pathname } = useLocation();
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("all");
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  useEffect(() => {
-    fetchEvents();
-  }, [activeCategory]);
+  const [activeCategory, setActiveCategory] = useState("all");
 
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      const params: any = {};
-      
-      if (activeCategory === "upcoming") {
-        params.upcoming = true;
-      } else if (activeCategory !== "all") {
-        params.category = activeCategory;
-      }
-
-      const response = await eventService.getAllEvents(params);
-      setEvents(response.data.events || []);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      setEvents([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const displayEvents = events;
+  const events = [
+    {
+      id: 1,
+      title: "CSI Installation Ceremony",
+      category: "all",
+      date: "2025-08-11",
+      time: "01:00 PM - 5:00 PM",
+      location: "JVN Hall",
+      description:
+        "Installation for the new board members of the CSI KKWIEER for academic year 2025-26.",
+      image: "/images/installation.jpg",
+      attendees: 45,
+    },
+    {
+      id: 2,
+      title: "Google Cohort Programme",
+      category: "talks",
+      date: "2025-08-05",
+      time: "10:00 AM - 12:00 PM",
+      location: "JVN Hall",
+      description:
+        "Cohort 2 Guidance Sessions, aimed at introducing students to cloud learning opportunities",
+      image: "/images/cohort.jpg",
+      attendees: 120,
+      featured: false,
+    },
+    {
+      id: 3,
+      title: "Campus To Corporate 3.0",
+      category: "competitions",
+      date: "2025-03-17",
+      time: "9:00 AM",
+      location: "Multiple Labs",
+      description:
+        "Campus to Corporate was a powerful-packed session filled with industry trends, career insights, and practical tips to help students transition from academic life to the corporate world with confidence.",
+      image: "/images/c2c.jpg",
+      attendees: 180,
+    },
+    {
+      id: 4,
+      title: "E-Yantran 2024-25",
+      category: "workshops",
+      date: "2025-01-28",
+      time: "9:00 AM",
+      location: "Multiple Labs",
+      description:
+        "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative, driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
+      image: "/images/eyantran.jpg",
+      attendees: 32,
+      featured: false,
+    },
+    {
+      id: 5,
+      title: "E-Yantran 2024-25",
+      category: "upcoming",
+      date: "2025-01-28",
+      time: "9:00 AM",
+      location: "Multiple Labs",
+      description:
+        "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative, driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
+      image: "/images/eyantran.jpg",
+      attendees: 32,
+      featured: false,
+    },
+  ];
 
   const categories = [
     {
       id: "upcoming",
       name: "Upcoming",
-      count: displayEvents.filter((e) => new Date(e.startDate) > new Date()).length,
+      count: events.filter((e) => new Date(e.date) > new Date()).length,
     },
-    { id: "all", name: "All Events", count: displayEvents.length },
+    { id: "all", name: "All Events", count: events.length },
     {
       id: "talks",
       name: "Talks",
-      count: displayEvents.filter((e) => e.category === "talks").length,
+      count: events.filter((e) => e.category === "talks").length,
     },
     {
-      id: "competition",
+      id: "competitions",
       name: "Competitions",
-      count: displayEvents.filter((e) => e.category === "competition").length,
+      count: events.filter((e) => e.category === "competitions").length,
     },
     {
-      id: "workshop",
+      id: "workshops",
       name: "Workshops",
-      count: displayEvents.filter((e) => e.category === "workshop").length,
+      count: events.filter((e) => e.category === "workshops").length,
     },
   ];
 
-  const filteredEvents = displayEvents;
+  const filteredEvents =
+    activeCategory === "all"
+      ? events
+      : activeCategory === "upcoming"
+        ? events.filter((event) => new Date(event.date) > new Date())
+        : events.filter((event) => event.category === activeCategory);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -87,17 +129,6 @@ const Events = () => {
     if (text.length <= limit) return text;
     return text.slice(0, limit) + "...";
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-blue-600 font-medium">Loading events...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 relative overflow-hidden">
@@ -126,22 +157,20 @@ const Events = () => {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-5 py-2 min-w-[120px] rounded-xl font-semibold text-sm justify-center border border-gray-600 bg-transparent transition-colors duration-300 ${
-                  activeCategory === cat.id
+                className={`flex items-center gap-2 px-5 py-2 min-w-[120px] rounded-xl font-semibold text-sm justify-center border border-gray-600 bg-transparent transition-colors duration-300 ${activeCategory === cat.id
                     ? "border-blue-500 text-blue-600"
                     : "text-gray-700 hover:border-blue-500 hover:text-blue-600"
-                }`}
+                  }`}
               >
                 {cat.id === "talks" && <Calendar className="w-4 h-4" />}
                 {cat.id === "workshops" && <Sparkles className="w-4 h-4" />}
                 {cat.id === "competitions" && <Award className="w-4 h-4" />}
                 <span>{cat.name}</span>
                 <span
-                  className={`text-xs px-2 py-1 rounded-full ${
-                    activeCategory === cat.id
+                  className={`text-xs px-2 py-1 rounded-full ${activeCategory === cat.id
                       ? "bg-blue-50 text-blue-600"
                       : "bg-gray-100 text-gray-500"
-                  }`}
+                    }`}
                 >
                   {cat.count}
                 </span>
@@ -155,9 +184,8 @@ const Events = () => {
           {filteredEvents.map((event) => (
             <div
               key={event.id}
-              className={`group relative bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col justify-between border border-white/20 ${
-                event.featured ? "ring-2 ring-indigo-200 ring-offset-2" : ""
-              }`}
+              className={`group relative bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col justify-between border border-white/20 ${event.featured ? "ring-2 ring-indigo-200 ring-offset-2" : ""
+                }`}
             >
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden rounded-t-3xl">
@@ -184,10 +212,10 @@ const Events = () => {
                   {/* Date Box */}
                   <div className="ml-4 bg-white border border-gray-800 rounded-xl p-3 text-center shadow-md w-16">
                     <div className="text-xl font-bold text-gray-900">
-                      {formatDate(event.startDate).day}
+                      {formatDate(event.date).day}
                     </div>
                     <div className="text-sm text-blue-600 font-semibold">
-                      {formatDate(event.startDate).month}
+                      {formatDate(event.date).month}
                     </div>
                   </div>
                 </div>
@@ -197,7 +225,7 @@ const Events = () => {
                   <div className="flex items-center text-sm gap-2">
                     <div className="flex items-center gap-2 rounded-lg px-3 py-1">
                       <Clock className="w-4 h-4 text-blue-600" />
-                      <span className="font-medium">{event.startTime}{event.endTime ? ` - ${event.endTime}` : ''}</span>
+                      <span className="font-medium">{event.time}</span>
                     </div>
                   </div>
                   <div className="flex items-center text-sm gap-2">
@@ -210,18 +238,21 @@ const Events = () => {
                   </div>
                   <div className="flex items-center gap-1 text-sm text-gray-500 rounded-lg px-3 py-1 mt-2 w-max">
                     <Users className="w-4 h-4 text-blue-600" />
-                    <span className="font-medium">{event.attendees || event.participants || 0} joined</span>
+                    <span className="font-medium">{event.attendees} joined</span>
                   </div>
                 </div>
 
                 {/* Register / Read More Button */}
-                <button
-                  className="mt-6 w-full py-3 px-4 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 
-                             border border-gray-600 bg-transparent text-blue-600 
-                             transition-colors duration-300 hover:bg-blue-600 hover:border-blue-600 hover:text-white"
-                >
-                  {activeCategory === "upcoming" ? "Register Now" : "Read More"}
-                </button>
+                {activeCategory === "upcoming" && (
+                  <button
+                    className="mt-6 w-full py-3 px-4 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 
+               border border-gray-600 bg-transparent text-blue-600 
+               transition-colors duration-300 hover:bg-blue-600 hover:border-blue-600 hover:text-white"
+                  >
+                    Register Now
+                  </button>
+                )}
+
               </div>
             </div>
           ))}
