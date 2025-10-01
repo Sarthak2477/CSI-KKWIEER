@@ -21,6 +21,19 @@ const Events = () => {
 
   const events = [
     {
+      id: 6,
+      title: "Campus to Corporate 4.0",
+      category: "upcoming",
+      date: "2025-09-28",
+      time: "9:00 AM",
+      location: "Multiple Labs",
+      description:
+        "Take the leap from learning to career readiness! Gain real-world experience, expert mentorship, and certificates that set you apart.",
+      image: "/images/c2c.png",
+      attendees: null,
+      featured: true,
+    },
+    {
       id: 1,
       title: "CSI Installation Ceremony",
       category: "all",
@@ -73,7 +86,7 @@ const Events = () => {
     {
       id: 5,
       title: "E-Yantran 2024-25",
-      category: "upcoming",
+      category: "all",
       date: "2025-01-28",
       time: "9:00 AM",
       location: "Multiple Labs",
@@ -83,6 +96,7 @@ const Events = () => {
       attendees: 32,
       featured: false,
     },
+    
   ];
 
   const categories = [
@@ -110,11 +124,12 @@ const Events = () => {
   ];
 
   const filteredEvents =
-    activeCategory === "all"
-      ? events
-      : activeCategory === "upcoming"
-        ? events.filter((event) => new Date(event.date) > new Date())
-        : events.filter((event) => event.category === activeCategory);
+  activeCategory === "all"
+    ? events
+    : activeCategory === "upcoming"
+      ? events.filter((event) => event.category === "upcoming")
+      : events.filter((event) => event.category === activeCategory);
+
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -158,8 +173,8 @@ const Events = () => {
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className={`flex items-center gap-2 px-5 py-2 min-w-[120px] rounded-xl font-semibold text-sm justify-center border border-gray-600 bg-transparent transition-colors duration-300 ${activeCategory === cat.id
-                    ? "border-blue-500 text-blue-600"
-                    : "text-gray-700 hover:border-blue-500 hover:text-blue-600"
+                  ? "border-blue-500 text-blue-600"
+                  : "text-gray-700 hover:border-blue-500 hover:text-blue-600"
                   }`}
               >
                 {cat.id === "talks" && <Calendar className="w-4 h-4" />}
@@ -168,8 +183,8 @@ const Events = () => {
                 <span>{cat.name}</span>
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${activeCategory === cat.id
-                      ? "bg-blue-50 text-blue-600"
-                      : "bg-gray-100 text-gray-500"
+                    ? "bg-blue-50 text-blue-600"
+                    : "bg-gray-100 text-gray-500"
                     }`}
                 >
                   {cat.count}
@@ -192,7 +207,7 @@ const Events = () => {
                 <img
                   src={event.image}
                   alt={event.title}
-                  className="w-full h-full object-cover transition-transform duration-700"
+                  className="w-full h-full transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
               </div>
@@ -236,22 +251,28 @@ const Events = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 text-sm text-gray-500 rounded-lg px-3 py-1 mt-2 w-max">
-                    <Users className="w-4 h-4 text-blue-600" />
-                    <span className="font-medium">{event.attendees} joined</span>
-                  </div>
+                  {event.attendees && (
+                    <div className="flex items-center text-sm gap-2">
+                      <div className="flex items-center gap-2 rounded-lg px-3 py-1">
+                        <Users className="w-4 h-4 text-blue-600" />
+                        <span className="font-medium">{event.attendees} Attendees</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Register / Read More Button */}
-                {activeCategory === "upcoming" && (
+                {event.category === "upcoming" && (
                   <button
                     className="mt-6 w-full py-3 px-4 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 
-               border border-gray-600 bg-transparent text-blue-600 
-               transition-colors duration-300 hover:bg-blue-600 hover:border-blue-600 hover:text-white"
+    border border-gray-600 bg-transparent text-blue-600 
+    transition-colors duration-300 hover:bg-blue-600 hover:border-blue-600 hover:text-white"
+                    onClick={()=>window.open("https://shorturl.at/o64YZ", "_blank")}
                   >
                     Register Now
                   </button>
                 )}
+
 
               </div>
             </div>

@@ -27,7 +27,7 @@ const staticEvents: Event[] = [
     id: 1,
     title: "CSI Installation Ceremony",
     description:
-      "Installation for the new board members of the CSI KKWIEER for academic year 2025-26. Every ending writes a new beginning, together we carry the legacy ahead",
+      "Installation for the new board members of the CSI KKWIEER for academic year 2025-26.",
     image: "/images/installation.jpg",
     status: "past",
   },
@@ -35,26 +35,18 @@ const staticEvents: Event[] = [
     id: 2,
     title: "Google Cohort Programme",
     description:
-      "The Department of Computer Engineering at KKWIEER hosted the Google Cloud Arcade Facilitator Program 2025 – Cohort 2 Guidance Sessions, aimed at introducing students to cloud learning opportunities, gamified upskilling, and community building.",
+      "Cohort 2 Guidance Sessions, aimed at introducing students to cloud learning opportunities",
     image: "/images/cohort.jpg",
-    status: "ongoing",
-  },
-  {
-    id: 3,
-    title: "Campus To Corporate 3.0",
-    description:
-      "Campus to Corporate was a powerful-packed session filled with industry trends, career insights, and practical tips to help students transition from academic life to the corporate world with confidence.",
-    image: "/images/c2c.jpg",
-    status: "upcoming",
-  },
-  {
-    id: 4,
-    title: "E-Yantran 2024-25",
-    description:
-      "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative, driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
-    image: "/images/eyantran.jpg",
     status: "past",
   },
+  {
+    id: 6,
+    title: "Campus to Corporate 4.0",
+    description:
+      "Take the leap from learning to career readiness! Gain real-world experience, expert mentorship, and certificates that set you apart.",
+    image: "/images/c2c.png",
+    status: "upcoming",
+  }
 ];
 
 export const EventsCarousel = (): JSX.Element => {
@@ -79,14 +71,7 @@ export const EventsCarousel = (): JSX.Element => {
     }
   };
 
-  const displayEvents = apiEvents.map(event => ({
-    id: parseInt(event._id.slice(-6), 16),
-    title: event.title,
-    description: event.description,
-    image: event.image,
-    status: event.status === 'completed' ? 'past' as const : 
-            event.status === 'ongoing' ? 'ongoing' as const : 'upcoming' as const
-  }));
+  const displayEvents = staticEvents;
 
   const truncateDescription = (text: string) => {
     if (text.length <= DESCRIPTION_LIMIT) return text;
@@ -130,7 +115,7 @@ export const EventsCarousel = (): JSX.Element => {
                 <img
                   src={event.image}
                   alt={event.title}
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-center"
                 />
               </div>
 
@@ -160,7 +145,7 @@ export const EventsCarousel = (): JSX.Element => {
                 </p>
                 <Button
                   className="mt-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow hover:opacity-90 transition text-sm sm:text-base px-4 sm:px-6 py-2"
-                  onClick={() => navigate(`/events/${event.id}`)}
+                  onClick={() => navigate(`/events/`)}
                 >
                   Learn More
                 </Button>

@@ -34,6 +34,7 @@ import { GallerySection } from "./sections/GallerySection/GallerySection";
 import { Navbar } from "../../components/ui/navbar";
 import { useLocation } from "react-router-dom";
 import RollingGallery from "@/components/RollingGallery";
+import Snackbar from "@/components/ui/snackbar";
 
 export const Home = (): JSX.Element => {
   const [isAtTop, setIsAtTop] = useState(true);
@@ -42,7 +43,7 @@ export const Home = (): JSX.Element => {
 
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -84,6 +85,14 @@ export const Home = (): JSX.Element => {
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-transparent relative z-10">
+      <Snackbar event={{ id: 6, 
+        title: "Campus to Corporate 4.0", 
+        category: "upcoming", date: "2025-09-28", 
+        time: "9:00 AM", location: "Multiple Labs", 
+        description: "Take the leap from learning to career readiness! Gain real-world experience, expert mentorship, and certificates that set you apart.", 
+        image: "/images/c2c.png", 
+        attendees: null, 
+        featured: true, }} />
       <div className="overflow-hidden w-full relative bg-transparent">
         <div className="relative w-full bg-transparent">
 
@@ -91,7 +100,6 @@ export const Home = (): JSX.Element => {
 
           {/* Main content sections */}
           <div className="relative w-full pt-16 lg:pt-0 bg-transparent">
-
 
 
 
@@ -134,7 +142,7 @@ export const Home = (): JSX.Element => {
                     <div className="text-xs sm:text-sm text-blue-100 mt-1">Team Members</div>
                   </div>
                 </div>
-                
+
 
                 {/* Events Organized */}
                 <div className="lg:row-span-2 lg:col-start-1 lg:row-start-5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-5 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
@@ -194,7 +202,7 @@ export const Home = (): JSX.Element => {
                   </div>
                 </Card>
 
-                
+
 
                 {/* CSI Nashik Chapter */}
                 <Card className="sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:col-start-3 lg:row-start-5 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl sm:rounded-2xl p-6 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
