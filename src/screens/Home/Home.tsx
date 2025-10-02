@@ -1,24 +1,17 @@
 import {
-  Club,
   FlagIcon,
   GalleryVerticalIcon,
   HomeIcon,
   ImageIcon,
   UserSquareIcon,
-  MenuIcon,
-  XIcon,
-  Link,
+  
   Award,
   Calendar,
   Network,
   Users,
 } from "lucide-react";
 
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "../../components/ui/navigation-menu";
+
 
 import CommitteeMembersCarousel from "./sections/CommitteeMembersCarousel/CommitteeMembersCarousel";
 
@@ -32,8 +25,6 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { GallerySection } from "./sections/GallerySection/GallerySection";
 import { Navbar } from "../../components/ui/navbar";
-import { useLocation } from "react-router-dom";
-import RollingGallery from "@/components/RollingGallery";
 import Snackbar from "@/components/ui/snackbar";
 
 export const Home = (): JSX.Element => {
@@ -61,23 +52,7 @@ export const Home = (): JSX.Element => {
 
 
 
-  // Navigation items data
-  const navigationItems = [
-    { icon: <HomeIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Home" },
-    { icon: <FlagIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Events" },
-    {
-      icon: <GalleryVerticalIcon className="w-5 h-5 sm:w-6 sm:h-6" />,
-      label: "Committee",
-    },
-    {
-      icon: <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6" />,
-      label: "Gallery",
-    },
-    {
-      icon: <UserSquareIcon className="w-5 h-5 sm:w-6 sm:h-6" />,
-      label: "About Us",
-    },
-  ];
+ 
 
   const scrollToSection = (sectionLabel: string) => {
     setIsMobileMenuOpen(false); // Close mobile menu when item is clicked

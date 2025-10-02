@@ -59,7 +59,7 @@ export const ComputerSocietySection = (): JSX.Element => {
       }}
     >
         {/* Half-Circle Image Arrangement */}
-        <div className="absolute left-8 sm:left-16 md:left-24 lg:left-32 top-1/2 transform -translate-y-1/2 w-72 sm:w-80 md:w-96 h-72 sm:h-80 md:h-96 opacity-20 z-0 hidden sm:block">
+        <div className="absolute left-4 sm:left-16 md:left-24 lg:left-32 top-1/2 transform -translate-y-1/2 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 opacity-15 sm:opacity-20 z-0">
           <div className="relative w-full h-full">
             {[
               '/images/installation.jpg',
