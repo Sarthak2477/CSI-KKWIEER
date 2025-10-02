@@ -83,19 +83,6 @@ const Events = () => {
       attendees: 32,
       featured: false,
     },
-    {
-      id: 5,
-      title: "E-Yantran 2024-25",
-      category: "all",
-      date: "2025-01-28",
-      time: "9:00 AM",
-      location: "Multiple Labs",
-      description:
-        "Turn your trash into Treasure is what we followed in E-Yantran 2025. A flagship initiative, driving change through E-Waste awareness and collection, empowering communities for a sustainable future.",
-      image: "/images/eyantran.jpg",
-      attendees: 32,
-      featured: false,
-    },
     
   ];
 
