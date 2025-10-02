@@ -4,7 +4,7 @@ import {
   HomeIcon,
   ImageIcon,
   UserSquareIcon,
-  
+
   Award,
   Calendar,
   Network,
@@ -52,7 +52,7 @@ export const Home = (): JSX.Element => {
 
 
 
- 
+
 
   const scrollToSection = (sectionLabel: string) => {
     setIsMobileMenuOpen(false); // Close mobile menu when item is clicked
@@ -60,14 +60,16 @@ export const Home = (): JSX.Element => {
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-transparent relative z-10">
-      <Snackbar event={{ id: 6, 
-        title: "Campus to Corporate 4.0", 
-        category: "upcoming", date: "2025-09-28", 
-        time: "9:00 AM", location: "Multiple Labs", 
-        description: "Take the leap from learning to career readiness! Gain real-world experience, expert mentorship, and certificates that set you apart.", 
-        image: "/images/c2c.png", 
-        attendees: null, 
-        featured: true, }} />
+      <Snackbar event={{
+        id: 6,
+        title: "Campus to Corporate 4.0",
+        category: "upcoming", date: "2025-09-28",
+        time: "9:00 AM", location: "Multiple Labs",
+        description: "Take the leap from learning to career readiness! Gain real-world experience, expert mentorship, and certificates that set you apart.",
+        image: "/images/c2c.png",
+        attendees: null,
+        featured: true,
+      }} />
       <div className="overflow-hidden w-full relative bg-transparent">
         <div className="relative w-full bg-transparent">
 
@@ -160,10 +162,10 @@ export const Home = (): JSX.Element => {
                   </div>
                 </div>
                 <Card className="sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:col-start-3 lg:row-start-3 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl sm:rounded-2xl p-6 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-white text-center">
+                  <h2 className="text-lg sm:text-2xl font-semibold mb-3 sm:mb-4 text-white text-center">
                     CSI India
                   </h2>
-                  <p className="text-white sm:text-sm leading-relaxed text-justify">
+                  <p className="text-xs sm:text-sm md:text-base leading-relaxed text-center sm:text-justify max-w-prose">
                     The seed for the Computer Society of India (CSI) was first shown in the year 1965
                     with a handful of IT enthusiasts who were a computer user group and felt the need
                     to organize their activities. They also wanted to share their knowledge and exchange
@@ -181,10 +183,10 @@ export const Home = (): JSX.Element => {
 
                 {/* CSI Nashik Chapter */}
                 <Card className="sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:col-start-3 lg:row-start-5 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl sm:rounded-2xl p-6 flex flex-col items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-white text-center">
+                  <h2 className="text-lg sm:text-2xl font-semibold mb-3 sm:mb-4 text-white text-center">
                     CSI Nashik Chapter
                   </h2>
-                  <p className="text-white sm:text-sm leading-relaxed text-justify">
+                  <p className="text-xs sm:text-sm md:text-base leading-relaxed text-center sm:text-justify max-w-prose">
                     Nashik chapter of Computer Society of India (CSI) was formed in 1988-89.
                     During the years, the chapter conducted several activities. We have won
                     the Best Chapter award several times. The First student branch was formed

@@ -32,8 +32,9 @@ export const FooterSection = (): JSX.Element => {
     {
       icon: <MailIcon className="w-6 h-6" />,
       alt: "Email",
-      href: "csi-kkwieer@kkwagh.edu.in",
-    },
+      href: "mailto:csi-kkwieer@kkwagh.edu.in",
+    }
+    
   ];
 
   return (
