@@ -201,10 +201,6 @@ export const Home = (): JSX.Element => {
               </div>
             </div>
 
-
-
-
-
             <div id="AboutUs" className="bg-gray-50">
               <AboutUs />
             </div>
