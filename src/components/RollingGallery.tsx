@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useAnimation, useTransform, PanInfo } from 'motion/react';
-import './RollingGallery.css';
+
 
 const IMGS: string[] = [
   '/images/csi_img1.png',

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Navbar } from "../../components/ui/navbar";
 import ProfileCard from "../../components/ProfileCard";
-import { useLocation } from "react-router-dom";
+import { useRouter } from "next/router";
 
 // Define the committee member interface
 interface CommitteeMember {
@@ -317,11 +317,11 @@ const CustomButton: React.FC<{
   className = "",
   onClick,
 }) => {
-  const { pathname } = useLocation();
+  const router = useRouter();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [router.pathname]);
   
   const baseClasses =
     "font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center";

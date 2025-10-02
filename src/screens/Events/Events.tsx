@@ -8,14 +8,14 @@ import {
   Award,
 } from "lucide-react";
 import { Navbar } from "../../components/ui/navbar";
-import { useLocation } from "react-router-dom";
+import { useRouter } from "next/router";
 
 const Events = () => {
-  const { pathname } = useLocation();
+  const router = useRouter();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [router.pathname]);
 
   const [activeCategory, setActiveCategory] = useState("all");
 

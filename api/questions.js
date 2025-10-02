@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'api-key': 'your-mongodb-data-api-key',
+        'api-key': 'f94293f3-b99a-41d6-bc97-c78632fe9c94',
       },
       body: JSON.stringify({
         collection: 'tests',

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { authenticateUser } from '../../api/auth';
 
 interface LoginProps {
     onLogin: (credentials: { username: string; password: string; secretCode: string }) => void;
@@ -21,40 +22,26 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             setLoading(false);
             return;
         }
-
         try {
-            const response = await fetch('/api/auth', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password, secretCode }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
+            const result = await authenticateUser(username, password, secretCode);
+            if (result.success) {
                 onLogin({ username, password, secretCode });
             } else {
-                setError(data.error || 'Login failed');
+                setError('Authentication failed');
             }
-        } catch (err) {
-            // Fallback for development
-            if (secretCode === 'CSI2025' && username === 'student' && password === 'test123') {
-                onLogin({ username, password, secretCode });
-            } else {
-                setError('Invalid credentials. Use: student/test123/CSI2025');
-            }
+        } catch (authErr: any) {
+            setError(authErr.message || 'Authentication failed');
         } finally {
             setLoading(false);
         }
+
     };
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
             <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
                 <h1 className="text-2xl font-bold text-center mb-6">Test Login</h1>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">

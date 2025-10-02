@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useCallback } from "react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import "./ProfileCard.css";
+
 
 interface ProfileCardProps {
   avatarUrl: string;
