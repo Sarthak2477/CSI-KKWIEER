@@ -24,94 +24,41 @@ const Test = (): JSX.Element => {
     const testRef = useRef<HTMLDivElement>(null);
 
     const fetchTestMetadata = async () => {
-        console.log('🔍 Fetching test metadata...');
         try {
-            const response = await fetch(`/api/test-metadata?username=${userInfo?.username}`);
-            console.log('📡 Metadata response status:', response.status);
-            
+            const response = await fetch('/api/questions?type=metadata');
             const data = await response.json();
-            console.log('📋 Raw metadata received:', JSON.stringify(data, null, 2));
-            
-            if (data.testCompleted) {
-                setTestCompleted(true);
-                setTestStatus('ended');
-                return;
+            if (data.testId) {
+                setTestMetadata(data);
+                checkTestSchedule(data);
             }
-            
-            setTestMetadata(data);
-            console.log('✅ Metadata set, calling checkTestSchedule...');
-            checkTestSchedule(data);
-               
         } catch (error) {
-            console.error('💥 Error fetching test metadata:', error);
+            console.error('Error fetching test metadata:', error);
             setTestStatus('ready'); // Fallback to ready if metadata fails
         }
     };
 
     const checkTestSchedule = (metadata: any) => {
-        console.log('⏰ Checking test schedule...');
+        const now = new Date().getTime();
+        const startTime = new Date(metadata.schedule.startTime.$date).getTime();
+        const endTime = new Date(metadata.schedule.endTime.$date).getTime();
         
-        const now = new Date();
-        console.log('🕐 Current time:', now.toISOString());
-        console.log('🕐 Current timestamp:', now.getTime());
-        
-        console.log('📅 Schedule data:', metadata.schedule);
-        console.log('🚀 Start time raw:', metadata.schedule.startTime);
-        console.log('🏁 End time raw:', metadata.schedule.endTime);
-        
-        // Handle different date formats - keep as UTC
-        let startTime, endTime;
-        
-        if (metadata.schedule.startTime.$date) {
-            startTime = new Date(metadata.schedule.startTime.$date);
-            endTime = new Date(metadata.schedule.endTime.$date);
-        } else {
-            startTime = new Date(metadata.schedule.startTime);
-            endTime = new Date(metadata.schedule.endTime);
-        }
-        
-        console.log('🚀 Parsed start time:', startTime.toISOString());
-        console.log('🏁 Parsed end time:', endTime.toISOString());
-        console.log('🚀 Start timestamp:', startTime.getTime());
-        console.log('🏁 End timestamp:', endTime.getTime());
-        
-        const nowTime = now.getTime();
-        const startTimeMs = startTime.getTime();
-        const endTimeMs = endTime.getTime();
-        
-        console.log('⏱️ Time comparison:');
-        console.log('   Now:', nowTime);
-        console.log('   Start:', startTimeMs);
-        console.log('   End:', endTimeMs);
-        console.log('   Now < Start:', nowTime < startTimeMs);
-        console.log('   Now >= Start && Now <= End:', nowTime >= startTimeMs && nowTime <= endTimeMs);
-        console.log('   Now > End:', nowTime > endTimeMs);
-        
-        if (nowTime < startTimeMs) {
-            const countdown = Math.floor((startTimeMs - nowTime) / 1000);
-            console.log('⏳ Test is waiting. Countdown:', countdown, 'seconds');
+        if (now < startTime) {
             setTestStatus('waiting');
-            setCountdownTime(countdown);
-        } else if (nowTime >= startTimeMs && nowTime <= endTimeMs) {
-            console.log('✅ Test is ready to start');
+            setCountdownTime(Math.floor((startTime - now) / 1000));
+        } else if (now >= startTime && now <= endTime) {
             setTestStatus('ready');
             setTimeLeft(metadata.schedule.duration);
         } else {
-            console.log('❌ Test has ended');
             setTestStatus('ended');
         }
-        
-        console.log('🎯 Final test status:', testStatus);
     };
 
     // Countdown timer effect
     useEffect(() => {
         if (testStatus === 'waiting' && countdownTime > 0) {
-            console.log('⏰ Starting countdown timer. Time left:', countdownTime);
             const timer = setInterval(() => {
                 setCountdownTime(prev => {
                     if (prev <= 1) {
-                        console.log('🎉 Countdown finished! Setting status to ready');
                         setTestStatus('ready');
                         return 0;
                     }
@@ -140,13 +87,7 @@ const Test = (): JSX.Element => {
     }, [testStarted, testCompleted]);
 
     const addViolation = useCallback(() => {
-        setViolations(prev => {
-            const newCount = prev + 1;
-            if (newCount >= 3) {
-                submitTest();
-            }
-            return newCount;
-        });
+        // COMMENTED OUT FOR TESTING
     }, []);
 
     const enterFullscreen = async () => {
@@ -158,171 +99,37 @@ const Test = (): JSX.Element => {
         }
     };
 
-    // Anti-cheating measures
-    useEffect(() => {
-        if (!testStarted) return;
-
-        const handleVisibilityChange = () => {
-            if (document.hidden) {
-                addViolation();
-                setIsBlurred(true);
-            } else {
-                setIsBlurred(false);
-            }
-        };
-
-        const handleFullscreenChange = () => {
-            if (!document.fullscreenElement && testStarted) {
-                addViolation();
-                setIsFullscreen(false);
-            } else {
-                setIsFullscreen(true);
-            }
-        };
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            // Disable copy/paste (but don't count as violations)
-            if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'v' || e.key === 'x')) {
-                e.preventDefault();
-                return;
-            }
-            
-            // Disable F12, Ctrl+Shift+I, Ctrl+U
-            if (e.key === 'F12' || 
-                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                (e.ctrlKey && e.key === 'u')) {
-                e.preventDefault();
-                addViolation();
-            }
-        };
-
-        const handleContextMenu = (e: MouseEvent) => {
-            e.preventDefault();
-        };
-
-        const handleBlur = () => {
-            addViolation();
-            setIsBlurred(true);
-        };
-
-        const handleFocus = () => {
-            setIsBlurred(false);
-        };
-
-        // Add event listeners
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('contextmenu', handleContextMenu);
-        window.addEventListener('blur', handleBlur);
-        window.addEventListener('focus', handleFocus);
-
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
-            document.removeEventListener('keydown', handleKeyDown);
-            document.removeEventListener('contextmenu', handleContextMenu);
-            window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('focus', handleFocus);
-        };
-    }, [testStarted, addViolation]);
-
     const startTest = async () => {
-        console.log('🚀 Starting test...');
-        await enterFullscreen();
         setTestStarted(true);
     };
 
     const fetchQuestions = async () => {
-        console.log('📝 Fetching questions...');
         try {
             setQuestionsLoading(true);
             const response = await fetch('/api/questions');
             const data = await response.json();
             if (data.questions) {
-                console.log('✅ Questions loaded:', data.questions.length);
                 setQuestions(data.questions);
             } else {
-                console.error('❌ No questions received from API');
+                console.error('No questions received from API');
             }
         } catch (error) {
-            console.error('💥 Error fetching questions:', error);
+            console.error('Error fetching questions:', error);
         } finally {
             setQuestionsLoading(false);
         }
     };
 
-    const saveProgress = async () => {
-        if (!userInfo?.username || !testStarted) return;
-        
-        const progressData = {
-            username: userInfo.username,
-            answers,
-            flaggedQuestions: Array.from(flaggedQuestions),
-            currentQuestion,
-            timeLeft,
-            violations,
-            testStarted
-        };
-        
-        try {
-            await fetch('/api/save-progress', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(progressData)
-            });
-        } catch (error) {
-            console.error('Failed to save progress:', error);
-        }
-    };
-
-    const loadProgress = async (username: string) => {
-        try {
-            const response = await fetch(`/api/load-progress/${username}`);
-            if (response.ok) {
-                const data = await response.json();
-                if (data.progress) {
-                    setAnswers(data.progress.answers || {});
-                    setFlaggedQuestions(new Set(data.progress.flaggedQuestions || []));
-                    setCurrentQuestion(data.progress.currentQuestion || 0);
-                    setTimeLeft(data.progress.timeLeft || 3600);
-                    setViolations(data.progress.violations || 0);
-                    setTestStarted(data.progress.testStarted || false);
-                    console.log('✅ Progress restored');
-                }
-            }
-        } catch (error) {
-            console.error('Failed to load progress:', error);
-        }
-    };
-
     const handleLogin = (credentials: { username: string; password: string; secretCode: string }) => {
-        console.log('👤 User logged in:', credentials.username);
         setUserInfo(credentials);
         setIsLoggedIn(true);
-        // Set userInfo first, then fetch metadata (which needs username)
-        setTimeout(() => {
-            fetchTestMetadata();
-            fetchQuestions();
-            loadProgress(credentials.username);
-        }, 100);
+        fetchTestMetadata();
+        fetchQuestions();
     };
 
     const handleAnswer = (questionId: number, answer: string) => {
         setAnswers(prev => ({ ...prev, [questionId]: answer }));
     };
-
-    // Auto-save progress every 30 seconds
-    useEffect(() => {
-        if (!testStarted) return;
-        const interval = setInterval(saveProgress, 30000);
-        return () => clearInterval(interval);
-    }, [testStarted, answers, flaggedQuestions, currentQuestion, timeLeft, violations]);
-
-    // Save on answer change
-    useEffect(() => {
-        if (testStarted) saveProgress();
-    }, [answers, flaggedQuestions]);
 
     const toggleFlag = (questionId: number) => {
         setFlaggedQuestions(prev => {
@@ -393,35 +200,10 @@ const Test = (): JSX.Element => {
     };
 
     const formatTime = (seconds: number) => {
-        const hours = Math.floor(seconds / 3600);
-        const mins = Math.floor((seconds % 3600) / 60);
+        const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        
-        if (hours > 0) {
-            return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        } else {
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
-
-    // Debug info display
-    const debugInfo = (
-        <div className="fixed top-0 right-0 bg-black text-white p-2 text-xs z-50 max-w-xs">
-            <div>Status: {testStatus}</div>
-            <div>Countdown: {countdownTime}</div>
-            <div>Metadata: {testMetadata ? 'Loaded' : 'None'}</div>
-            <div>Current Time: {new Date().toLocaleTimeString()}</div>
-            <div>Timezone: {Intl.DateTimeFormat().resolvedOptions().timeZone}</div>
-            {testMetadata && (
-                <>
-                    <div>Start: {new Date(testMetadata.schedule?.startTime?.$date || testMetadata.schedule?.startTime).toLocaleString()}</div>
-                    <div>End: {new Date(testMetadata.schedule?.endTime?.$date || testMetadata.schedule?.endTime).toLocaleString()}</div>
-                </>
-            )}
-        </div>
-    );
-
-    // console.log('🎯 Current render state:', { testStatus, isLoggedIn, questionsLoading, questionsCount: questions.length });
 
     if (!isLoggedIn) {
         return <Login onLogin={handleLogin} />;
@@ -430,7 +212,6 @@ const Test = (): JSX.Element => {
     if (testStatus === 'waiting') {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <h1 className="text-2xl font-bold mb-6">{testMetadata?.title || 'Aptitude Test'}</h1>
                     <p className="text-gray-600 mb-4">Test will start in:</p>
@@ -446,7 +227,6 @@ const Test = (): JSX.Element => {
     if (testStatus === 'ended') {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <h1 className="text-2xl font-bold mb-6">Test Ended</h1>
                     <p className="text-gray-600">The test period has expired.</p>
@@ -458,7 +238,6 @@ const Test = (): JSX.Element => {
     if (questionsLoading) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <h1 className="text-2xl font-bold mb-6">Loading Questions...</h1>
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
@@ -470,7 +249,6 @@ const Test = (): JSX.Element => {
     if (questions.length === 0) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <h1 className="text-2xl font-bold mb-6">No Questions Available</h1>
                     <p className="text-gray-600 mb-4">Unable to load questions from the database.</p>
@@ -488,7 +266,6 @@ const Test = (): JSX.Element => {
     if (testCompleted) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <div className="mb-6">
                         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -496,20 +273,28 @@ const Test = (): JSX.Element => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                         </div>
-                        <h1 className="text-2xl font-bold text-gray-900 mb-2">Test Already Completed!</h1>
-                        <p className="text-gray-600">You have already submitted this test, {userInfo?.username}.</p>
+                        <h1 className="text-2xl font-bold text-gray-900 mb-2">Test Completed!</h1>
+                        <p className="text-gray-600">Thank you for taking the test, {userInfo?.username}.</p>
                     </div>
                     
-                    <p className="text-sm text-gray-500 mb-4">
-                        You cannot retake the test. Your previous submission has been recorded.
-                    </p>
+                    <div className="mb-6">
+                        <p className="text-sm text-gray-600 mb-3">Please rate your experience:</p>
+                        <div className="flex justify-center space-x-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <button
+                                    key={star}
+                                    className="text-2xl text-yellow-400 hover:text-yellow-500 transition-colors"
+                                    onClick={() => console.log(`Rated ${star} stars`)}
+                                >
+                                    ⭐
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                     
-                    <button
-                        onClick={() => window.location.href = '/'}
-                        className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                        Return to Home
-                    </button>
+                    <p className="text-sm text-gray-500">
+                        Your responses have been recorded. You may now close this window.
+                    </p>
                 </div>
             </div>
         );
@@ -518,7 +303,6 @@ const Test = (): JSX.Element => {
     if (!testStarted && testStatus === 'ready') {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
                     <h1 className="text-2xl font-bold text-center mb-6">{testMetadata?.title || 'Aptitude Test'}</h1>
                     <div className="space-y-4 text-sm text-gray-600">
@@ -542,33 +326,6 @@ const Test = (): JSX.Element => {
 
     return (
         <div ref={testRef} className="min-h-screen bg-gray-100 select-none">
-            {debugInfo}
-            
-            {/* Violation Warning Overlay */}
-            {isBlurred && (
-                <div className="fixed inset-0 bg-red-600 bg-opacity-90 flex items-center justify-center z-50">
-                    <div className="bg-white p-8 rounded-lg text-center max-w-md">
-                        <div className="text-red-600 text-6xl mb-4">⚠️</div>
-                        <h2 className="text-2xl font-bold text-red-600 mb-4">VIOLATION DETECTED</h2>
-                        <p className="text-gray-700 mb-4">
-                            You switched away from the test window. This has been recorded as a violation.
-                        </p>
-                        <p className="text-sm text-gray-600 mb-4">
-                            Violations: {violations}/3
-                        </p>
-                        <p className="text-sm text-red-600">
-                            Click anywhere to return to the test
-                        </p>
-                    </div>
-                </div>
-            )}
-            
-            {/* Fullscreen Warning */}
-            {!isFullscreen && testStarted && (
-                <div className="fixed top-0 left-0 right-0 bg-red-600 text-white text-center py-2 z-40">
-                    <span className="font-semibold">⚠️ FULLSCREEN REQUIRED - Press F11 or click the fullscreen button</span>
-                </div>
-            )}
             <div className="bg-white shadow-sm border-b px-6 py-4">
                 <div className="flex justify-between items-center">
                     <div>
@@ -582,19 +339,9 @@ const Test = (): JSX.Element => {
                         <span className="text-lg font-mono text-red-600">
                             {formatTime(timeLeft)}
                         </span>
-                        <span className={`text-sm font-semibold ${
-                            violations >= 2 ? 'text-red-600 animate-pulse' : 'text-red-600'
-                        }`}>
+                        <span className="text-sm text-red-600">
                             Violations: {violations}/3
                         </span>
-                        {!isFullscreen && (
-                            <button
-                                onClick={enterFullscreen}
-                                className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                            >
-                                Enter Fullscreen
-                            </button>
-                        )}
                     </div>
                 </div>
             </div>

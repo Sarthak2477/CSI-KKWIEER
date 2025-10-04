@@ -26,17 +26,11 @@ const Test = (): JSX.Element => {
     const fetchTestMetadata = async () => {
         console.log('🔍 Fetching test metadata...');
         try {
-            const response = await fetch(`/api/test-metadata?username=${userInfo?.username}`);
+            const response = await fetch('/api/test-metadata');
             console.log('📡 Metadata response status:', response.status);
             
             const data = await response.json();
             console.log('📋 Raw metadata received:', JSON.stringify(data, null, 2));
-            
-            if (data.testCompleted) {
-                setTestCompleted(true);
-                setTestStatus('ended');
-                return;
-            }
             
             setTestMetadata(data);
             console.log('✅ Metadata set, calling checkTestSchedule...');
@@ -59,7 +53,7 @@ const Test = (): JSX.Element => {
         console.log('🚀 Start time raw:', metadata.schedule.startTime);
         console.log('🏁 End time raw:', metadata.schedule.endTime);
         
-        // Handle different date formats - keep as UTC
+        // Handle different date formats
         let startTime, endTime;
         
         if (metadata.schedule.startTime.$date) {
@@ -140,13 +134,7 @@ const Test = (): JSX.Element => {
     }, [testStarted, testCompleted]);
 
     const addViolation = useCallback(() => {
-        setViolations(prev => {
-            const newCount = prev + 1;
-            if (newCount >= 3) {
-                submitTest();
-            }
-            return newCount;
-        });
+        // COMMENTED OUT FOR TESTING
     }, []);
 
     const enterFullscreen = async () => {
@@ -158,78 +146,8 @@ const Test = (): JSX.Element => {
         }
     };
 
-    // Anti-cheating measures
-    useEffect(() => {
-        if (!testStarted) return;
-
-        const handleVisibilityChange = () => {
-            if (document.hidden) {
-                addViolation();
-                setIsBlurred(true);
-            } else {
-                setIsBlurred(false);
-            }
-        };
-
-        const handleFullscreenChange = () => {
-            if (!document.fullscreenElement && testStarted) {
-                addViolation();
-                setIsFullscreen(false);
-            } else {
-                setIsFullscreen(true);
-            }
-        };
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            // Disable copy/paste (but don't count as violations)
-            if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'v' || e.key === 'x')) {
-                e.preventDefault();
-                return;
-            }
-            
-            // Disable F12, Ctrl+Shift+I, Ctrl+U
-            if (e.key === 'F12' || 
-                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                (e.ctrlKey && e.key === 'u')) {
-                e.preventDefault();
-                addViolation();
-            }
-        };
-
-        const handleContextMenu = (e: MouseEvent) => {
-            e.preventDefault();
-        };
-
-        const handleBlur = () => {
-            addViolation();
-            setIsBlurred(true);
-        };
-
-        const handleFocus = () => {
-            setIsBlurred(false);
-        };
-
-        // Add event listeners
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('contextmenu', handleContextMenu);
-        window.addEventListener('blur', handleBlur);
-        window.addEventListener('focus', handleFocus);
-
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
-            document.removeEventListener('keydown', handleKeyDown);
-            document.removeEventListener('contextmenu', handleContextMenu);
-            window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('focus', handleFocus);
-        };
-    }, [testStarted, addViolation]);
-
     const startTest = async () => {
         console.log('🚀 Starting test...');
-        await enterFullscreen();
         setTestStarted(true);
     };
 
@@ -252,77 +170,17 @@ const Test = (): JSX.Element => {
         }
     };
 
-    const saveProgress = async () => {
-        if (!userInfo?.username || !testStarted) return;
-        
-        const progressData = {
-            username: userInfo.username,
-            answers,
-            flaggedQuestions: Array.from(flaggedQuestions),
-            currentQuestion,
-            timeLeft,
-            violations,
-            testStarted
-        };
-        
-        try {
-            await fetch('/api/save-progress', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(progressData)
-            });
-        } catch (error) {
-            console.error('Failed to save progress:', error);
-        }
-    };
-
-    const loadProgress = async (username: string) => {
-        try {
-            const response = await fetch(`/api/load-progress/${username}`);
-            if (response.ok) {
-                const data = await response.json();
-                if (data.progress) {
-                    setAnswers(data.progress.answers || {});
-                    setFlaggedQuestions(new Set(data.progress.flaggedQuestions || []));
-                    setCurrentQuestion(data.progress.currentQuestion || 0);
-                    setTimeLeft(data.progress.timeLeft || 3600);
-                    setViolations(data.progress.violations || 0);
-                    setTestStarted(data.progress.testStarted || false);
-                    console.log('✅ Progress restored');
-                }
-            }
-        } catch (error) {
-            console.error('Failed to load progress:', error);
-        }
-    };
-
     const handleLogin = (credentials: { username: string; password: string; secretCode: string }) => {
         console.log('👤 User logged in:', credentials.username);
         setUserInfo(credentials);
         setIsLoggedIn(true);
-        // Set userInfo first, then fetch metadata (which needs username)
-        setTimeout(() => {
-            fetchTestMetadata();
-            fetchQuestions();
-            loadProgress(credentials.username);
-        }, 100);
+        fetchTestMetadata();
+        fetchQuestions();
     };
 
     const handleAnswer = (questionId: number, answer: string) => {
         setAnswers(prev => ({ ...prev, [questionId]: answer }));
     };
-
-    // Auto-save progress every 30 seconds
-    useEffect(() => {
-        if (!testStarted) return;
-        const interval = setInterval(saveProgress, 30000);
-        return () => clearInterval(interval);
-    }, [testStarted, answers, flaggedQuestions, currentQuestion, timeLeft, violations]);
-
-    // Save on answer change
-    useEffect(() => {
-        if (testStarted) saveProgress();
-    }, [answers, flaggedQuestions]);
 
     const toggleFlag = (questionId: number) => {
         setFlaggedQuestions(prev => {
@@ -411,17 +269,16 @@ const Test = (): JSX.Element => {
             <div>Countdown: {countdownTime}</div>
             <div>Metadata: {testMetadata ? 'Loaded' : 'None'}</div>
             <div>Current Time: {new Date().toLocaleTimeString()}</div>
-            <div>Timezone: {Intl.DateTimeFormat().resolvedOptions().timeZone}</div>
             {testMetadata && (
                 <>
-                    <div>Start: {new Date(testMetadata.schedule?.startTime?.$date || testMetadata.schedule?.startTime).toLocaleString()}</div>
-                    <div>End: {new Date(testMetadata.schedule?.endTime?.$date || testMetadata.schedule?.endTime).toLocaleString()}</div>
+                    <div>Start: {testMetadata.schedule?.startTime?.$date || testMetadata.schedule?.startTime}</div>
+                    <div>End: {testMetadata.schedule?.endTime?.$date || testMetadata.schedule?.endTime}</div>
                 </>
             )}
         </div>
     );
 
-    // console.log('🎯 Current render state:', { testStatus, isLoggedIn, questionsLoading, questionsCount: questions.length });
+    console.log('🎯 Current render state:', { testStatus, isLoggedIn, questionsLoading, questionsCount: questions.length });
 
     if (!isLoggedIn) {
         return <Login onLogin={handleLogin} />;
@@ -496,20 +353,28 @@ const Test = (): JSX.Element => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                         </div>
-                        <h1 className="text-2xl font-bold text-gray-900 mb-2">Test Already Completed!</h1>
-                        <p className="text-gray-600">You have already submitted this test, {userInfo?.username}.</p>
+                        <h1 className="text-2xl font-bold text-gray-900 mb-2">Test Completed!</h1>
+                        <p className="text-gray-600">Thank you for taking the test, {userInfo?.username}.</p>
                     </div>
                     
-                    <p className="text-sm text-gray-500 mb-4">
-                        You cannot retake the test. Your previous submission has been recorded.
-                    </p>
+                    <div className="mb-6">
+                        <p className="text-sm text-gray-600 mb-3">Please rate your experience:</p>
+                        <div className="flex justify-center space-x-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <button
+                                    key={star}
+                                    className="text-2xl text-yellow-400 hover:text-yellow-500 transition-colors"
+                                    onClick={() => console.log(`Rated ${star} stars`)}
+                                >
+                                    ⭐
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                     
-                    <button
-                        onClick={() => window.location.href = '/'}
-                        className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                        Return to Home
-                    </button>
+                    <p className="text-sm text-gray-500">
+                        Your responses have been recorded. You may now close this window.
+                    </p>
                 </div>
             </div>
         );
@@ -543,32 +408,6 @@ const Test = (): JSX.Element => {
     return (
         <div ref={testRef} className="min-h-screen bg-gray-100 select-none">
             {debugInfo}
-            
-            {/* Violation Warning Overlay */}
-            {isBlurred && (
-                <div className="fixed inset-0 bg-red-600 bg-opacity-90 flex items-center justify-center z-50">
-                    <div className="bg-white p-8 rounded-lg text-center max-w-md">
-                        <div className="text-red-600 text-6xl mb-4">⚠️</div>
-                        <h2 className="text-2xl font-bold text-red-600 mb-4">VIOLATION DETECTED</h2>
-                        <p className="text-gray-700 mb-4">
-                            You switched away from the test window. This has been recorded as a violation.
-                        </p>
-                        <p className="text-sm text-gray-600 mb-4">
-                            Violations: {violations}/3
-                        </p>
-                        <p className="text-sm text-red-600">
-                            Click anywhere to return to the test
-                        </p>
-                    </div>
-                </div>
-            )}
-            
-            {/* Fullscreen Warning */}
-            {!isFullscreen && testStarted && (
-                <div className="fixed top-0 left-0 right-0 bg-red-600 text-white text-center py-2 z-40">
-                    <span className="font-semibold">⚠️ FULLSCREEN REQUIRED - Press F11 or click the fullscreen button</span>
-                </div>
-            )}
             <div className="bg-white shadow-sm border-b px-6 py-4">
                 <div className="flex justify-between items-center">
                     <div>
@@ -582,19 +421,9 @@ const Test = (): JSX.Element => {
                         <span className="text-lg font-mono text-red-600">
                             {formatTime(timeLeft)}
                         </span>
-                        <span className={`text-sm font-semibold ${
-                            violations >= 2 ? 'text-red-600 animate-pulse' : 'text-red-600'
-                        }`}>
+                        <span className="text-sm text-red-600">
                             Violations: {violations}/3
                         </span>
-                        {!isFullscreen && (
-                            <button
-                                onClick={enterFullscreen}
-                                className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                            >
-                                Enter Fullscreen
-                            </button>
-                        )}
                     </div>
                 </div>
             </div>

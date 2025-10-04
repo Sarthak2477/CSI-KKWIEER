@@ -16,6 +16,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     isFlagged = false,
     onToggleFlag
 }) => {
+    if (!question) {
+        return <div className="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">Loading question...</div>;
+    }
+
     return (
         <div className="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
             <div className="mb-4">
@@ -34,7 +38,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     )}
                 </div>
                 <h2 className="text-lg font-medium text-gray-900 leading-relaxed">
-                    {question.question}
+                    {question.question || 'Question text not available'}
                 </h2>
                 {question.image && (
                     <div className="mt-4">
@@ -48,7 +52,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             </div>
 
             <div className="space-y-3">
-                {question.options.map((option, index) => {
+                {(question.options || []).map((option, index) => {
                     const optionLabel = String.fromCharCode(65 + index); // A, B, C, D
                     const isSelected = selectedAnswer === option;
                     
