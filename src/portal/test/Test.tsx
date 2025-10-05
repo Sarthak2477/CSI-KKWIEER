@@ -404,22 +404,7 @@ const Test = (): JSX.Element => {
         }
     };
 
-    // Debug info display
-    const debugInfo = (
-        <div className="fixed top-0 right-0 bg-black text-white p-2 text-xs z-50 max-w-xs">
-            <div>Status: {testStatus}</div>
-            <div>Countdown: {countdownTime}</div>
-            <div>Metadata: {testMetadata ? 'Loaded' : 'None'}</div>
-            <div>Current Time: {new Date().toLocaleTimeString()}</div>
-            <div>Timezone: {Intl.DateTimeFormat().resolvedOptions().timeZone}</div>
-            {testMetadata && (
-                <>
-                    <div>Start: {new Date(testMetadata.schedule?.startTime?.$date || testMetadata.schedule?.startTime).toLocaleString()}</div>
-                    <div>End: {new Date(testMetadata.schedule?.endTime?.$date || testMetadata.schedule?.endTime).toLocaleString()}</div>
-                </>
-            )}
-        </div>
-    );
+
 
     // console.log('🎯 Current render state:', { testStatus, isLoggedIn, questionsLoading, questionsCount: questions.length });
 
@@ -430,7 +415,6 @@ const Test = (): JSX.Element => {
     if (testStatus === 'waiting') {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <h1 className="text-2xl font-bold mb-6">{testMetadata?.title || 'Aptitude Test'}</h1>
                     <p className="text-gray-600 mb-4">Test will start in:</p>
@@ -446,7 +430,6 @@ const Test = (): JSX.Element => {
     if (testStatus === 'ended') {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <h1 className="text-2xl font-bold mb-6">Test Ended</h1>
                     <p className="text-gray-600">The test period has expired.</p>
@@ -458,7 +441,6 @@ const Test = (): JSX.Element => {
     if (questionsLoading) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <h1 className="text-2xl font-bold mb-6">Loading Questions...</h1>
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
@@ -470,7 +452,6 @@ const Test = (): JSX.Element => {
     if (questions.length === 0) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <h1 className="text-2xl font-bold mb-6">No Questions Available</h1>
                     <p className="text-gray-600 mb-4">Unable to load questions from the database.</p>
@@ -488,7 +469,6 @@ const Test = (): JSX.Element => {
     if (testCompleted) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
                     <div className="mb-6">
                         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -518,7 +498,6 @@ const Test = (): JSX.Element => {
     if (!testStarted && testStatus === 'ready') {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-                {debugInfo}
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
                     <h1 className="text-2xl font-bold text-center mb-6">{testMetadata?.title || 'Aptitude Test'}</h1>
                     <div className="space-y-4 text-sm text-gray-600">
@@ -542,7 +521,6 @@ const Test = (): JSX.Element => {
 
     return (
         <div ref={testRef} className="min-h-screen bg-gray-100 select-none">
-            {debugInfo}
             
             {/* Violation Warning Overlay */}
             {isBlurred && (
@@ -595,6 +573,12 @@ const Test = (): JSX.Element => {
                                 Enter Fullscreen
                             </button>
                         )}
+                        <button
+                            onClick={submitTest}
+                            className="text-sm bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700"
+                        >
+                            End Test
+                        </button>
                     </div>
                 </div>
             </div>

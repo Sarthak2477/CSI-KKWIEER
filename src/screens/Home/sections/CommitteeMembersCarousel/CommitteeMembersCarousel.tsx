@@ -204,16 +204,8 @@ const CommitteeMembersCarousel: React.FC = () => {
                     <ProfileCard
                       name={member.name}
                       title={member.position}
-                      handle={member.year}
-                      status="Active"
-                      contactText="Contact Me"
                       avatarUrl={member.image}
-                      miniAvatarUrl={member.image}
                       linkedinUrl={member.linkedin}
-                      showUserInfo={true}
-                      onContactClick={() =>
-                        console.log(`Contact ${member.name}`)
-                      }
                     />
                   </div>
                 </SwiperSlide>

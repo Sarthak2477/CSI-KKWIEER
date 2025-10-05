@@ -351,6 +351,7 @@ const CustomButton: React.FC<{
 export const Committee = (): JSX.Element => {
   const [selectedYear, setSelectedYear] = useState("2025");
   const { visibleItems, loading, lastElementRef, resetVisibleItems } = useLazyLoading(12);
+  const [currentVisibleItems, setCurrentVisibleItems] = useState(12);
 
   const handleYearChange = (year: string) => {
     setSelectedYear(year);
@@ -441,14 +442,8 @@ export const Committee = (): JSX.Element => {
                   <ProfileCard
                     name={member.name}
                     title={member.position}
-                    handle={member.year}
-                    status="Active"
-                    contactText="Contact Me"
                     avatarUrl={member.image}
-                    miniAvatarUrl={member.image}
                     linkedinUrl={member.linkedin}
-                    showUserInfo={true}
-                    onContactClick={() => console.log(`Contact ${member.name}`)}
                   />
                 </div>
               ))}
@@ -468,7 +463,7 @@ export const Committee = (): JSX.Element => {
               <div className="text-center">
                 <CustomButton
                   onClick={() => {
-                    setVisibleItems(prev => prev + 12);
+                    setCurrentVisibleItems(prev => prev + 12);
                   }}
                   variant="outline"
                   size="lg"
