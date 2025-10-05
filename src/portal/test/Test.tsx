@@ -13,6 +13,7 @@ const Test = (): JSX.Element => {
     const [testStarted, setTestStarted] = useState(false);
     const [testCompleted, setTestCompleted] = useState(false);
     const [isBlurred, setIsBlurred] = useState(false);
+    const [showViolationMessage, setShowViolationMessage] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userInfo, setUserInfo] = useState<{username: string; password: string; secretCode: string} | null>(null);
     const [questions, setQuestions] = useState<TestQuestion[]>([]);
@@ -142,12 +143,58 @@ const Test = (): JSX.Element => {
     const addViolation = useCallback(() => {
         setViolations(prev => {
             const newCount = prev + 1;
+            setShowViolationMessage(true);
+            setTimeout(() => setShowViolationMessage(false), 3000);
+            
             if (newCount >= 3) {
-                submitTest();
+                console.log('🚨 3 violations reached! Submitting test immediately...');
+                console.log('Test data:', { username: userInfo?.username, violations: newCount, answers: Object.keys(answers).length });
+                
+                // Immediate submission without async complications
+                const timeSpent = (testMetadata?.schedule?.duration || 3600) - timeLeft;
+                const testData = {
+                    username: userInfo?.username,
+                    answers,
+                    timeSpent,
+                    violations: newCount,
+                    totalQuestions: questions.length
+                };
+
+                // Use async/await for clearer flow
+                (async () => {
+                    try {
+                        console.log('📤 Sending submission request...');
+                        const response = await fetch('/api/submit-test', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(testData)
+                        });
+                        
+                        console.log('📡 Response status:', response.status);
+                        if (response.ok) {
+                            console.log('✅ Test submitted successfully due to violations');
+                        } else {
+                            console.error('❌ Submission failed:', response.statusText);
+                        }
+                    } catch (error) {
+                        console.error('💥 Submission error:', error);
+                    } finally {
+                        console.log('🏁 Setting test as completed');
+                        setTestCompleted(true);
+                        if (document.fullscreenElement) {
+                            document.exitFullscreen?.();
+                        }
+                    }
+                })();
             }
+            
             return newCount;
         });
-    }, []);
+    }, [testMetadata, timeLeft, userInfo, answers, questions.length]);
+
+
 
     const enterFullscreen = async () => {
         try {
@@ -523,7 +570,7 @@ const Test = (): JSX.Element => {
         <div ref={testRef} className="min-h-screen bg-gray-100 select-none">
             
             {/* Violation Warning Overlay */}
-            {isBlurred && (
+            {showViolationMessage && (
                 <div className="fixed inset-0 bg-red-600 bg-opacity-90 flex items-center justify-center z-50">
                     <div className="bg-white p-8 rounded-lg text-center max-w-md">
                         <div className="text-red-600 text-6xl mb-4">⚠️</div>
