@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { X, Calendar, Users, MapPin, ExternalLink } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 export interface GalleryItem {
   id: number;
@@ -128,7 +128,7 @@ const categories = [
 ];
 
 export const GallerySection = (): JSX.Element => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [filteredData, setFilteredData] = useState(galleryData);
@@ -229,7 +229,7 @@ export const GallerySection = (): JSX.Element => {
         {/* View All */}
         <div className="flex justify-center mt-12">
           <button
-            onClick={() => navigate("/gallery")}
+            onClick={() => router.push("/gallery")}
             className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl shadow-md hover:scale-105 transition-transform"
           >
             <ExternalLink size={18} className="inline mr-2" />

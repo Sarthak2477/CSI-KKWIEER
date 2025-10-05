@@ -1,7 +1,7 @@
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { eventService, Event as ApiEvent } from "../../../../services/eventService";
 import { useState, useEffect } from "react";
 
@@ -50,7 +50,7 @@ const staticEvents: Event[] = [
 ];
 
 export const EventsCarousel = (): JSX.Element => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [apiEvents, setApiEvents] = useState<ApiEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -145,7 +145,7 @@ export const EventsCarousel = (): JSX.Element => {
                 </p>
                 <Button
                   className="mt-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow hover:opacity-90 transition text-sm sm:text-base px-4 sm:px-6 py-2"
-                  onClick={() => navigate(`/events/`)}
+                  onClick={() => router.push(`/events/`)}
                 >
                   Learn More
                 </Button>
@@ -158,7 +158,7 @@ export const EventsCarousel = (): JSX.Element => {
       {/* View All Button */}
       <div className="flex justify-center mt-6">
         <button
-          onClick={() => navigate("/events")}
+          onClick={() => router.push("/events")}
           className="
             relative
             px-6 sm:px-8 py-2 sm:py-3

@@ -8,7 +8,8 @@ import {
   XIcon,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -21,8 +22,7 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState<string>("home");
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const navigationItems = [
     { icon: <HomeIcon className="w-5 h-5 sm:w-6 sm:h-6" />, label: "Home", target: "home", path: "/" },
@@ -41,19 +41,19 @@ export const Navbar = () => {
 
   // Set active item based on current route when component mounts or route changes
   useEffect(() => {
-    if (location.pathname === "/") {
+    if (router.pathname === "/") {
       // Only reset to "home" if we don't have a pending section navigation
-      if (!location.hash && activeItem.startsWith("/")) {
+      if (!router.asPath.includes("#") && activeItem.startsWith("/")) {
         setActiveItem("home");
       }
     } else {
-      setActiveItem(location.pathname);
+      setActiveItem(router.pathname);
     }
-  }, [location.pathname]);
+  }, [router.pathname]);
 
   // Scrollspy effect - only works when user hasn't manually clicked
   useEffect(() => {
-    if (location.pathname !== "/") return;
+    if (router.pathname !== "/") return;
     
     const handleScroll = () => {
       // Only update if current active item is a section (not a route)
@@ -85,7 +85,7 @@ export const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     handleScroll(); // Check initial position
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [location.pathname, activeItem]);
+  }, [router.pathname, activeItem]);
 
   // Handle navigation clicks
   const handleNavClick = (item: typeof navigationItems[0], e: React.MouseEvent) => {
@@ -96,12 +96,12 @@ export const Navbar = () => {
       // Section navigation
       setActiveItem(item.target);
       
-      if (location.pathname === "/") {
+      if (router.pathname === "/") {
         // Already on homepage, just scroll
         scrollToSection(item.target);
       } else {
         // Navigate to homepage first, then scroll
-        navigate("/");
+        router.push("/");
         // Use setTimeout to ensure navigation completes
         setTimeout(() => {
           scrollToSection(item.target);
@@ -110,7 +110,7 @@ export const Navbar = () => {
     } else {
       // Route navigation
       setActiveItem(item.path);
-      navigate(item.path);
+      router.push(item.path);
     }
   };
 

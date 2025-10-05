@@ -7,12 +7,22 @@ export const ComputerSocietySection = (): JSX.Element => {
   const [typedText2, setTypedText2] = useState("");
   const [showCursor1, setShowCursor1] = useState(true);
   const [showCursor2, setShowCursor2] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(1024);
 
   const text1 = "Computer Society Of India,";
   const text2 = "KKWIEER Student's Branch";
 
   useEffect(() => {
     const timeout = setTimeout(() => setIsVisible(true), 50);
+    if (typeof window !== 'undefined') {
+      setWindowWidth(window.innerWidth);
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      window.addEventListener('resize', handleResize);
+      return () => {
+        clearTimeout(timeout);
+        window.removeEventListener('resize', handleResize);
+      };
+    }
     return () => clearTimeout(timeout);
   }, []);
 
@@ -70,7 +80,7 @@ export const ComputerSocietySection = (): JSX.Element => {
               '/images/csi_img1.png'
             ].map((img, index) => {
               const angle = (index * 50) + 90; // 90° to 340° for maximum spacing
-              const radius = window.innerWidth < 640 ? 120 : window.innerWidth < 768 ? 150 : 200;
+              const radius = windowWidth < 640 ? 120 : windowWidth < 768 ? 150 : 200;
               const x = Math.cos((angle * Math.PI) / 180) * radius;
               const y = Math.sin((angle * Math.PI) / 180) * radius;
               
@@ -79,8 +89,8 @@ export const ComputerSocietySection = (): JSX.Element => {
                   key={index} 
                   className="absolute w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 overflow-hidden rounded-lg"
                   style={{
-                    left: `calc(50% + ${x}px - ${window.innerWidth < 640 ? '40px' : window.innerWidth < 768 ? '48px' : window.innerWidth < 1024 ? '64px' : '72px'})`,
-                    top: `calc(50% + ${y}px - ${window.innerWidth < 640 ? '40px' : window.innerWidth < 768 ? '48px' : window.innerWidth < 1024 ? '64px' : '72px'})`,
+                    left: `calc(50% + ${x}px - ${windowWidth < 640 ? '40px' : windowWidth < 768 ? '48px' : windowWidth < 1024 ? '64px' : '72px'})`,
+                    top: `calc(50% + ${y}px - ${windowWidth < 640 ? '40px' : windowWidth < 768 ? '48px' : windowWidth < 1024 ? '64px' : '72px'})`,
                   }}
                 >
                   <img 
