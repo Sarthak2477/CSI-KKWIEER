@@ -21,7 +21,7 @@ import {
     ArrowLeft,
     Play
 } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useRouter } from "next/router";
 
 type EventPhoto = {
     id: number;
@@ -149,11 +149,11 @@ const EVENT_PHOTOS: EventPhoto[] = [
 const CATEGORIES = ["All", "Workshop", "Seminar", "Ceremony", "Networking", "Activity", "Award"] as const;
 
 const Gallery = (): JSX.Element => {
-    const { pathname } = useLocation();
+    const router = useRouter();
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [pathname]);
+    }, [router.pathname]);
 
     const [query, setQuery] = useState("");
     const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]>("All");

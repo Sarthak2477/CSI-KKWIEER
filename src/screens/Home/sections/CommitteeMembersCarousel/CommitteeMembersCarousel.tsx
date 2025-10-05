@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import ProfileCard from "../../../../components/ProfileCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Pagination } from "swiper/modules";
@@ -128,10 +128,10 @@ const CustomButton: React.FC<{
 // -------------------- Main Component --------------------
 const CommitteeMembersCarousel: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState("2025");
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleViewAllMembers = () => {
-    navigate("/committee");
+    router.push("/committee");
   };
 
   // Filter by year
@@ -204,16 +204,8 @@ const CommitteeMembersCarousel: React.FC = () => {
                     <ProfileCard
                       name={member.name}
                       title={member.position}
-                      handle={member.year}
-                      status="Active"
-                      contactText="Contact Me"
                       avatarUrl={member.image}
-                      miniAvatarUrl={member.image}
                       linkedinUrl={member.linkedin}
-                      showUserInfo={true}
-                      onContactClick={() =>
-                        console.log(`Contact ${member.name}`)
-                      }
                     />
                   </div>
                 </SwiperSlide>
@@ -232,7 +224,7 @@ const CommitteeMembersCarousel: React.FC = () => {
         <div className="text-center">
           <div className="flex justify-center mt-6">
             <button
-              onClick={() => navigate("/committee")}
+              onClick={() => router.push("/committee")}
               className="
                 relative
                 px-6 sm:px-8 py-2 sm:py-3

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Navbar } from "../../components/ui/navbar";
 import ProfileCard from "../../components/ProfileCard";
-import { useLocation } from "react-router-dom";
+import { useRouter } from "next/router";
 
 // Define the committee member interface
 interface CommitteeMember {
@@ -317,11 +317,11 @@ const CustomButton: React.FC<{
   className = "",
   onClick,
 }) => {
-  const { pathname } = useLocation();
+  const router = useRouter();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [router.pathname]);
   
   const baseClasses =
     "font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center";
@@ -351,6 +351,7 @@ const CustomButton: React.FC<{
 export const Committee = (): JSX.Element => {
   const [selectedYear, setSelectedYear] = useState("2025");
   const { visibleItems, loading, lastElementRef, resetVisibleItems } = useLazyLoading(12);
+  const [currentVisibleItems, setCurrentVisibleItems] = useState(12);
 
   const handleYearChange = (year: string) => {
     setSelectedYear(year);
@@ -441,14 +442,8 @@ export const Committee = (): JSX.Element => {
                   <ProfileCard
                     name={member.name}
                     title={member.position}
-                    handle={member.year}
-                    status="Active"
-                    contactText="Contact Me"
                     avatarUrl={member.image}
-                    miniAvatarUrl={member.image}
                     linkedinUrl={member.linkedin}
-                    showUserInfo={true}
-                    onContactClick={() => console.log(`Contact ${member.name}`)}
                   />
                 </div>
               ))}
@@ -468,7 +463,7 @@ export const Committee = (): JSX.Element => {
               <div className="text-center">
                 <CustomButton
                   onClick={() => {
-                    setVisibleItems(prev => prev + 12);
+                    setCurrentVisibleItems(prev => prev + 12);
                   }}
                   variant="outline"
                   size="lg"
