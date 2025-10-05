@@ -12,6 +12,7 @@ const Test = (): JSX.Element => {
     const [violations, setViolations] = useState(0);
     const [testStarted, setTestStarted] = useState(false);
     const [testCompleted, setTestCompleted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [isBlurred, setIsBlurred] = useState(false);
     const [showViolationMessage, setShowViolationMessage] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -183,6 +184,7 @@ const Test = (): JSX.Element => {
                     } finally {
                         console.log('🏁 Setting test as completed');
                         setTestCompleted(true);
+                        setIsSubmitting(false);
                         if (document.fullscreenElement) {
                             document.exitFullscreen?.();
                         }
@@ -406,6 +408,9 @@ const Test = (): JSX.Element => {
     };
 
     const submitTest = async () => {
+        if (isSubmitting || testCompleted) return;
+        
+        setIsSubmitting(true);
         try {
             const timeSpent = (testMetadata?.schedule?.duration || 3600) - timeLeft;
             const testData = {
@@ -431,11 +436,12 @@ const Test = (): JSX.Element => {
             }
         } catch (error) {
             console.error('Error submitting test:', error);
-        }
-
-        setTestCompleted(true);
-        if (document.fullscreenElement) {
-            document.exitFullscreen?.();
+        } finally {
+            setTestCompleted(true);
+            setIsSubmitting(false);
+            if (document.fullscreenElement) {
+                document.exitFullscreen?.();
+            }
         }
     };
 
@@ -622,9 +628,10 @@ const Test = (): JSX.Element => {
                         )}
                         <button
                             onClick={submitTest}
-                            className="text-sm bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700"
+                            disabled={isSubmitting}
+                            className="text-sm bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            End Test
+                            {isSubmitting ? 'Ending...' : 'End Test'}
                         </button>
                     </div>
                 </div>
@@ -695,9 +702,10 @@ const Test = (): JSX.Element => {
                             {currentQuestion === questions.length - 1 ? (
                                 <button
                                     onClick={submitTest}
-                                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                    disabled={isSubmitting}
+                                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Submit Test
+                                    {isSubmitting ? 'Submitting...' : 'Submit Test'}
                                 </button>
                             ) : (
                                 <button
