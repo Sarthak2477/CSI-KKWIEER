@@ -259,10 +259,12 @@ const Test = (): JSX.Element => {
                 return;
             }
             
-            // Disable F12, Ctrl+Shift+I, Ctrl+U
+            // Disable F12, Ctrl+Shift+I, Ctrl+U, Alt+Tab
             if (e.key === 'F12' || 
                 (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                (e.ctrlKey && e.key === 'u')) {
+                (e.ctrlKey && e.key === 'u') ||
+                (e.altKey && e.key === 'Tab') ||
+                e.key === 'Alt') {
                 e.preventDefault();
                 addViolation();
             }
@@ -595,7 +597,7 @@ const Test = (): JSX.Element => {
                             </svg>
                         </div>
                         <h1 className="text-2xl font-bold text-gray-900 mb-2">Test Already Completed!</h1>
-                        <p className="text-gray-600">You have already submitted this test, {userInfo?.name}.</p>
+                        <p className="text-gray-600">You have already submitted this test, {userInfo?.username}.</p>
                     </div>
                     
                     <p className="text-sm text-gray-500 mb-4">
