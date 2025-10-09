@@ -20,16 +20,39 @@ export default async function handler(req, res) {
     const results = db.collection("testresults");
     const tests = db.collection("tests");
 
+    // Check if user already submitted
+    const existingResult = await results.findOne({ username });
+    if (existingResult) {
+      return res.status(400).json({ error: "Test already submitted" });
+    }
+
     // Fetch correct answers from questions
     const questions = await tests.find({}).toArray();
     
     // Calculate actual score
     let correctAnswers = 0;
-    questions.forEach((question, index) => {
-      if (answers[index] && answers[index] === question.correctAnswer) {
-        correctAnswers++;
+    console.log('Calculating score for user:', username);
+    console.log('Total questions:', questions.length);
+    console.log('User answers:', answers);
+    
+    Object.keys(answers).forEach(questionIndex => {
+      const index = parseInt(questionIndex);
+      const userAnswer = answers[questionIndex];
+      const question = questions[index];
+      
+      if (question) {
+        const correctAnswer = question.correctAnswer;
+        const isCorrect = userAnswer && userAnswer.toString().trim() === correctAnswer.toString().trim();
+        
+        console.log(`Q${index}: User="${userAnswer}" Correct="${correctAnswer}" Match=${isCorrect}`);
+        
+        if (isCorrect) {
+          correctAnswers++;
+        }
       }
     });
+    
+    console.log('Final score:', correctAnswers, 'out of', Object.keys(answers).length);
 
     const testResult = {
       username,

@@ -97,9 +97,11 @@ const Test = (): JSX.Element => {
         } else if (nowTime >= startTimeMs && nowTime <= endTimeMs) {
             console.log('✅ Test is ready to start');
             setTestStatus('ready');
-            setTimeLeft(metadata.schedule.duration);
+            // Set time left to remaining time until test ends
+            const remainingTime = Math.floor((endTimeMs - nowTime) / 1000);
+            setTimeLeft(remainingTime);
         } else {
-            console.log('❌ Test has ended');
+            console.log('❌ Test period has ended');
             setTestStatus('ended');
         }
         
@@ -124,22 +126,32 @@ const Test = (): JSX.Element => {
         }
     }, [testStatus, countdownTime]);
 
-    // Timer
+    // Timer - counts down to schedule end time
     useEffect(() => {
-        if (!testStarted || testCompleted) return;
+        if (!testStarted || testCompleted || !testMetadata?.schedule) return;
 
         const timer = setInterval(() => {
-            setTimeLeft(prev => {
-                if (prev <= 1) {
-                    submitTest();
-                    return 0;
-                }
-                return prev - 1;
-            });
+            const now = new Date().getTime();
+            let endTime;
+            
+            if (testMetadata.schedule.endTime.$date) {
+                endTime = new Date(testMetadata.schedule.endTime.$date).getTime();
+            } else {
+                endTime = new Date(testMetadata.schedule.endTime).getTime();
+            }
+            
+            const remainingTime = Math.floor((endTime - now) / 1000);
+            
+            if (remainingTime <= 0) {
+                submitTest();
+                setTimeLeft(0);
+            } else {
+                setTimeLeft(remainingTime);
+            }
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [testStarted, testCompleted]);
+    }, [testStarted, testCompleted, testMetadata]);
 
     const addViolation = useCallback(() => {
         setViolations(prev => {
@@ -164,6 +176,9 @@ const Test = (): JSX.Element => {
                 // Use async/await for clearer flow
                 (async () => {
                     try {
+                        if (isSubmitting) return; // Prevent double submission
+                        setIsSubmitting(true);
+                        
                         console.log('📤 Sending submission request...');
                         const response = await fetch('/api/submit-test', {
                             method: 'POST',
@@ -176,6 +191,14 @@ const Test = (): JSX.Element => {
                         console.log('📡 Response status:', response.status);
                         if (response.ok) {
                             console.log('✅ Test submitted successfully due to violations');
+                            // Clear draft after successful submission
+                            if (userInfo?.username) {
+                                await fetch('/api/clear-draft', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ username: userInfo.username })
+                                });
+                            }
                         } else {
                             console.error('❌ Submission failed:', response.statusText);
                         }
@@ -258,6 +281,12 @@ const Test = (): JSX.Element => {
             setIsBlurred(false);
         };
 
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue = 'Are you sure you want to leave? Your test progress will be lost.';
+            return 'Are you sure you want to leave? Your test progress will be lost.';
+        };
+
         // Add event listeners
         document.addEventListener('visibilitychange', handleVisibilityChange);
         document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -265,6 +294,7 @@ const Test = (): JSX.Element => {
         document.addEventListener('contextmenu', handleContextMenu);
         window.addEventListener('blur', handleBlur);
         window.addEventListener('focus', handleFocus);
+        window.addEventListener('beforeunload', handleBeforeUnload);
 
         return () => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
@@ -273,6 +303,7 @@ const Test = (): JSX.Element => {
             document.removeEventListener('contextmenu', handleContextMenu);
             window.removeEventListener('blur', handleBlur);
             window.removeEventListener('focus', handleFocus);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, [testStarted, addViolation]);
 
@@ -280,6 +311,8 @@ const Test = (): JSX.Element => {
         console.log('🚀 Starting test...');
         await enterFullscreen();
         setTestStarted(true);
+        // Save draft when test starts
+        setTimeout(saveDraft, 100);
     };
 
     const fetchQuestions = async () => {
@@ -301,10 +334,10 @@ const Test = (): JSX.Element => {
         }
     };
 
-    const saveProgress = async () => {
-        if (!userInfo?.username || !testStarted) return;
+    const saveDraft = async () => {
+        if (!userInfo?.username) return;
         
-        const progressData = {
+        const draftData = {
             username: userInfo.username,
             answers,
             flaggedQuestions: Array.from(flaggedQuestions),
@@ -315,63 +348,81 @@ const Test = (): JSX.Element => {
         };
         
         try {
-            await fetch('/api/save-progress', {
+            await fetch('/api/save-draft', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(progressData)
+                body: JSON.stringify(draftData)
             });
         } catch (error) {
-            console.error('Failed to save progress:', error);
+            console.error('Failed to save draft:', error);
         }
     };
 
-    const loadProgress = async (username: string) => {
+    const loadDraft = async (username: string) => {
         try {
-            const response = await fetch(`/api/load-progress/${username}`);
+            const response = await fetch(`/api/load-draft?username=${username}`);
             if (response.ok) {
                 const data = await response.json();
-                if (data.progress) {
-                    setAnswers(data.progress.answers || {});
-                    setFlaggedQuestions(new Set(data.progress.flaggedQuestions || []));
-                    setCurrentQuestion(data.progress.currentQuestion || 0);
-                    setTimeLeft(data.progress.timeLeft || 3600);
-                    setViolations(data.progress.violations || 0);
-                    setTestStarted(data.progress.testStarted || false);
-                    console.log('✅ Progress restored');
+                if (data.draft) {
+                    setAnswers(data.draft.answers || {});
+                    setFlaggedQuestions(new Set(data.draft.flaggedQuestions || []));
+                    setCurrentQuestion(data.draft.currentQuestion || 0);
+                    setTimeLeft(data.draft.timeLeft || 3600);
+                    setViolations(data.draft.violations || 0);
+                    setTestStarted(data.draft.testStarted || false);
+                    console.log('✅ Draft restored');
                 }
             }
         } catch (error) {
-            console.error('Failed to load progress:', error);
+            console.error('Failed to load draft:', error);
         }
     };
 
-    const handleLogin = (credentials: { username: string; password: string; secretCode: string }) => {
+    const checkTestStatus = async (username: string) => {
+        try {
+            const response = await fetch(`/api/check-test-status?username=${username}`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.testCompleted) {
+                    setTestCompleted(true);
+                    return true;
+                }
+            }
+        } catch (error) {
+            console.error('Failed to check test status:', error);
+        }
+        return false;
+    };
+
+    const handleLogin = async (credentials: { username: string; password: string; secretCode: string }) => {
         console.log('👤 User logged in:', credentials.username);
         setUserInfo(credentials);
         setIsLoggedIn(true);
-        // Set userInfo first, then fetch metadata (which needs username)
+        
+        // Check if test is already completed
+        const isCompleted = await checkTestStatus(credentials.username);
+        if (isCompleted) return;
+        
+        // Load other data
         setTimeout(() => {
             fetchTestMetadata();
             fetchQuestions();
-            loadProgress(credentials.username);
+            loadDraft(credentials.username);
         }, 100);
     };
 
     const handleAnswer = (questionId: number, answer: string) => {
         setAnswers(prev => ({ ...prev, [questionId]: answer }));
+        // Auto-save draft on answer change
+        setTimeout(saveDraft, 100);
     };
 
-    // Auto-save progress every 30 seconds
+    // Auto-save draft every 10 seconds
     useEffect(() => {
-        if (!testStarted) return;
-        const interval = setInterval(saveProgress, 30000);
+        if (!userInfo?.username) return;
+        const interval = setInterval(saveDraft, 10000);
         return () => clearInterval(interval);
-    }, [testStarted, answers, flaggedQuestions, currentQuestion, timeLeft, violations]);
-
-    // Save on answer change
-    useEffect(() => {
-        if (testStarted) saveProgress();
-    }, [answers, flaggedQuestions]);
+    }, [userInfo, answers, flaggedQuestions, currentQuestion, timeLeft, violations, testStarted]);
 
     const toggleFlag = (questionId: number) => {
         setFlaggedQuestions(prev => {
@@ -383,6 +434,8 @@ const Test = (): JSX.Element => {
             }
             return newSet;
         });
+        // Auto-save draft on flag change
+        setTimeout(saveDraft, 100);
     };
 
     const goToQuestion = (questionIndex: number) => {
@@ -408,8 +461,12 @@ const Test = (): JSX.Element => {
     };
 
     const submitTest = async () => {
-        if (isSubmitting || testCompleted) return;
+        if (isSubmitting || testCompleted) {
+            console.log('Submission blocked - already submitting or completed');
+            return;
+        }
         
+        console.log('Starting test submission...');
         setIsSubmitting(true);
         try {
             const timeSpent = (testMetadata?.schedule?.duration || 3600) - timeLeft;
@@ -431,6 +488,14 @@ const Test = (): JSX.Element => {
 
             if (response.ok) {
                 console.log('Test results saved successfully');
+                // Clear draft after successful submission
+                if (userInfo?.username) {
+                    await fetch('/api/clear-draft', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: userInfo.username })
+                    });
+                }
             } else {
                 console.error('Failed to save test results');
             }
@@ -480,12 +545,12 @@ const Test = (): JSX.Element => {
         );
     }
 
-    if (testStatus === 'ended') {
+    if (testStatus === 'ended' && !testCompleted) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
                 <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-                    <h1 className="text-2xl font-bold mb-6">Test Ended</h1>
-                    <p className="text-gray-600">The test period has expired.</p>
+                    <h1 className="text-2xl font-bold mb-6">Test Period Ended</h1>
+                    <p className="text-gray-600">The test period has expired. You can no longer take this test.</p>
                 </div>
             </div>
         );
@@ -530,7 +595,7 @@ const Test = (): JSX.Element => {
                             </svg>
                         </div>
                         <h1 className="text-2xl font-bold text-gray-900 mb-2">Test Already Completed!</h1>
-                        <p className="text-gray-600">You have already submitted this test, {userInfo?.username}.</p>
+                        <p className="text-gray-600">You have already submitted this test, {userInfo?.name}.</p>
                     </div>
                     
                     <p className="text-sm text-gray-500 mb-4">

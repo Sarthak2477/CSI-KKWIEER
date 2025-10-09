@@ -412,7 +412,7 @@ const Test = (): JSX.Element => {
                 <div className="flex justify-between items-center">
                     <div>
                         <h1 className="text-xl font-semibold">{testMetadata?.title || 'Aptitude Test'}</h1>
-                        <span className="text-sm text-gray-500">Welcome, {userInfo?.username}</span>
+                        <span className="text-sm text-gray-500">Welcome, {userInfo?.name}</span>
                     </div>
                     <div className="flex items-center space-x-6">
                         <span className="text-sm text-gray-600">
