@@ -1,7 +1,7 @@
 // pages/api/login.js (Next.js API route)
 import { MongoClient } from "mongodb";
 
-const uri = "mongodb+srv://sarthakp8074_db_user:JfSovTLpEyjdtT5C@cluster-csi.cz17liw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-CSI"; // put your connection string in .env.local
+const uri = "mongodb+srv://sarthakp8074_db_user:eIra0uMgdxNJea5x@cluster-csi.cz17liw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-CSI"; // put your connection string in .env.local
 const client = new MongoClient(uri);
 
 export default async function handler(req, res) {

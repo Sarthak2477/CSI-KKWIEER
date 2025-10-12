@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const uri = "mongodb+srv://sarthakp8074_db_user:JfSovTLpEyjdtT5C@cluster-csi.cz17liw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-CSI";
+const uri = "mongodb+srv://sarthakp8074_db_user:eIra0uMgdxNJea5x@cluster-csi.cz17liw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-CSI";
 const client = new MongoClient(uri);
 
 export default async function handler(req, res) {
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { username, answers, flaggedQuestions, currentQuestion, timeLeft, violations, testStarted } = req.body;
+  const { username, answers, flaggedQuestions, currentQuestion, timeSpent, violations, testStarted, questions } = req.body;
 
   if (!username) {
     return res.status(400).json({ error: 'Username is required' });
@@ -24,9 +24,10 @@ export default async function handler(req, res) {
       answers: answers || {},
       flaggedQuestions: flaggedQuestions || [],
       currentQuestion: currentQuestion || 0,
-      timeLeft: timeLeft || 3600,
+      timeSpent: timeSpent || 0,
       violations: violations || 0,
       testStarted: testStarted || false,
+      questions: questions || [],
       lastUpdated: new Date()
     };
 

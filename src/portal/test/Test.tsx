@@ -97,9 +97,12 @@ const Test = (): JSX.Element => {
         } else if (nowTime >= startTimeMs && nowTime <= endTimeMs) {
             console.log('✅ Test is ready to start');
             setTestStatus('ready');
-            // Set time left to remaining time until test ends
-            const remainingTime = Math.floor((endTimeMs - nowTime) / 1000);
-            setTimeLeft(remainingTime);
+            // Give 30 minutes from login, but cap at schedule end time
+            const thirtyMinutes = 30 * 60; // 30 minutes in seconds
+            const remainingScheduleTime = Math.floor((endTimeMs - nowTime) / 1000);
+            const timeAllowed = Math.min(thirtyMinutes, remainingScheduleTime);
+            setTimeLeft(timeAllowed);
+            console.log(`Time allowed: ${timeAllowed}s (30min: ${thirtyMinutes}s, remaining: ${remainingScheduleTime}s)`);
         } else {
             console.log('❌ Test period has ended');
             setTestStatus('ended');
@@ -126,32 +129,22 @@ const Test = (): JSX.Element => {
         }
     }, [testStatus, countdownTime]);
 
-    // Timer - counts down to schedule end time
+    // Timer - counts down allocated time (30 min or remaining schedule time)
     useEffect(() => {
-        if (!testStarted || testCompleted || !testMetadata?.schedule) return;
+        if (!testStarted || testCompleted) return;
 
         const timer = setInterval(() => {
-            const now = new Date().getTime();
-            let endTime;
-            
-            if (testMetadata.schedule.endTime.$date) {
-                endTime = new Date(testMetadata.schedule.endTime.$date).getTime();
-            } else {
-                endTime = new Date(testMetadata.schedule.endTime).getTime();
-            }
-            
-            const remainingTime = Math.floor((endTime - now) / 1000);
-            
-            if (remainingTime <= 0) {
-                submitTest();
-                setTimeLeft(0);
-            } else {
-                setTimeLeft(remainingTime);
-            }
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    submitTest();
+                    return 0;
+                }
+                return prev - 1;
+            });
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [testStarted, testCompleted, testMetadata]);
+    }, [testStarted, testCompleted]);
 
     const addViolation = useCallback(() => {
         setViolations(prev => {
@@ -164,13 +157,17 @@ const Test = (): JSX.Element => {
                 console.log('Test data:', { username: userInfo?.username, violations: newCount, answers: Object.keys(answers).length });
                 
                 // Immediate submission without async complications
-                const timeSpent = (testMetadata?.schedule?.duration || 3600) - timeLeft;
+                const initialTime = 30 * 60; // 30 minutes in seconds
+                const timeSpent = initialTime - timeLeft;
+                const actualQuestionCount = testMetadata?.config?.totalQuestions || questions.length;
+                const presentedQuestions = questions.slice(0, actualQuestionCount);
                 const testData = {
                     username: userInfo?.username,
                     answers,
                     timeSpent,
                     violations: newCount,
-                    totalQuestions: questions.length
+                    totalQuestions: presentedQuestions.length,
+                    questions: presentedQuestions
                 };
 
                 // Use async/await for clearer flow
@@ -326,6 +323,8 @@ const Test = (): JSX.Element => {
             if (data.questions) {
                 console.log('✅ Questions loaded:', data.questions.length);
                 setQuestions(data.questions);
+                // Save draft immediately after questions are loaded
+                setTimeout(saveDraft, 100);
             } else {
                 console.error('❌ No questions received from API');
             }
@@ -339,14 +338,17 @@ const Test = (): JSX.Element => {
     const saveDraft = async () => {
         if (!userInfo?.username) return;
         
+        const initialTime = 30 * 60; // 30 minutes in seconds
+        const timeSpent = initialTime - timeLeft;
         const draftData = {
             username: userInfo.username,
             answers,
             flaggedQuestions: Array.from(flaggedQuestions),
             currentQuestion,
-            timeLeft,
+            timeSpent,
             violations,
-            testStarted
+            testStarted,
+            questions
         };
         
         try {
@@ -369,15 +371,26 @@ const Test = (): JSX.Element => {
                     setAnswers(data.draft.answers || {});
                     setFlaggedQuestions(new Set(data.draft.flaggedQuestions || []));
                     setCurrentQuestion(data.draft.currentQuestion || 0);
-                    setTimeLeft(data.draft.timeLeft || 3600);
+                    // Calculate timeLeft from timeSpent
+                    const initialTime = 30 * 60; // 30 minutes in seconds
+                    const timeSpent = data.draft.timeSpent || 0;
+                    const remainingTime = Math.max(0, initialTime - timeSpent);
+                    setTimeLeft(remainingTime);
                     setViolations(data.draft.violations || 0);
                     setTestStarted(data.draft.testStarted || false);
-                    console.log('✅ Draft restored');
+                    if (data.draft.questions && data.draft.questions.length > 0) {
+                        setQuestions(data.draft.questions);
+                        console.log('✅ Draft restored with saved questions:', data.draft.questions.length);
+                        return true; // Indicate questions were restored
+                    } else {
+                        console.log('✅ Draft restored without questions');
+                    }
                 }
             }
         } catch (error) {
             console.error('Failed to load draft:', error);
         }
+        return false; // Indicate no questions were restored
     };
 
     const checkTestStatus = async (username: string) => {
@@ -406,10 +419,13 @@ const Test = (): JSX.Element => {
         if (isCompleted) return;
         
         // Load other data
-        setTimeout(() => {
+        setTimeout(async () => {
             fetchTestMetadata();
-            fetchQuestions();
-            loadDraft(credentials.username);
+            const questionsRestored = await loadDraft(credentials.username);
+            // Only fetch new questions if no questions were restored from draft
+            if (!questionsRestored) {
+                fetchQuestions();
+            }
         }, 100);
     };
 
@@ -424,7 +440,14 @@ const Test = (): JSX.Element => {
         if (!userInfo?.username) return;
         const interval = setInterval(saveDraft, 10000);
         return () => clearInterval(interval);
-    }, [userInfo, answers, flaggedQuestions, currentQuestion, timeLeft, violations, testStarted]);
+    }, [userInfo, answers, flaggedQuestions, currentQuestion, timeLeft, violations, testStarted, questions]);
+
+    // Save draft when timeLeft changes (every second during test)
+    useEffect(() => {
+        if (testStarted && userInfo?.username) {
+            saveDraft();
+        }
+    }, [timeLeft]);
 
     const toggleFlag = (questionId: number) => {
         setFlaggedQuestions(prev => {
@@ -445,8 +468,8 @@ const Test = (): JSX.Element => {
     };
 
     const getQuestionStatus = (questionIndex: number) => {
-        if (answers[questionIndex]) return 'answered';
         if (flaggedQuestions.has(questionIndex)) return 'flagged';
+        if (answers[questionIndex]) return 'answered';
         return 'unanswered';
     };
 
@@ -471,13 +494,17 @@ const Test = (): JSX.Element => {
         console.log('Starting test submission...');
         setIsSubmitting(true);
         try {
-            const timeSpent = (testMetadata?.schedule?.duration || 3600) - timeLeft;
+            const initialTime = 30 * 60; // 30 minutes in seconds
+            const timeSpent = initialTime - timeLeft;
+            const actualQuestionCount = testMetadata?.config?.totalQuestions || questions.length;
+            const presentedQuestions = questions.slice(0, actualQuestionCount);
             const testData = {
                 username: userInfo?.username,
                 answers,
                 timeSpent,
                 violations,
-                totalQuestions: questions.length
+                totalQuestions: presentedQuestions.length,
+                questions: presentedQuestions
             };
 
             const response = await fetch('/api/submit-test', {
