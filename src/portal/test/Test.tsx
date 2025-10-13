@@ -22,6 +22,8 @@ const Test = (): JSX.Element => {
     const [testMetadata, setTestMetadata] = useState<any>(null);
     const [countdownTime, setCountdownTime] = useState<number>(0);
     const [testStatus, setTestStatus] = useState<'loading' | 'waiting' | 'ready' | 'active' | 'ended'>('loading');
+    const [isOnline, setIsOnline] = useState(typeof window !== 'undefined' ? navigator.onLine : true);
+    const [offlineQueue, setOfflineQueue] = useState<any[]>([]);
 
     const testRef = useRef<HTMLDivElement>(null);
 
@@ -97,12 +99,12 @@ const Test = (): JSX.Element => {
         } else if (nowTime >= startTimeMs && nowTime <= endTimeMs) {
             console.log('✅ Test is ready to start');
             setTestStatus('ready');
-            // Give 30 minutes from login, but cap at schedule end time
-            const thirtyMinutes = 30 * 60; // 30 minutes in seconds
+            // Give 45 minutes from login, but cap at schedule end time
+            const fortyFiveMinutes = 45 * 60; // 45 minutes in seconds
             const remainingScheduleTime = Math.floor((endTimeMs - nowTime) / 1000);
-            const timeAllowed = Math.min(thirtyMinutes, remainingScheduleTime);
+            const timeAllowed = Math.min(fortyFiveMinutes, remainingScheduleTime);
             setTimeLeft(timeAllowed);
-            console.log(`Time allowed: ${timeAllowed}s (30min: ${thirtyMinutes}s, remaining: ${remainingScheduleTime}s)`);
+            console.log(`Time allowed: ${timeAllowed}s (45min: ${fortyFiveMinutes}s, remaining: ${remainingScheduleTime}s)`);
         } else {
             console.log('❌ Test period has ended');
             setTestStatus('ended');
@@ -157,7 +159,7 @@ const Test = (): JSX.Element => {
                 console.log('Test data:', { username: userInfo?.username, violations: newCount, answers: Object.keys(answers).length });
                 
                 // Immediate submission without async complications
-                const initialTime = 30 * 60; // 30 minutes in seconds
+                const initialTime = 45 * 60; // 45 minutes in seconds
                 const timeSpent = initialTime - timeLeft;
                 const actualQuestionCount = testMetadata?.config?.totalQuestions || questions.length;
                 const presentedQuestions = questions.slice(0, actualQuestionCount);
@@ -335,10 +337,34 @@ const Test = (): JSX.Element => {
         }
     };
 
+    const processOfflineQueue = async () => {
+        if (offlineQueue.length === 0) return;
+        
+        console.log(`📤 Processing ${offlineQueue.length} queued requests`);
+        const successful = [];
+        
+        for (const request of offlineQueue) {
+            try {
+                await fetch(request.url, request.options);
+                successful.push(request);
+                console.log('✅ Synced queued request');
+            } catch (error) {
+                console.error('❌ Failed to sync request:', error);
+            }
+        }
+        
+        // Remove successful requests from queue
+        setOfflineQueue(prev => prev.filter(item => !successful.includes(item)));
+        
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('offlineQueue');
+        }
+    };
+
     const saveDraft = async () => {
         if (!userInfo?.username) return;
         
-        const initialTime = 30 * 60; // 30 minutes in seconds
+        const initialTime = 45 * 60; // 45 minutes in seconds
         const timeSpent = initialTime - timeLeft;
         const draftData = {
             username: userInfo.username,
@@ -351,14 +377,29 @@ const Test = (): JSX.Element => {
             questions
         };
         
-        try {
-            await fetch('/api/save-draft', {
+        const requestData = {
+            url: '/api/save-draft',
+            options: {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(draftData)
-            });
+            }
+        };
+        
+        try {
+            if (!isOnline) throw new Error('Offline');
+            await fetch(requestData.url, requestData.options);
+            console.log('✅ Draft saved to server');
         } catch (error) {
-            console.error('Failed to save draft:', error);
+            console.log('💾 Saving draft locally (offline)');
+            setOfflineQueue(prev => {
+                const updated = prev.filter(item => item.type !== 'draft');
+                return [...updated, { ...requestData, type: 'draft', timestamp: Date.now() }];
+            });
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('testDraft', JSON.stringify(draftData));
+                localStorage.setItem('offlineQueue', JSON.stringify(offlineQueue));
+            }
         }
     };
 
@@ -372,7 +413,7 @@ const Test = (): JSX.Element => {
                     setFlaggedQuestions(new Set(data.draft.flaggedQuestions || []));
                     setCurrentQuestion(data.draft.currentQuestion || 0);
                     // Calculate timeLeft from timeSpent
-                    const initialTime = 30 * 60; // 30 minutes in seconds
+                    const initialTime = 45 * 60; // 45 minutes in seconds
                     const timeSpent = data.draft.timeSpent || 0;
                     const remainingTime = Math.max(0, initialTime - timeSpent);
                     setTimeLeft(remainingTime);
@@ -414,6 +455,42 @@ const Test = (): JSX.Element => {
         setUserInfo(credentials);
         setIsLoggedIn(true);
         
+        // Restore offline data
+        if (typeof window !== 'undefined') {
+            const offlineDraft = localStorage.getItem('testDraft');
+            const savedQueue = localStorage.getItem('offlineQueue');
+            
+            if (offlineDraft) {
+                try {
+                    const draftData = JSON.parse(offlineDraft);
+                    if (draftData.username === credentials.username) {
+                        console.log('📱 Restoring offline progress');
+                        setAnswers(draftData.answers || {});
+                        setFlaggedQuestions(new Set(draftData.flaggedQuestions || []));
+                        setCurrentQuestion(draftData.currentQuestion || 0);
+                        const initialTime = 45 * 60;
+                        const timeSpent = draftData.timeSpent || 0;
+                        const remainingTime = Math.max(0, initialTime - timeSpent);
+                        setTimeLeft(remainingTime);
+                        setViolations(draftData.violations || 0);
+                        setTestStarted(draftData.testStarted || false);
+                        if (draftData.questions) setQuestions(draftData.questions);
+                    }
+                } catch (error) {
+                    console.error('Failed to restore offline draft:', error);
+                }
+            }
+            
+            if (savedQueue) {
+                try {
+                    const queueData = JSON.parse(savedQueue);
+                    setOfflineQueue(queueData);
+                } catch (error) {
+                    console.error('Failed to restore offline queue:', error);
+                }
+            }
+        }
+        
         // Check if test is already completed
         const isCompleted = await checkTestStatus(credentials.username);
         if (isCompleted) return;
@@ -434,6 +511,56 @@ const Test = (): JSX.Element => {
         // Auto-save draft on answer change
         setTimeout(saveDraft, 100);
     };
+
+    // Network connectivity monitoring
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        
+        const checkConnectivity = async () => {
+            try {
+                const response = await fetch('/api/ping', { 
+                    method: 'GET',
+                    cache: 'no-cache',
+                    signal: AbortSignal.timeout(5000)
+                });
+                const wasOffline = !isOnline;
+                setIsOnline(response.ok);
+                if (wasOffline && response.ok) {
+                    console.log('🌐 Connection restored, processing offline queue');
+                    processOfflineQueue();
+                }
+            } catch (error) {
+                console.log('🔌 Connection lost');
+                setIsOnline(false);
+            }
+        };
+
+        const handleOnline = () => {
+            console.log('🌐 Browser detected online');
+            checkConnectivity();
+        };
+        
+        const handleOffline = () => {
+            console.log('🔌 Browser detected offline');
+            setIsOnline(false);
+        };
+
+        // Initial check
+        checkConnectivity();
+        
+        // Periodic connectivity check every 10 seconds
+        const interval = setInterval(checkConnectivity, 10000);
+        
+        // Browser events as backup
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, [isOnline]);
 
     // Auto-save draft every 10 seconds
     useEffect(() => {
@@ -494,7 +621,7 @@ const Test = (): JSX.Element => {
         console.log('Starting test submission...');
         setIsSubmitting(true);
         try {
-            const initialTime = 30 * 60; // 30 minutes in seconds
+            const initialTime = 45 * 60; // 45 minutes in seconds
             const timeSpent = initialTime - timeLeft;
             const actualQuestionCount = testMetadata?.config?.totalQuestions || questions.length;
             const presentedQuestions = questions.slice(0, actualQuestionCount);
@@ -688,9 +815,16 @@ const Test = (): JSX.Element => {
                 </div>
             )}
             
+            {/* Connection Status */}
+            {!isOnline && (
+                <div className="fixed top-0 left-0 right-0 bg-orange-600 text-white text-center py-2 z-50 animate-pulse">
+                    <span className="font-semibold">🔌 OFFLINE - Progress saved locally ({offlineQueue.length} pending)</span>
+                </div>
+            )}
+            
             {/* Fullscreen Warning */}
             {!isFullscreen && testStarted && (
-                <div className="fixed top-0 left-0 right-0 bg-red-600 text-white text-center py-2 z-40">
+                <div className={`fixed left-0 right-0 bg-red-600 text-white text-center py-2 z-40 ${!isOnline ? 'top-10' : 'top-0'}`}>
                     <span className="font-semibold">⚠️ FULLSCREEN REQUIRED - Press F11 or click the fullscreen button</span>
                 </div>
             )}
