@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  if (secretCode !== "CSI2025") {
+  if (secretCode !== "K7M9X") {
     return res.status(401).json({ error: "Invalid secret code" });
   }
 

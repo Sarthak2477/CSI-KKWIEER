@@ -2,7 +2,13 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/committee": "pages/committee.js",
-  "/portal/test": "pages/portal/test.js"
+  "/portal/test": "pages/portal/test.js",
+  "/api/ping": "pages/api/ping.js",
+  "/api/save-draft": "pages/api/save-draft.js",
+  "/api/auth": "pages/api/auth.js",
+  "/api/check-test-status": "pages/api/check-test-status.js",
+  "/api/load-draft": "pages/api/load-draft.js",
+  "/api/test-metadata": "pages/api/test-metadata.js",
+  "/api/submit-test": "pages/api/submit-test.js",
+  "/api/clear-draft": "pages/api/clear-draft.js"
 }
