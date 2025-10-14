@@ -100,7 +100,7 @@ const Test = (): JSX.Element => {
             console.log('✅ Test is ready to start');
             setTestStatus('ready');
             // Give 45 minutes from login, but cap at schedule end time
-            const fortyFiveMinutes = 1 * 60; // 45 minutes in seconds
+            const fortyFiveMinutes = 45 * 60; // 45 minutes in seconds
             const remainingScheduleTime = Math.floor((endTimeMs - nowTime) / 1000);
             const timeAllowed = Math.min(fortyFiveMinutes, remainingScheduleTime);
             setTimeLeft(timeAllowed);
