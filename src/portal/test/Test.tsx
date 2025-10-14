@@ -792,12 +792,12 @@ const Test = (): JSX.Element => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                         </div>
-                        <h1 className="text-2xl font-bold text-gray-900 mb-2">Test Already Completed!</h1>
-                        <p className="text-gray-600">You have already submitted this test, {userInfo?.username}.</p>
+                        <h1 className="text-2xl font-bold text-gray-900 mb-2">Test Completed!</h1>
+                        <p className="text-gray-600">You have submitted this test, {userInfo?.username}.</p>
                     </div>
                     
                     <p className="text-sm text-gray-500 mb-4">
-                        You cannot retake the test. Your previous submission has been recorded.
+                        You cannot retake the test. Your submission has been recorded.
                     </p>
                     
                     <button
