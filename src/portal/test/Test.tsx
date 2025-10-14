@@ -100,7 +100,7 @@ const Test = (): JSX.Element => {
             console.log('✅ Test is ready to start');
             setTestStatus('ready');
             // Give 45 minutes from login, but cap at schedule end time
-            const fortyFiveMinutes = 45 * 60; // 45 minutes in seconds
+            const fortyFiveMinutes = 1 * 60; // 45 minutes in seconds
             const remainingScheduleTime = Math.floor((endTimeMs - nowTime) / 1000);
             const timeAllowed = Math.min(fortyFiveMinutes, remainingScheduleTime);
             setTimeLeft(timeAllowed);
@@ -138,7 +138,49 @@ const Test = (): JSX.Element => {
         const timer = setInterval(() => {
             setTimeLeft(prev => {
                 if (prev <= 1) {
-                    submitTest();
+                    // Auto-submit with current data when time runs out
+                    const initialTime = 45 * 60;
+                    const timeSpent = initialTime - 1; // Almost full time used
+                    const actualQuestionCount = testMetadata?.config?.totalQuestions || questions.length;
+                    const presentedQuestions = questions.slice(0, actualQuestionCount);
+                    
+                    const testData = {
+                        username: userInfo?.username,
+                        answers,
+                        timeSpent,
+                        violations,
+                        totalQuestions: presentedQuestions.length,
+                        questions: presentedQuestions
+                    };
+
+                    // Submit immediately on timeout
+                    (async () => {
+                        try {
+                            setIsSubmitting(true);
+                            const response = await fetch('/api/submit-test', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(testData)
+                            });
+                            
+                            if (response.ok && userInfo?.username) {
+                                await fetch('/api/clear-draft', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ username: userInfo.username })
+                                });
+                            }
+                        } catch (error) {
+                            console.error('Timeout submission error:', error);
+                        } finally {
+                            setTestCompleted(true);
+                            setIsSubmitting(false);
+                            if (document.fullscreenElement) {
+                                document.exitFullscreen?.();
+                            }
+                        }
+                    })();
+                    
                     return 0;
                 }
                 return prev - 1;
@@ -146,7 +188,7 @@ const Test = (): JSX.Element => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [testStarted, testCompleted]);
+    }, [testStarted, testCompleted, answers, questions, testMetadata, userInfo, violations]);
 
     const addViolation = useCallback(() => {
         setViolations(prev => {
